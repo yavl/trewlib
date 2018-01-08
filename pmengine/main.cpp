@@ -1,8 +1,9 @@
 #include "pm.h"
+#include <fmt/format.h>
+#include <fmt/format.cc>
 
 const int winWidth = 800, winHeight = 600;
-
-Texture tex;
+pm::Texture tex;
 
 int main() {
 	GLFWwindow* window;
@@ -16,10 +17,11 @@ int main() {
 	}
 
 	const GLFWvidmode* vimod = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	glfwSetWindowPos(window, (vimod->width-winWidth)/2, (vimod->height-winHeight)/2);
+	glfwSetWindowPos(window, (vimod->width - winWidth) / 2, (vimod->height - winHeight) / 2);
 	glfwMakeContextCurrent(window);
-	tex = init_texture("tex.png");
-	printf("%d x %d\n", tex.x, tex.y);
+
+	tex = pm::init_texture("tex.png");
+	tex.print_info();
 	while (!glfwWindowShouldClose(window))
 	{
 		glViewport(0, 0, winWidth, winHeight);
@@ -33,30 +35,13 @@ int main() {
 		glOrtho(0.0, winWidth, winHeight, 0, -1, 1.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		render();
+		pm::render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	return 0;
 }
 
-void render() {
-	drawTexture(tex, 0, 0, 800, 600);
-}
-
-void drawTexture(Texture tex, GLfloat x, GLfloat y, GLuint sizeX, GLuint sizeY) {
-	glBindTexture(GL_TEXTURE_2D, tex.texture);
-	glPushMatrix();
-		glTranslatef(x, y, 0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 0.0f);
-			glVertex2f(0.0f, 0.0f);
-			glTexCoord2f(0.0f, 1.0f);
-			glVertex2f(0.0f, sizeY);
-			glTexCoord2f(1.0f, 1.0f);
-			glVertex2f(sizeX, sizeY);
-			glTexCoord2f(1.0f, 0.0f);
-			glVertex2f(sizeX, 0.0f);
-		glEnd();
-	glPopMatrix();
+void pm::render() {
+	pm::draw_texture(tex, 0, 0, 800, 600);
 }
