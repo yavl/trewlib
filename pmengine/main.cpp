@@ -1,9 +1,10 @@
-#include "pm.h"
 #include <fmt/format.h>
 #include <fmt/format.cc>
+#include "pmMain.cpp"
 
 const int winWidth = 800, winHeight = 600;
-pm::Texture tex;
+//pm::Texture tex;
+Main m;
 
 int main() {
 	GLFWwindow* window;
@@ -20,8 +21,10 @@ int main() {
 	glfwSetWindowPos(window, (vimod->width - winWidth) / 2, (vimod->height - winHeight) / 2);
 	glfwMakeContextCurrent(window);
 
-	tex = pm::init_texture("tex.png");
-	tex.print_info();
+	m.create();
+
+	//tex = pm::init_texture("tex.png");
+	//tex.print_info();
 	while (!glfwWindowShouldClose(window))
 	{
 		glViewport(0, 0, winWidth, winHeight);
@@ -43,5 +46,6 @@ int main() {
 }
 
 void pm::render() {
-	pm::draw_texture(tex, 0, 0, 800, 600);
+	//pm::draw_texture(tex, 0, 0, 800, 600);
+	m.render();
 }

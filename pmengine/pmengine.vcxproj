@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pmMain.cpp" />
     <ClCompile Include="pm_texture.cpp" />
   </ItemGroup>
   <ItemGroup>
