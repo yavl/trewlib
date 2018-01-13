@@ -1,9 +1,9 @@
 #include <fmt/format.h>
 #include <fmt/format.cc>
 #include "pmMain.cpp"
+#include <GL/glu.h>
 
 const int winWidth = 800, winHeight = 600;
-//pm::Texture tex;
 Main m;
 
 int main() {
@@ -22,9 +22,9 @@ int main() {
 	glfwMakeContextCurrent(window);
 
 	m.create();
-
-	//tex = pm::init_texture("tex.png");
-	//tex.print_info();
+GLfloat w = 600;
+GLfloat camx = 0;
+GLfloat camy = 0;
 	while (!glfwWindowShouldClose(window))
 	{
 		glViewport(0, 0, winWidth, winHeight);
@@ -35,10 +35,16 @@ int main() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glScalef(1, -1, 1);
+camy+=0.01f;
+gluOrtho2D(camx-1.0, camx+1.0, camy-1.0,camy+1.0);
 		glOrtho(0.0, winWidth, winHeight, 0, -1, 1.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		pm::render();
+ 
+glMatrixMode(GL_MODELVIEW);
+glLoadIdentity();
+		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -46,6 +52,5 @@ int main() {
 }
 
 void pm::render() {
-	//pm::draw_texture(tex, 0, 0, 800, 600);
 	m.render();
 }
