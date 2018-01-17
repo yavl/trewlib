@@ -1,6 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <SOIL/SOIL.h>
 #include <fmt/format.h>
+#include <OpenGL/glu.h>
 
 using namespace std;
 
@@ -131,15 +132,12 @@ namespace pm {
 		void draw() {
 			tex->draw_texture(0, 0, tex->get_x(), tex->get_y());
 		}
-		
-		~Sprite() {
-			fmt::print("[DESTRUCTED] Sprite with Texture <{}>\n", tex->get_name());
-		}
 	};
 	
-		class Camera {
+    class Camera {
 	private:
 		GLfloat x, y;
+        const GLfloat cam_speed = 0.02f;
 	public:
 		Camera() {}
 		GLfloat get_x() {
@@ -160,6 +158,34 @@ namespace pm {
 			this->x = x;
 			this->y = y;
 		}
+        
+        void update(GLFWwindow* window) {
+            int state = glfwGetKey(window, GLFW_KEY_W);
+            if (state == GLFW_PRESS) {
+                set_y(get_y() - cam_speed);
+            }
+            
+            state = glfwGetKey(window, GLFW_KEY_S);
+            if (state == GLFW_PRESS) {
+                set_y(get_y() + cam_speed);
+            }
+            
+            state = glfwGetKey(window, GLFW_KEY_A);
+            if (state == GLFW_PRESS) {
+                set_x(get_x() - cam_speed);
+            }
+            
+            state = glfwGetKey(window, GLFW_KEY_D);
+            if (state == GLFW_PRESS) {
+                set_x(get_x() + cam_speed);
+            }
+            
+            gluOrtho2D(x-1.0, x+1.0, y-1.0,y+1.0);
+        }
+        
+        ~Camera() {
+            fmt::print("[DESTRUCTED] Camera\n");
+        }
 	};
 	
 	void render();
