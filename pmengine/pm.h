@@ -6,9 +6,27 @@
 using namespace std;
 
 namespace pm {
+    class Color {
+    public:
+        GLfloat r, g, b, a;
+        Color() {
+            r = 1.0f;
+            g = 1.0f;
+            b = 1.0f;
+            a = 1.0f;
+        }
+        Color(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
+            this->r = r;
+            this->g = g;
+            this->b = b;
+            this->a = a;
+        }
+    };
+    
 	class Texture {
 	private:
 		GLint tex_width, tex_height;
+        Color color;
 		string name;
 		const char* path;
 	public:
@@ -27,6 +45,10 @@ namespace pm {
 		void set_y(GLint tex_height) {
 			this->tex_height = tex_height;
 		}
+        
+        void set_color(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
+            this->color = Color(r, g, b, a);
+        }
 
 		string get_name() {
 			return name;
@@ -43,7 +65,7 @@ namespace pm {
 		}
 
 		void print_info() {
-			fmt::print("Texture name: {}\nResolution: {} x {}\n", name, tex_width, tex_height);
+            fmt::print("[INFO] Texture name (id {}): {} ({} x {})\n", texture, name, tex_width, tex_height);
 		}
 
 		Texture() {}
@@ -51,6 +73,8 @@ namespace pm {
 		Texture(const char* path) {
 			this->set_name(path);
 			this->path = path;
+            glGenTextures(0, &texture);
+            glBindTexture(GL_TEXTURE_2D, this->texture);
 			this->texture = SOIL_load_OGL_texture(
 				path,
 				SOIL_LOAD_AUTO,
@@ -58,10 +82,9 @@ namespace pm {
 				SOIL_FLAG_DDS_LOAD_DIRECT | SOIL_FLAG_INVERT_Y
 			);
 			if (!this->texture) {
-				fmt::print("SOIL loading error: '{}'\n", SOIL_last_result());
+				fmt::print("[ERROR] SOIL loading error: '{}'\n", SOIL_last_result());
 			}
 			else {
-				this->texture = 1;
 				fmt::print("[LOADED] Texture <{}>\n", this->get_name());
 			}
 
@@ -74,6 +97,7 @@ namespace pm {
 
 		void draw_texture(GLfloat x, GLfloat y, GLuint sizeX, GLuint sizeY) {
 			glBindTexture(GL_TEXTURE_2D, this->texture);
+            glColor4f(color.r, color.g, color.b, color.a);
 			glPushMatrix();
 			glTranslatef(x, y, 0);
 			glBegin(GL_QUADS);
@@ -130,7 +154,7 @@ namespace pm {
 		}
 			
 		void draw() {
-			tex->draw_texture(0, 0, tex->get_x(), tex->get_y());
+			tex->draw_texture(x, y, tex->get_x(), tex->get_y());
 		}
 	};
 	
@@ -154,7 +178,7 @@ namespace pm {
 			this->y = y;
 		}
 		
-		void set_position(GLfloat x, GLfloat y) {
+		void set_pos(GLfloat x, GLfloat y) {
 			this->x = x;
 			this->y = y;
 		}
@@ -187,6 +211,4 @@ namespace pm {
             fmt::print("[DESTRUCTED] Camera\n");
         }
 	};
-	
-	void render();
 }

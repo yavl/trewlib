@@ -11,7 +11,8 @@ int main() {
 	GLFWwindow* window;
 	if (!glfwInit())
 		return -1;
-
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	window = glfwCreateWindow(winWidth, winHeight, "pm::engine", NULL, NULL);
 	if (!window) {
 		glfwTerminate();
@@ -20,14 +21,14 @@ int main() {
     
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
-    fmt::print("{} {}", width, height);
+    fmt::print("Framebuffer size: {} {}\n", width, height);
 
 	const GLFWvidmode* vimod = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	glfwSetWindowPos(window, (vimod->width - winWidth) / 2, (vimod->height - winHeight) / 2);
 	glfwMakeContextCurrent(window);
 
 	m.create();
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window) && glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS)
 	{
 		glViewport(0, 0, width, height);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -36,12 +37,12 @@ int main() {
 		glDisable(GL_DEPTH_TEST);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glScalef(1, -1, 1);
+        glScalef(1.0f, -1.0f, 1.0f);
         cam.update(window);
 		glOrtho(0.0, width, height, 0, -1, 1.0);
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		pm::render();
+		//glLoadIdentity();
+        m.render();
         int state = glfwGetKey(window, GLFW_KEY_E);
         if (state == GLFW_PRESS)
             fmt::print("хуй");
@@ -53,8 +54,4 @@ glLoadIdentity();
 		glfwPollEvents();
 	}
 	return 0;
-}
-
-void pm::render() {
-	m.render();
 }

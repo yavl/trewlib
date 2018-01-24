@@ -28,7 +28,6 @@
 		F5316C5D200E27A800E59393 /* pm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pm.h; sourceTree = "<group>"; };
 		F56A4B07200DFC05007ACEF2 /* pmengine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pmengine; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56A4B0A200DFC05007ACEF2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		F5FCFED7200F7E1100C45EF8 /* tex.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tex.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +46,6 @@
 			children = (
 				F56A4B09200DFC05007ACEF2 /* pmengine */,
 				F56A4B08200DFC05007ACEF2 /* Products */,
-				F5FCFED7200F7E1100C45EF8 /* tex.png */,
 			);
 			sourceTree = "<group>";
 		};
@@ -241,8 +239,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /Users/vlad/path/include;
 				LIBRARY_SEARCH_PATHS = /Users/vlad/path/lib/;
-				"OTHER_CPLUSPLUSFLAGS[arch=*]" = "-I/Users/vlad/path/include";
 				OTHER_LDFLAGS = (
 					"-lglfw3",
 					"-lSOIL",
@@ -263,6 +261,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /Users/vlad/path/include;
 				LIBRARY_SEARCH_PATHS = /Users/vlad/path/lib/;
 				OTHER_LDFLAGS = (
 					"-lglfw3",
