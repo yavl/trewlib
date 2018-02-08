@@ -1,5 +1,5 @@
 # pm
-very tiny cross-platform game librarya
+very tiny cross-platform game library
 ```c++
 #include "pm.h"
 
