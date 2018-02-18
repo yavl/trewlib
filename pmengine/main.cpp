@@ -43,9 +43,6 @@ int main() {
 		glMatrixMode(GL_MODELVIEW);
 		//glLoadIdentity();
 		m.render();
-		int state = glfwGetKey(window, GLFW_KEY_E);
-		if (state == GLFW_PRESS)
-			fmt::print("хуй");
 		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
