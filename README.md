@@ -16,7 +16,7 @@ public:
         
         sprite = pm::Sprite(tex);
         sprite.get_texture()->print_info();
-        sprite.get_texture()->set_color(0, 0.4f, 0, 1.0f);
+        sprite.set_color(0, 0.4f, 0, 1.0f);
         sprite.set_pos(100, 0);
         
         sprite2 = pm::Sprite(tex2);
