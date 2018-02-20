@@ -1,7 +1,6 @@
-#include <fmt/format.h>
 #include <fmt/format.cc>
+#include "pm.hpp"
 #include "pmMain.cpp"
-#include <OpenGL/glu.h>
 
 const int winWidth = 800, winHeight = 600;
 Main m;

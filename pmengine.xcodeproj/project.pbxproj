@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		F5316C5E200E27A800E59393 /* pmMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F5316C5B200E27A800E59393 /* pmMain.cpp */; };
+		F54939C9203C7EE900FAD28D /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54939C8203C7EE900FAD28D /* Color.cpp */; };
+		F54939CC203C827C00FAD28D /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54939CB203C827C00FAD28D /* Camera.cpp */; };
+		F54939CF203C836E00FAD28D /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54939CD203C836E00FAD28D /* Sprite.cpp */; };
+		F54939D2203C83F100FAD28D /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F54939D0203C83F100FAD28D /* Texture.cpp */; };
 		F56A4B0B200DFC05007ACEF2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56A4B0A200DFC05007ACEF2 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +29,11 @@
 
 /* Begin PBXFileReference section */
 		F5316C5B200E27A800E59393 /* pmMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pmMain.cpp; sourceTree = "<group>"; };
-		F5316C5D200E27A800E59393 /* pm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pm.h; sourceTree = "<group>"; };
+		F5316C5D200E27A800E59393 /* pm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pm.hpp; sourceTree = "<group>"; };
+		F54939C8203C7EE900FAD28D /* Color.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Color.cpp; sourceTree = "<group>"; };
+		F54939CB203C827C00FAD28D /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		F54939CD203C836E00FAD28D /* Sprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sprite.cpp; sourceTree = "<group>"; };
+		F54939D0203C83F100FAD28D /* Texture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
 		F56A4B07200DFC05007ACEF2 /* pmengine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pmengine; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56A4B0A200DFC05007ACEF2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -41,6 +49,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F54939CA203C823A00FAD28D /* pm */ = {
+			isa = PBXGroup;
+			children = (
+				F5316C5D200E27A800E59393 /* pm.hpp */,
+				F54939C8203C7EE900FAD28D /* Color.cpp */,
+				F54939CB203C827C00FAD28D /* Camera.cpp */,
+				F54939CD203C836E00FAD28D /* Sprite.cpp */,
+				F54939D0203C83F100FAD28D /* Texture.cpp */,
+			);
+			path = pm;
+			sourceTree = "<group>";
+		};
 		F56A4AFE200DFC05007ACEF2 = {
 			isa = PBXGroup;
 			children = (
@@ -60,7 +80,7 @@
 		F56A4B09200DFC05007ACEF2 /* pmengine */ = {
 			isa = PBXGroup;
 			children = (
-				F5316C5D200E27A800E59393 /* pm.h */,
+				F54939CA203C823A00FAD28D /* pm */,
 				F5316C5B200E27A800E59393 /* pmMain.cpp */,
 				F56A4B0A200DFC05007ACEF2 /* main.cpp */,
 			);
@@ -124,7 +144,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F54939CC203C827C00FAD28D /* Camera.cpp in Sources */,
 				F56A4B0B200DFC05007ACEF2 /* main.cpp in Sources */,
+				F54939CF203C836E00FAD28D /* Sprite.cpp in Sources */,
+				F54939D2203C83F100FAD28D /* Texture.cpp in Sources */,
+				F54939C9203C7EE900FAD28D /* Color.cpp in Sources */,
 				F5316C5E200E27A800E59393 /* pmMain.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
