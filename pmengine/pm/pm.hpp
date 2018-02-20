@@ -26,7 +26,6 @@ namespace pm {
     class Texture {
     private:
         GLint tex_width, tex_height;
-        Color color;
         std::string name;
         const char* path;
     public:
@@ -37,9 +36,6 @@ namespace pm {
         
         GLint get_y();
         void set_y(GLint tex_height);
-        
-        void set_color(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-        Color get_color();
         
         std::string get_name();
         void set_name(std::string name);
@@ -53,7 +49,7 @@ namespace pm {
         
         Texture(const char* path);
         
-        void draw_texture(GLfloat x, GLfloat y, GLuint sizeX, GLuint sizeY);
+        void draw_texture(GLfloat x, GLfloat y, GLuint sizeX, GLuint sizeY, Color color);
         
         ~Texture();
     };
@@ -79,6 +75,7 @@ namespace pm {
         void set_pos(GLfloat x, GLfloat y);
         
         void set_color(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
+        Color get_color();
         
         void draw();
     };

@@ -14,10 +14,6 @@ void pm::Texture::set_y(GLint tex_height) {
     this->tex_height = tex_height;
 }
 
-void pm::Texture::set_color(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
-    this->color = Color(r, g, b, a);
-}
-
 std::string pm::Texture::get_name() {
     return name;
 }
@@ -63,7 +59,7 @@ pm::Texture::Texture(const char* path) {
     this->set_y(height);
 }
 
-void pm::Texture::draw_texture(GLfloat x, GLfloat y, GLuint sizeX, GLuint sizeY) {
+void pm::Texture::draw_texture(GLfloat x, GLfloat y, GLuint sizeX, GLuint sizeY, Color color) {
     glBindTexture(GL_TEXTURE_2D, this->texture);
     glColor4f(color.r, color.g, color.b, color.a);
     glPushMatrix();

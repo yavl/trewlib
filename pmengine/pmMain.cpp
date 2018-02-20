@@ -1,27 +1,40 @@
 #include "pm/pm.hpp"
+#include <vector>
+
+using namespace std;
+using namespace pm;
 
 class Main {
 private:
-    pm::Texture* tex;
-    pm::Texture* tex2;
-    pm::Sprite sprite;
-    pm::Sprite sprite2;
+    Texture* tex;
+    Texture* tex2;
+    Sprite sprite, sprite2, sprite3;
+    vector<pm::Sprite> sprites;
 public:
     void create() {
-        tex = new pm::Texture("tex.png");
-        tex2 = new pm::Texture("tex2.png");
+        tex = new Texture("tex.png");
+        tex2 = new Texture("tex2.png");
         
-        sprite = pm::Sprite(tex);
+        sprite = Sprite(tex);
         sprite.get_texture()->print_info();
-        sprite.get_texture()->set_color(0, 0.4f, 0, 1.0f);
-        sprite.set_pos(100, 0);
+        sprite.set_color(0, 0.4f, 0, 1.0f);
+        sprite.set_pos(0, 0);
         
-        sprite2 = pm::Sprite(tex2);
+        sprite2 = Sprite(tex);
+        sprite2.set_pos(200, 100);
+        
+        sprite3 = Sprite(tex2);
+        sprite3.set_pos(300, 200);
+        
+        sprites.push_back(sprite);
+        sprites.push_back(sprite2);
+        sprites.push_back(sprite3);
     }
     
     void render() {
-        sprite.draw();
-        sprite2.draw();
+        for (Sprite& x : sprites) {
+            x.draw();
+        }
     }
     
     ~Main() {

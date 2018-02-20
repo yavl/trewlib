@@ -26,9 +26,16 @@ void pm::Sprite::set_pos_y(GLfloat y) {
 
 void pm::Sprite::set_pos(GLfloat x, GLfloat y) {
     this->x = x;
+    this->y = y;
 }
 
+void pm::Sprite::set_color(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
+    color = pm::Color(r, g, b, a);
+}
+pm::Color pm::Sprite::get_color() {
+    return color;
+}
 void pm::Sprite::draw() {
-    tex->draw_texture(x, y, tex->get_x(), tex->get_y());
+    tex->draw_texture(x, y, tex->get_x(), tex->get_y(), color);
 }
 
