@@ -9,7 +9,7 @@ private:
     Texture* tex;
     Texture* tex2;
     Sprite sprite, sprite2, sprite3;
-    vector<pm::Sprite> sprites;
+    vector<Sprite> sprites;
 public:
     void create() {
         tex = new Texture("tex.png");
