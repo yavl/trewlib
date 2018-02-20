@@ -1,7 +1,7 @@
 # pm
 very tiny cross-platform game library
 ```c++
-#include "pm.h"
+#include "pm.hpp"
 
 class Main {
 private:
