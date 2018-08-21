@@ -1,5 +1,12 @@
 # pm
-very tiny cross-platform game library
+very tiny cross-platform 2D game library
+### Features
+* OpenGL 3.3 renderer
+* Compiles on Windows, macOS, Linux
+* Lightweight (~150kb .exe release binary on Windows)
+* Does nothing except drawing sprites and loading shaders
+### Dependencies
+GLFW, SOIL, glm, glad, fmt
 ```c++
 #include "pm/Texture.hpp"
 #include "pm/Sprite.hpp"
