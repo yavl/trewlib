@@ -155,20 +155,14 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc" />
     <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="FileManager.cpp" />
-    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="HelloWorld.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Texture.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.hpp" />
-    <ClInclude Include="FileManager.hpp" />
-    <ClInclude Include="InputManager.hpp" />
-    <ClInclude Include="pm.hpp" />
-    <ClInclude Include="Shader.hpp" />
-    <ClInclude Include="Texture.hpp" />
+    <ClCompile Include="pm\Camera.cpp" />
+    <ClCompile Include="pm\FileManager.cpp" />
+    <ClCompile Include="pm\InputManager.cpp" />
+    <ClCompile Include="pm\Shader.cpp" />
+    <ClCompile Include="pm\Sprite.cpp" />
+    <ClCompile Include="pm\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
@@ -177,6 +171,15 @@
   <ItemGroup>
     <Image Include="tex.png" />
     <Image Include="tex2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pm\Camera.hpp" />
+    <ClInclude Include="pm\FileManager.hpp" />
+    <ClInclude Include="pm\InputManager.hpp" />
+    <ClInclude Include="pm\pm.hpp" />
+    <ClInclude Include="pm\Shader.hpp" />
+    <ClInclude Include="pm\Sprite.hpp" />
+    <ClInclude Include="pm\Texture.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

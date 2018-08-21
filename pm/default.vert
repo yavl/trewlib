@@ -7,11 +7,11 @@ layout (location = 2) in vec2 texCoord;
 out vec4 vertexColor;
 out vec2 TexCoord;
 
-uniform float offset;
+uniform mat4 u_projTrans;
 
 void main()
 {
-    gl_Position = vec4(position.x, position.y, position.z, 1.0);
+    gl_Position = u_projTrans * vec4(position.x, position.y, position.z, 1.0);
     vertexColor = vec4(color, 1.0);
     TexCoord = vec2(texCoord.x, 1.0 - texCoord.y); // inverted Y
 }

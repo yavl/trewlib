@@ -4,6 +4,8 @@ InputManager::InputManager(GLFWwindow* window) {
 	this->window = window;
 }
 
+InputManager::InputManager() {}
+
 InputManager::~InputManager() {
 }
 

@@ -16,52 +16,41 @@
     <Filter Include="Исходные файлы\pm">
       <UniqueIdentifier>{9ac34d13-bb6a-4a31-a326-c713ee894f82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\deps">
+      <UniqueIdentifier>{eea44e5b-5851-4e23-bbeb-0f6a3116b9a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Исходные файлы\pm</Filter>
-    </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Исходные файлы\pm</Filter>
+    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c">
+      <Filter>Исходные файлы\deps</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc">
-      <Filter>Исходные файлы\pm</Filter>
+      <Filter>Исходные файлы\deps</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c">
-      <Filter>Исходные файлы\pm</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Исходные файлы\pm</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
+    <ClCompile Include="HelloWorld.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="pm\Camera.cpp">
+      <Filter>Исходные файлы\pm</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Camera.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="FileManager.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="pm.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.hpp">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
+    <ClCompile Include="pm\FileManager.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
+    <ClCompile Include="pm\InputManager.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
+    <ClCompile Include="pm\Shader.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
+    <ClCompile Include="pm\Sprite.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
+    <ClCompile Include="pm\Texture.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag">
@@ -78,5 +67,28 @@
     <Image Include="tex2.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pm\Camera.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\FileManager.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\InputManager.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\pm.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\Shader.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\Sprite.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\Texture.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

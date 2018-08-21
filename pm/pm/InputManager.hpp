@@ -7,6 +7,7 @@ private:
 	GLFWwindow* window;
 public:
 	InputManager(GLFWwindow* window);
+	InputManager();
 	~InputManager();
 	void update();
 };
