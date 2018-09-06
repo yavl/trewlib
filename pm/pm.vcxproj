@@ -18,9 +18,49 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc" />
+    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c" />
+    <ClCompile Include="HelloWorld.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="pm\Camera.cpp" />
+    <ClCompile Include="pm\Coord.cpp" />
+    <ClCompile Include="pm\FileManager.cpp" />
+    <ClCompile Include="pm\InputManager.cpp" />
+    <ClCompile Include="pm\Shader.cpp" />
+    <ClCompile Include="pm\Sprite.cpp" />
+    <ClCompile Include="pm\TextRenderer.cpp" />
+    <ClCompile Include="pm\Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HelloWorld.hpp" />
+    <ClInclude Include="pm\Camera.hpp" />
+    <ClInclude Include="pm\Coord.hpp" />
+    <ClInclude Include="pm\FileManager.hpp" />
+    <ClInclude Include="pm\InputManager.hpp" />
+    <ClInclude Include="pm\pm.hpp" />
+    <ClInclude Include="pm\Shader.hpp" />
+    <ClInclude Include="pm\Sprite.hpp" />
+    <ClInclude Include="pm\TextRenderer.hpp" />
+    <ClInclude Include="pm\Texture.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.frag" />
+    <None Include="default.vert" />
+    <None Include="fontsh.frag" />
+    <None Include="fontsh.vert" />
+    <None Include="freetype.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="tex.png" />
+    <Image Include="tex2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Ubuntu-Regular.ttf" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{4446983D-BCFE-40F2-9354-668E113E35F6}</ProjectGuid>
+    <ProjectGuid>{E856AF6C-FC3D-46B5-A4BF-03BCAB87A53B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>pm</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
@@ -80,8 +120,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\path\include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;C:\path\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -94,11 +132,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib;SOIL_Debug_x86.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib;freetype.lib;SOIL_Debug_x86.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -109,6 +148,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +157,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -125,13 +165,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib;opengl32.lib;SOIL_Debug_x86.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,6 +184,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,35 +193,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc" />
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c" />
-    <ClCompile Include="HelloWorld.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="pm\Camera.cpp" />
-    <ClCompile Include="pm\FileManager.cpp" />
-    <ClCompile Include="pm\InputManager.cpp" />
-    <ClCompile Include="pm\Shader.cpp" />
-    <ClCompile Include="pm\Sprite.cpp" />
-    <ClCompile Include="pm\Texture.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="tex.png" />
-    <Image Include="tex2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="pm\Camera.hpp" />
-    <ClInclude Include="pm\FileManager.hpp" />
-    <ClInclude Include="pm\InputManager.hpp" />
-    <ClInclude Include="pm\pm.hpp" />
-    <ClInclude Include="pm\Shader.hpp" />
-    <ClInclude Include="pm\Sprite.hpp" />
-    <ClInclude Include="pm\Texture.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,49 +1,36 @@
-#include "pm/Texture.hpp"
-#include "pm/Sprite.hpp"
-#include "pm/Shader.hpp"
-#include "pm/InputManager.hpp"
+﻿#include "HelloWorld.hpp"
 
-using namespace pm;
+Main::Main(GLFWwindow* window, int width, int height) {
+	this->window = window;
+	cam = Camera(window, width, height);
+	input = InputManager(window);
+}
 
-class Main {
-private:
-	Camera cam;
-	InputManager input;
-	Texture* tex;
-	Texture* tex2;
-	Sprite sprite;
-	Sprite sprite2;
-	GLFWwindow* window;
-public:
-	Main(GLFWwindow* window, int width, int height) {
-		this->window = window;
-		cam = Camera(window, width, height);
-		input = InputManager(window);
-	}
+Main::~Main() {
+	delete tex;
+	delete tex2;
+}
 
-	void create() {
-		Shader sh("default.vert", "default.frag");
+void Main::create() {
+	Shader sh("default.vert", "default.frag");
 
-		tex = new Texture("tex.png", sh.get_shader_program(), &cam);
-		tex2 = new Texture("tex2.png", sh.get_shader_program(), &cam);
+	tex = new Texture("tex.png", sh.get_shader_program(), &cam);
+	tex2 = new Texture("tex2.png", sh.get_shader_program(), &cam);
 
-		sprite = Sprite(tex);
-		sprite2 = Sprite(tex2);
-	}
+	sprite = Sprite(tex);
+	sprite2 = Sprite(tex2);
 
-	void render(float dt) {
-		cam.update(dt);
-		input.update();
-		sprite.draw();
-		sprite2.draw();
-	}
+	//text = new TextRenderer(&cam);
+}
 
-	void resize(int width, int height) {
-		cam.update_projection_matrix(width, height);
-	}
+void Main::render(float dt) {
+	cam.update(dt);
+	input.update();
+	sprite.draw();
+	sprite2.draw();
+	//text->display();
+}
 
-	~Main() {
-		delete tex;
-		delete tex2;
-	}
-};
+void Main::resize(int width, int height) {
+	cam.update_window_data(width, height);
+}

@@ -13,4 +13,5 @@ public:
 	FileManager(const char* path);
 	~FileManager();
 	std::string as_string();
+	bool is_open();
 };

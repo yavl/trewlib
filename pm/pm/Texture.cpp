@@ -25,12 +25,15 @@ Texture::Texture(const char* path, GLuint shader_id, Camera* cam) {
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	float widthf = (float)width;
+	float heightf = (float)height;
+
 	float vertices[] = {
 		 // positions			 // colors           // texture coords
-		 width,  height, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-		 width, -height, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-		-width, -height, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-		-width,  height, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+		 widthf,  heightf, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+		 widthf, -heightf, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+		-widthf, -heightf, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+		-widthf,  heightf, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 	};
 	
 	unsigned int indices[] = {

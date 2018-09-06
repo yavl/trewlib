@@ -17,7 +17,7 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 	GLint success;
 	char infoLog[512];
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
+	if (!success || !vert_file.is_open()) {
 		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
 		fmt::print("[ERROR] ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", infoLog);
 	}
@@ -32,7 +32,7 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 	glShaderSource(fragmentShader, 1, &frag, nullptr);
 	glCompileShader(fragmentShader);
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
+	if (!success || !frag_file.is_open()) {
 		glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
 		fmt::print("[ERROR] ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", infoLog);
 	}

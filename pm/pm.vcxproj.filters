@@ -14,23 +14,14 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Исходные файлы\pm">
-      <UniqueIdentifier>{9ac34d13-bb6a-4a31-a326-c713ee894f82}</UniqueIdentifier>
+      <UniqueIdentifier>{e0a1b187-c370-4a4d-b935-66118f2bbaca}</UniqueIdentifier>
     </Filter>
     <Filter Include="Исходные файлы\deps">
-      <UniqueIdentifier>{eea44e5b-5851-4e23-bbeb-0f6a3116b9a3}</UniqueIdentifier>
+      <UniqueIdentifier>{bc3f17d7-4060-499b-a249-4c2a2bd5f943}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c">
-      <Filter>Исходные файлы\deps</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc">
-      <Filter>Исходные файлы\deps</Filter>
-    </ClCompile>
-    <ClCompile Include="HelloWorld.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="pm\Camera.cpp">
@@ -48,25 +39,24 @@
     <ClCompile Include="pm\Sprite.cpp">
       <Filter>Исходные файлы\pm</Filter>
     </ClCompile>
+    <ClCompile Include="pm\TextRenderer.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
     <ClCompile Include="pm\Texture.cpp">
       <Filter>Исходные файлы\pm</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.frag">
-      <Filter>Файлы ресурсов</Filter>
-    </None>
-    <None Include="default.vert">
-      <Filter>Файлы ресурсов</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="tex.png">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="tex2.png">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
+    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c">
+      <Filter>Исходные файлы\deps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc">
+      <Filter>Исходные файлы\deps</Filter>
+    </ClCompile>
+    <ClCompile Include="HelloWorld.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="pm\Coord.cpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pm\Camera.hpp">
@@ -87,8 +77,47 @@
     <ClInclude Include="pm\Sprite.hpp">
       <Filter>Исходные файлы\pm</Filter>
     </ClInclude>
+    <ClInclude Include="pm\TextRenderer.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
     <ClInclude Include="pm\Texture.hpp">
       <Filter>Исходные файлы\pm</Filter>
     </ClInclude>
+    <ClInclude Include="HelloWorld.hpp">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="pm\Coord.hpp">
+      <Filter>Исходные файлы\pm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="default.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="fontsh.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="fontsh.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="freetype.dll">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="tex.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="tex2.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Ubuntu-Regular.ttf">
+      <Filter>Файлы ресурсов</Filter>
+    </Font>
   </ItemGroup>
 </Project>
