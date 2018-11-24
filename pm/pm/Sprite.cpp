@@ -10,8 +10,7 @@ Sprite::Sprite(Texture* texture) {
 
 Sprite::Sprite() {}
 
-Sprite::~Sprite() {
-}
+Sprite::~Sprite() {}
 
 void Sprite::draw() {
 	texture->draw(x, y);

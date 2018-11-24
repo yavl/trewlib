@@ -40,7 +40,7 @@ void Camera::update(float dt) {
 	}
 	if (state == GLFW_PRESS) {
 		drag_new = Coord(mouseX, mouseY);
-		if (!drag_new.equals(drag_old)) {
+		if (drag_new != drag_old) {
 			this->translate((drag_old.x - drag_new.x) * zoom*2, (drag_new.y - drag_old.y) * zoom*2);
 			drag_old = drag_new;
 		}		

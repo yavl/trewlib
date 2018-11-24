@@ -1,8 +1,9 @@
 #pragma once
 
 #include "pm.hpp"
-#include "Camera.hpp"
 #include <SOIL/SOIL.h>
+#include "Camera.hpp"
+#include "Shader.hpp"
 
 namespace pm {
 	class Texture {
@@ -10,15 +11,15 @@ namespace pm {
 		unsigned char* image;
 		int width, height;
 		GLuint texture, VAO, VBO, EBO;
-		GLuint shader_id;
+		Shader* shader;
 		std::string name;
 		Camera* cam;
 		glm::mat4 matrix;
 		float x, y;
 	public:
-		Texture(const char* path, GLuint shader_id, Camera* cam);
+		Texture(const char* path, Shader* shader, Camera* cam);
 		~Texture();
 		void draw(float x, float y);
-		void set_shader_program(GLuint shader_id);
+		void set_shader(Shader* shader);
 	};
 }

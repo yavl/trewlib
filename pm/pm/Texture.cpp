@@ -2,9 +2,9 @@
 
 using namespace pm;
 
-Texture::Texture(const char* path, GLuint shader_id, Camera* cam) {
+Texture::Texture(const char* path, Shader* shader, Camera* cam) {
 	this->name = path;
-	this->shader_id = shader_id;
+	this->shader = shader;
 	this->cam = cam;
 	this->matrix = glm::mat4(1.0f);
 	this->x = 0.0f;
@@ -71,17 +71,16 @@ Texture::~Texture() {
 void Texture::draw(float x, float y) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glUseProgram(shader_id);
+	shader->use();
 	matrix = glm::mat4(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(x, y, 0));
-	GLuint matrix_id = glGetUniformLocation(shader_id, "u_projTrans");
-	glUniformMatrix4fv(matrix_id, 1, GL_FALSE, glm::value_ptr(cam->projection_matrix * matrix));
+	shader->set_uniform("u_projTrans", cam->projection_matrix * matrix);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 
-void Texture::set_shader_program(GLuint shader_id) {
-	this->shader_id = shader_id;
+void Texture::set_shader(Shader* shader) {
+	this->shader = shader;
 }

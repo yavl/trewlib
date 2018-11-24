@@ -24,6 +24,8 @@ private:
     Sprite sprite;
     Sprite sprite2;
     GLFWwindow* window;
+    Hud hud;
+    Shader* sh;
 public:
     Main(GLFWwindow* window, int width, int height) {
         this->window = window;
@@ -32,13 +34,15 @@ public:
     }
 
     void create() {
-        Shader sh("default.vert", "default.frag");
+        sh = new Shader("default.vert", "default.frag");
 
-        tex = new Texture("tex.png", sh.get_shader_program(), &cam);
-        tex2 = new Texture("tex2.png", sh.get_shader_program(), &cam);
+        tex = new Texture("tex.png", sh, &cam);
+        tex2 = new Texture("tex2.png", sh, &cam);
 
         sprite = Sprite(tex);
         sprite2 = Sprite(tex2);
+
+        hud = Hud(window);
     }
 
     void render(float dt) {
@@ -46,6 +50,7 @@ public:
         input.update();
         sprite.draw();
         sprite2.draw();
+        hud.display();
     }
 
     void resize(int width, int height) {
@@ -55,6 +60,7 @@ public:
     ~Main() {
         delete tex;
         delete tex2;
+        delete sh;
     }
 };
 ```

@@ -10,6 +10,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 Main* m;
 
 int main() {
+	const int WINDOW_WIDTH = 1600;
+	const int WINDOW_HEIGHT = 1200;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -18,13 +20,15 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
 #endif
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "pm::engine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "pm::engine", NULL, NULL);
 	if (!window) {
 		fmt::print("Failed to create GLFW window");
 		glfwTerminate();
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	glfwSetWindowPos(window, (mode->width - WINDOW_WIDTH)/2, (mode->height - WINDOW_HEIGHT)/2);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);

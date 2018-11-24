@@ -4,7 +4,7 @@
 #include "pm/Sprite.hpp"
 #include "pm/Shader.hpp"
 #include "pm/InputManager.hpp"
-#include "pm/TextRenderer.hpp"
+#include "pm/Hud.hpp"
 #include "pm/Camera.hpp"
 
 using namespace pm;
@@ -18,7 +18,8 @@ private:
 	Sprite sprite;
 	Sprite sprite2;
 	GLFWwindow* window;
-	TextRenderer* text;
+	Hud hud;
+	Shader* sh;
 public:
 	Main(GLFWwindow* window, int width, int height);
 	~Main();

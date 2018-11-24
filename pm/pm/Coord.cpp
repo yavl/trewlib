@@ -14,3 +14,11 @@ bool Coord::equals(Coord coord) {
 		return true;
 	else return false;
 }
+
+bool Coord::operator==(const Coord& b) {
+	return this->equals(b);
+}
+
+bool Coord::operator!=(const Coord& b) {
+	return !this->equals(b);
+}

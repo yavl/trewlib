@@ -19,37 +19,48 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\fmt\format.cc" />
-    <ClCompile Include="..\..\..\..\..\..\..\path\include\glad\glad.c" />
     <ClCompile Include="HelloWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pm\Camera.cpp" />
     <ClCompile Include="pm\Coord.cpp" />
+    <ClCompile Include="pm\external\fmt\format.cc" />
+    <ClCompile Include="pm\external\glad\glad.c" />
+    <ClCompile Include="pm\external\imgui\imgui.cpp" />
+    <ClCompile Include="pm\external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="pm\external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="pm\external\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="pm\external\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="pm\external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="pm\FileManager.cpp" />
     <ClCompile Include="pm\InputManager.cpp" />
     <ClCompile Include="pm\Shader.cpp" />
     <ClCompile Include="pm\Sprite.cpp" />
-    <ClCompile Include="pm\TextRenderer.cpp" />
+    <ClCompile Include="pm\Hud.cpp" />
     <ClCompile Include="pm\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HelloWorld.hpp" />
     <ClInclude Include="pm\Camera.hpp" />
     <ClInclude Include="pm\Coord.hpp" />
+    <ClInclude Include="pm\external\imgui\imconfig.h" />
+    <ClInclude Include="pm\external\imgui\imgui.h" />
+    <ClInclude Include="pm\external\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="pm\external\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="pm\external\imgui\imgui_internal.h" />
+    <ClInclude Include="pm\external\imgui\imstb_rectpack.h" />
+    <ClInclude Include="pm\external\imgui\imstb_textedit.h" />
+    <ClInclude Include="pm\external\imgui\imstb_truetype.h" />
     <ClInclude Include="pm\FileManager.hpp" />
     <ClInclude Include="pm\InputManager.hpp" />
     <ClInclude Include="pm\pm.hpp" />
     <ClInclude Include="pm\Shader.hpp" />
     <ClInclude Include="pm\Sprite.hpp" />
-    <ClInclude Include="pm\TextRenderer.hpp" />
+    <ClInclude Include="pm\Hud.hpp" />
     <ClInclude Include="pm\Texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
     <None Include="default.vert" />
-    <None Include="fontsh.frag" />
-    <None Include="fontsh.vert" />
-    <None Include="freetype.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="tex.png" />
@@ -120,6 +131,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\path\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;C:\path\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -137,7 +150,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib;freetype.lib;SOIL_Debug_x86.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib;SOIL_Debug_x86.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,7 +170,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -172,6 +185,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib;SOIL_Debug_x86.lib;freetype.lib;opengl32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

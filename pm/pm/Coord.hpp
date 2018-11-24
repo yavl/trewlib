@@ -8,4 +8,6 @@ public:
 	Coord();
 	~Coord();
 	bool equals(Coord coord);
+	bool operator==(const Coord& b);
+	bool operator!=(const Coord& b);
 };
