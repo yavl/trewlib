@@ -13,5 +13,5 @@ void main()
 {
     gl_Position = u_projTrans * vec4(position.x, position.y, position.z, 1.0);
     vertexColor = vec4(color, 1.0);
-    TexCoord = vec2(texCoord.x, 1.0 - texCoord.y); // inverted Y
+    TexCoord = vec2(texCoord.x, texCoord.y);
 }

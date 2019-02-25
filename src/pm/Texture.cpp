@@ -15,6 +15,7 @@ Texture::Texture(const char* path, Shader* shader, Camera* cam) {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
+	stbi_set_flip_vertically_on_load(true);
 	this->image = stbi_load(path, &width, &height, 0, STBI_rgb_alpha);
 	if (this->image) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
