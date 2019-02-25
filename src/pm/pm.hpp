@@ -5,4 +5,5 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "external/fmt/format.h"
+#define FMT_HEADER_ONLY
+#include "fmt/format.h"

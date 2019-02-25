@@ -1,4 +1,6 @@
 #include "Texture.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "external/stb_image.h"
 
 using namespace pm;
 
@@ -13,16 +15,16 @@ Texture::Texture(const char* path, Shader* shader, Camera* cam) {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	this->image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_AUTO);
+	this->image = stbi_load(path, &width, &height, 0, STBI_rgb_alpha);
 	if (this->image) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		fmt::print("[LOADED] Texture <{}> with size: {}x{}\n", name, width, height);
 	}
 	else {
-		fmt::print("[ERROR] SOIL loading error: '{}'\n", SOIL_last_result());
+        fmt::print("[ERROR] Can't load texture <{}>", name);
 	}
-	SOIL_free_image_data(image);
+	stbi_image_free(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	float widthf = (float)width;

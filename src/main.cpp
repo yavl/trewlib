@@ -10,8 +10,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 Main* m;
 
 int main() {
-	const int WINDOW_WIDTH = 1600;
-	const int WINDOW_HEIGHT = 1200;
+	const int WINDOW_WIDTH = 800;
+	const int WINDOW_HEIGHT = 600;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -38,10 +38,19 @@ int main() {
 
 	double lastFrame = 0.0;
 	double currentFrame, dt;
+    //int frameCount = 0;
+    double prevTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window)) {
 		currentFrame = glfwGetTime();
 		dt = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+        
+        /*frameCount++;
+        if (currentFrame - prevTime >= 1.0f) {
+            fmt::print("{} fps\n", frameCount);
+            frameCount = 0;
+            prevTime = currentFrame;
+        }*/
 
 		glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);

@@ -1,4 +1,4 @@
-﻿#include "HelloWorld.hpp"
+#include "HelloWorld.hpp"
 
 Main::Main(GLFWwindow* window, int width, int height) {
 	this->window = window;
@@ -14,8 +14,7 @@ void Main::create() {
 
 	sprite = Sprite(tex);
 	sprite2 = Sprite(tex2);
-
-	hud = Hud(window);
+    hud = Hud(window);
 }
 
 void Main::render(float dt) {
@@ -23,7 +22,7 @@ void Main::render(float dt) {
 	input.update();
 	sprite.draw();
 	sprite2.draw();
-	hud.display();
+    hud.display();
 }
 
 void Main::resize(int width, int height) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "pm.hpp"
-#include <SOIL/SOIL.h>
 #include "Camera.hpp"
 #include "Shader.hpp"
 
