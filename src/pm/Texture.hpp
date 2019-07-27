@@ -1,10 +1,10 @@
 #pragma once
 
 #include "pm.hpp"
-#include "Camera.hpp"
-#include "Shader.hpp"
 
 namespace pm {
+	class Camera;
+	class Shader;
 	class Texture {
 	private:
 		unsigned char* image;

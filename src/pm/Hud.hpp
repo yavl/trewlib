@@ -1,8 +1,6 @@
 #pragma once
 
 #include "pm.hpp"
-#include "Shader.hpp"
-#include "Camera.hpp"
 #include "external/imgui/imgui.h"
 #include "external/imgui/imgui_impl_glfw.h"
 #include "external/imgui/imgui_impl_opengl3.h"

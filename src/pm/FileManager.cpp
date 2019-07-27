@@ -1,4 +1,7 @@
 #include "FileManager.hpp"
+#include <sstream>
+
+using namespace pm;
 
 FileManager::FileManager(const char* path) {
 	fin.open(path);
@@ -15,6 +18,6 @@ std::string FileManager::as_string() {
 	return sstr.str();
 }
 
-bool FileManager::is_open() {
+bool FileManager::is_open() const {
 	return fin.is_open();
 }

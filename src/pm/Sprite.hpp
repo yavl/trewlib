@@ -1,16 +1,15 @@
 #pragma once
 
-#include "Texture.hpp"
-
 namespace pm {
+	class Texture;
 	class Sprite {
 	private:
 		Texture* texture;
-		float x, y;
+		float x;
+		float y;
 	public:
 		Sprite(Texture* tex);
-		Sprite();
-		~Sprite();
+		virtual ~Sprite() = default;
 		void draw();
 	};
 }

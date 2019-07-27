@@ -1,24 +1,30 @@
 #pragma once
 
-#include "pm/Texture.hpp"
-#include "pm/Sprite.hpp"
-#include "pm/Shader.hpp"
-#include "pm/InputManager.hpp"
-#include "pm/Hud.hpp"
-#include "pm/Camera.hpp"
+#include <memory>
+
+namespace pm {
+	class Texture;
+	class Shader;
+	class Camera;
+	class Sprite;
+	class InputManager;
+	class Hud;
+}
 
 using namespace pm;
 
+struct GLFWwindow;
+
 class Main {
 private:
-	Camera cam;
-	InputManager input;
+	std::unique_ptr<Camera> cam;
+	std::unique_ptr<InputManager> input;
 	Texture* tex;
 	Texture* tex2;
-	Sprite sprite;
-	Sprite sprite2;
+	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> sprite2;
 	GLFWwindow* window;
-	Hud hud;
+	std::unique_ptr<Hud> hud;
 	Shader* sh;
 public:
 	Main(GLFWwindow* window, int width, int height);

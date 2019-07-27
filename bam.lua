@@ -1,5 +1,25 @@
+Import("configure.lua")
+
+--- Setup Config -------
+config = NewConfig()
+config:Add(OptCCompiler("compiler"))
+config:Finalize("config.lua")
+
 settings = NewSettings()
-settings.cc.flags_cxx:Add("-std=c++14")
+
+compiler = config.compiler.driver
+if compiler == "gcc" then
+	SetDriversGCC(settings)
+	settings.cc.flags_cxx:Add("-std=c++17")
+elseif compiler == "clang" then
+	SetDriversClang(settings)
+elseif compiler == "cl" then
+	SetDriversCL(settings)
+else
+	-- apply compiler settings
+	config.compiler:Apply(settings)
+	compiler = config.compiler.driver
+end
 
 if platform == "macosx" then
 	settings.link.libs:Add("glfw")

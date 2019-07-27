@@ -1,13 +1,15 @@
 #pragma once
 
-#include "pm.hpp"
+struct GLFWwindow;
 
-class InputManager {
-private:
-	GLFWwindow* window;
-public:
-	InputManager(GLFWwindow* window);
-	InputManager();
-	~InputManager();
-	void update();
-};
+namespace pm {
+	class InputManager {
+	private:
+		GLFWwindow* window;
+	public:
+		InputManager(GLFWwindow* window);
+		InputManager();
+		~InputManager();
+		void update();
+	};
+}

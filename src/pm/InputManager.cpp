@@ -1,4 +1,7 @@
 #include "InputManager.hpp"
+#include "pm.hpp"
+
+using namespace pm;
 
 InputManager::InputManager(GLFWwindow* window) {
 	this->window = window;
