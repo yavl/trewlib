@@ -35,3 +35,8 @@ if(WIN32)
 	include_directories(pmEngine ../extlibs/include)
 	target_link_libraries (pmEngine opengl32)
 endif()
+
+if(APPLE)
+	include_directories(pmEngine ../extlibs/include)
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit -L../extlibs/libs-mac -lglfw3")
+endif()
