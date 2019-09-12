@@ -1,13 +1,12 @@
 #pragma once
 
-struct GLFWwindow;
-
 namespace pm {
+	class WindowManager;
 	class InputManager {
 	private:
-		GLFWwindow* window;
+		WindowManager* window;
 	public:
-		InputManager(GLFWwindow* window);
+		InputManager(WindowManager* window);
 		InputManager();
 		~InputManager();
 		void update();

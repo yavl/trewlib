@@ -4,23 +4,23 @@
 #include "Coord.hpp"
 
 namespace pm {
+	class WindowManager;
 	class Camera {
 	private:
-		GLFWwindow * window;
-		float cam_speed;
-		float winwidth, winheight;
+		WindowManager* window;
+		float camSpeed;
+		float winWidth, winHeight;
 		float x, y;
-		Coord drag_new, drag_old;
-		int old_state;
+		Coord dragNew, dragOld;
+		int oldState;
 	public:
 		glm::mat4 projection_matrix;
 		static float zoom;
 
-		Camera(GLFWwindow* window, int width, int height);
-		Camera();
-		~Camera();
+		Camera(WindowManager* window, int width, int height);
+		~Camera() = default;
 		void update(float dt);
-		void update_window_data(int width, int height);
+		void updateWindowData(int width, int height);
 		void set_position(float x, float y);
 		void translate(float x, float y);
 		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);

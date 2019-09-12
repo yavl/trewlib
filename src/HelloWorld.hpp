@@ -9,6 +9,7 @@ namespace pm {
 	class Sprite;
 	class InputManager;
 	class Hud;
+	class WindowManager;
 }
 
 using namespace pm;
@@ -23,11 +24,11 @@ private:
 	Texture* tex2;
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Sprite> sprite2;
-	GLFWwindow* window;
+	WindowManager* window;
 	std::unique_ptr<Hud> hud;
 	Shader* sh;
 public:
-	Main(GLFWwindow* window, int width, int height);
+	Main(WindowManager* window);
 	~Main();
 	void create();
 	void render(float dt);

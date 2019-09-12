@@ -1,9 +1,10 @@
 #include "InputManager.hpp"
 #include "pm.hpp"
+#include "WindowManager.hpp"
 
 using namespace pm;
 
-InputManager::InputManager(GLFWwindow* window) {
+InputManager::InputManager(WindowManager* window) {
 	this->window = window;
 }
 
@@ -13,6 +14,6 @@ InputManager::~InputManager() {
 }
 
 void InputManager::update() {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(window->getGlfwWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window->getGlfwWindow(), true);
 }

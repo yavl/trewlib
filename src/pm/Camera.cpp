@@ -1,59 +1,56 @@
 #include "Camera.hpp"
+#include "WindowManager.hpp"
 
 using namespace pm;
 
-Camera::Camera(GLFWwindow* window, int width, int height) {
+Camera::Camera(WindowManager* window, int width, int height) {
 	this->window = window;
-	this->cam_speed = 500.0f;
-	this->winwidth = (float) width;
-	this->winheight = (float) height;
+	this->camSpeed = 500.0f;
+	this->winWidth = (float) width;
+	this->winHeight = (float) height;
 	this->x = 0.0f;
 	this->y = 0.0f;
-	projection_matrix = glm::ortho(-winwidth * zoom, winwidth * zoom, -winheight * zoom, winheight * zoom, -1.0f, 1.0f);
-	glfwSetScrollCallback(window, scroll_callback);
-	old_state = GLFW_RELEASE;
-}
-
-Camera::Camera() {}
-
-Camera::~Camera() {
+	projection_matrix = glm::ortho(-winWidth * zoom, winWidth * zoom, -winHeight * zoom, winHeight * zoom, -1.0f, 1.0f);
+	glfwSetScrollCallback(window->getGlfwWindow(), scroll_callback);
+	oldState = GLFW_RELEASE;
 }
 
 void Camera::update(float dt) {
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		y -= cam_speed * dt * zoom;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		x += cam_speed * dt * zoom;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		y += cam_speed * dt * zoom;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		x -= cam_speed * dt * zoom;
+	auto win = window->getGlfwWindow();
+	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
+		y -= camSpeed * dt * zoom;
+	if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
+		x += camSpeed * dt * zoom;
+	if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
+		y += camSpeed * dt * zoom;
+	if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
+		x -= camSpeed * dt * zoom;
 
-	int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
+	int state = glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE);
 	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
+	glfwGetCursorPos(win, &xpos, &ypos);
 	int mouseX = (int)xpos;
 	int mouseY = (int)ypos;
-	if (state == GLFW_PRESS && old_state == GLFW_RELEASE) {
-		drag_new = Coord(mouseX, mouseY);
-		drag_old = drag_new;
+	if (state == GLFW_PRESS && oldState == GLFW_RELEASE) {
+		dragNew = Coord(mouseX, mouseY);
+		dragOld = dragNew;
 	}
 	if (state == GLFW_PRESS) {
-		drag_new = Coord(mouseX, mouseY);
-		if (drag_new != drag_old) {
-			this->translate((drag_old.x - drag_new.x) * zoom*2, (drag_new.y - drag_old.y) * zoom*2);
-			drag_old = drag_new;
+		dragNew = Coord(mouseX, mouseY);
+		if (dragNew != dragOld) {
+			this->translate((dragOld.x - dragNew.x) * zoom*2, (dragNew.y - dragOld.y) * zoom*2);
+			dragOld = dragNew;
 		}		
 	}
-	old_state = state;
+	oldState = state;
 
-	projection_matrix = glm::ortho(-winwidth * zoom, winwidth * zoom, -winheight * zoom, winheight * zoom, -1.0f, 1.0f);
+	projection_matrix = glm::ortho(-winWidth * zoom, winWidth * zoom, -winHeight * zoom, winHeight * zoom, -1.0f, 1.0f);
 	projection_matrix = glm::translate(projection_matrix, glm::vec3(x, y, 0));
 }
 
-void Camera::update_window_data(int width, int height) {
-	this->winwidth = (float) width;
-	this->winheight = (float) height;
+void Camera::updateWindowData(int width, int height) {
+	this->winWidth = (float) width;
+	this->winHeight = (float) height;
 }
 
 void Camera::set_position(float x, float y) {

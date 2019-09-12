@@ -19,7 +19,7 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
 	if (!success || !vert_file.is_open()) {
 		glGetShaderInfoLog(vertex_shader, 512, nullptr, infoLog);
-		fmt::print("[ERROR] ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", infoLog);
+		fmt::print("[ERROR] vertex shader compilation failed: {}\n", infoLog);
 	}
 	else {
 		fmt::print("[SUCCESS] <{}> succesfully compiled\n", vert_path);
@@ -34,7 +34,7 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
 	if (!success || !frag_file.is_open()) {
 		glGetShaderInfoLog(fragment_shader, 512, nullptr, infoLog);
-		fmt::print("[ERROR] ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", infoLog);
+		fmt::print("[ERROR] fragment shader compilation failed: {}\n", infoLog);
 	}
 	else {
 		fmt::print("[SUCCESS] <{}> succesfully compiled\n", frag_path);
@@ -49,11 +49,7 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 	glDeleteShader(fragment_shader);
 }
 
-Shader::~Shader() {
-
-}
-
-GLuint Shader::get_shader_program() {
+GLuint Shader::getShaderProgram() {
 	return shaderProgram;
 }
 
@@ -61,23 +57,29 @@ void Shader::use() {
 	glUseProgram(shaderProgram);
 }
 
-void Shader::set_uniform(const char* uniform_name, glm::mat4 uniform_mat4) {\
+void Shader::setUniform(const char* uniform_name, glm::mat4 uniform_mat4) {
 	GLuint id = glGetUniformLocation(shaderProgram, uniform_name);
-	if (id == -1)
+	if (id == -1) {
 		fmt::print("Error: glGetUniformLocation {}\n", uniform_name);
+	}
+	assert(id != -1);
 	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(uniform_mat4));
 }
 
-void Shader::set_uniform(const char* uniform_name, GLint uniform_i) {\
+void Shader::setUniform(const char* uniform_name, GLint uniform_i) {
 	GLuint id = glGetUniformLocation(shaderProgram, uniform_name);
-	if (id == -1)
+	if (id == -1) {
 		fmt::print("Error: glGetUniformLocation {}\n", uniform_name);
+	}
+	assert(id != -1);
 	glUniform1i(id, uniform_i);
 }
 
-void Shader::set_uniform(const char* uniform_name, GLfloat uniform_fv[4]) {\
+void Shader::setUniform(const char* uniform_name, GLfloat uniform_fv[4]) {
 	GLuint id = glGetUniformLocation(shaderProgram, uniform_name);
-	if (id == -1)
+	if (id == -1) {
 		fmt::print("Error: glGetUniformLocation {}\n", uniform_name);
+	}
+	assert(id != -1);
 	glUniform4fv(id, 4, uniform_fv);
 }

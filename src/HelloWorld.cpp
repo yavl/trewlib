@@ -5,10 +5,11 @@
 #include "pm/Camera.hpp"
 #include "pm/Shader.hpp"
 #include "pm/InputManager.hpp"
+#include "pm/WindowManager.hpp"
 
-Main::Main(GLFWwindow* window, int width, int height) {
+Main::Main(WindowManager* window) {
 	this->window = window;
-	cam = std::make_unique<Camera>(window, width, height);
+	cam = std::make_unique<Camera>(window, window->getWidth(), window->getHeight());
 	input = std::make_unique<InputManager>(window);
 }
 
@@ -20,7 +21,7 @@ void Main::create() {
 
 	sprite = std::make_unique<Sprite>(tex);
 	sprite2 = std::make_unique<Sprite>(tex2);
-    hud = std::make_unique<Hud>(window);
+    hud = std::make_unique<Hud>(window->getGlfwWindow());
 }
 
 void Main::render(float dt) {
@@ -32,7 +33,7 @@ void Main::render(float dt) {
 }
 
 void Main::resize(int width, int height) {
-	cam->update_window_data(width, height);
+	cam->updateWindowData(width, height);
 }
 
 Main::~Main() {
