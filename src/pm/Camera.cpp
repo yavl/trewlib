@@ -5,32 +5,32 @@ using namespace pm;
 
 Camera::Camera(WindowManager* window, int width, int height) {
 	this->window = window;
-	this->camSpeed = 500.0f;
-	this->winWidth = (float) width;
-	this->winHeight = (float) height;
-	this->x = 0.0f;
-	this->y = 0.0f;
+	camSpeed = 500.0f;
+	zoomFactor = 0.15f;
+	int winWidth = window->getWidth();
+	int winHeight = window->getHeight();
 	projection_matrix = glm::ortho(-winWidth * zoom, winWidth * zoom, -winHeight * zoom, winHeight * zoom, -1.0f, 1.0f);
 	glfwSetScrollCallback(window->getGlfwWindow(), scroll_callback);
 	oldState = GLFW_RELEASE;
 }
 
 void Camera::update(float dt) {
+	// todo cleanup
 	auto win = window->getGlfwWindow();
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
-		y -= camSpeed * dt * zoom;
+		pos.y -= camSpeed * dt * zoom;
 	if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
-		x += camSpeed * dt * zoom;
+		pos.x += camSpeed * dt * zoom;
 	if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
-		y += camSpeed * dt * zoom;
+		pos.y += camSpeed * dt * zoom;
 	if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
-		x -= camSpeed * dt * zoom;
+		pos.x -= camSpeed * dt * zoom;
 
 	int state = glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE);
 	double xpos, ypos;
 	glfwGetCursorPos(win, &xpos, &ypos);
-	int mouseX = (int)xpos;
-	int mouseY = (int)ypos;
+	float mouseX = static_cast<float>(xpos);
+	float mouseY = static_cast<float>(ypos);
 	if (state == GLFW_PRESS && oldState == GLFW_RELEASE) {
 		dragNew = Coord(mouseX, mouseY);
 		dragOld = dragNew;
@@ -44,23 +44,21 @@ void Camera::update(float dt) {
 	}
 	oldState = state;
 
+	// todo fix projection_matrix
+	int winWidth = window->getWidth();
+	int winHeight = window->getHeight();
 	projection_matrix = glm::ortho(-winWidth * zoom, winWidth * zoom, -winHeight * zoom, winHeight * zoom, -1.0f, 1.0f);
-	projection_matrix = glm::translate(projection_matrix, glm::vec3(x, y, 0));
+	projection_matrix = glm::translate(projection_matrix, glm::vec3(pos.x, pos.y, 0));
 }
 
-void Camera::updateWindowData(int width, int height) {
-	this->winWidth = (float) width;
-	this->winHeight = (float) height;
-}
-
-void Camera::set_position(float x, float y) {
-	this->x = x;
-	this->y = y;
+void Camera::setPosition(float x, float y) {
+	pos.x = x;
+	pos.y = y;
 }
 
 void Camera::translate(float x, float y) {
-	this->x -= x;
-	this->y -= y;
+	pos.x -= x;
+	pos.y -= y;
 }
 
 void Camera::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {

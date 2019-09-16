@@ -10,14 +10,14 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	FileManager vert_file(vert_path);
-	std::string vert_str = vert_file.as_string();
+	std::string vert_str = vert_file.asString();
 	const char* vert = vert_str.c_str();
 	glShaderSource(vertex_shader, 1, &vert, nullptr);
 	glCompileShader(vertex_shader);
 	GLint success;
 	char infoLog[512];
 	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success || !vert_file.is_open()) {
+	if (!success || !vert_file.isOpen()) {
 		glGetShaderInfoLog(vertex_shader, 512, nullptr, infoLog);
 		fmt::print("[ERROR] vertex shader compilation failed: {}\n", infoLog);
 	}
@@ -27,12 +27,12 @@ Shader::Shader(const char* vert_path, const char* frag_path) {
 
 	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	FileManager frag_file(frag_path);
-	std::string frag_str = frag_file.as_string();
+	std::string frag_str = frag_file.asString();
 	const char* frag = frag_str.c_str();
 	glShaderSource(fragment_shader, 1, &frag, nullptr);
 	glCompileShader(fragment_shader);
 	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-	if (!success || !frag_file.is_open()) {
+	if (!success || !frag_file.isOpen()) {
 		glGetShaderInfoLog(fragment_shader, 512, nullptr, infoLog);
 		fmt::print("[ERROR] fragment shader compilation failed: {}\n", infoLog);
 	}

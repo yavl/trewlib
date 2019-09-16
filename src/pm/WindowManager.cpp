@@ -40,26 +40,26 @@ void WindowManager::onResize(int width, int height) {
 	fmt::print("on resize\n");
 }
 
-int WindowManager::getWidth() {
+int WindowManager::getWidth() const {
 	return getSize().first;
 }
 
-int WindowManager::getHeight() {
+int WindowManager::getHeight() const {
 	return getSize().second;
 }
 
-std::pair<int, int> pm::WindowManager::getSize() {
+std::pair<int, int> pm::WindowManager::getSize() const {
 	int width;
 	int height;
 	glfwGetFramebufferSize(window, &width, &height);
 	return std::make_pair(width, height);
 }
 
-bool WindowManager::shouldClose() {
+bool WindowManager::shouldClose() const {
 	return glfwWindowShouldClose(window);
 }
 
-GLFWwindow* WindowManager::getGlfwWindow() {
+GLFWwindow* WindowManager::getGlfwWindow() const {
 	return window;
 }
 

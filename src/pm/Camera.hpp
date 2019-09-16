@@ -9,8 +9,8 @@ namespace pm {
 	private:
 		WindowManager* window;
 		float camSpeed;
-		float winWidth, winHeight;
-		float x, y;
+		float zoomFactor;
+		Coord pos;
 		Coord dragNew, dragOld;
 		int oldState;
 	public:
@@ -18,11 +18,10 @@ namespace pm {
 		static float zoom;
 
 		Camera(WindowManager* window, int width, int height);
-		~Camera() = default;
-		void update(float dt);
-		void updateWindowData(int width, int height);
-		void set_position(float x, float y);
-		void translate(float x, float y);
+		virtual ~Camera() = default;
+		virtual void update(float dt);
+		virtual void setPosition(float x, float y);
+		virtual void translate(float x, float y);
 		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	};
 }

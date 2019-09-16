@@ -10,8 +10,8 @@ namespace pm {
 		std::ifstream fin;
 	public:
 		FileManager(const char* path);
-		~FileManager();
-		std::string as_string();
-		bool is_open() const;
+		virtual ~FileManager() = default;
+		virtual std::string asString();
+		virtual bool isOpen() const;
 	};
 }

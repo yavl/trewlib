@@ -86,6 +86,6 @@ void Texture::draw(float x, float y) {
 	glBindVertexArray(0);
 }
 
-void Texture::set_shader(Shader* shader) {
+void Texture::setShader(Shader* shader) {
 	this->shader = shader;
 }

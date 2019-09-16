@@ -10,6 +10,6 @@ namespace pm {
 	public:
 		Sprite(Texture* tex);
 		virtual ~Sprite() = default;
-		void draw();
+		virtual void draw();
 	};
 }

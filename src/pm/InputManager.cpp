@@ -8,11 +8,6 @@ InputManager::InputManager(WindowManager* window) {
 	this->window = window;
 }
 
-InputManager::InputManager() {}
-
-InputManager::~InputManager() {
-}
-
 void InputManager::update() {
 	if (glfwGetKey(window->getGlfwWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window->getGlfwWindow(), true);

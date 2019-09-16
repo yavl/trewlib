@@ -4,12 +4,13 @@ namespace pm {
 	class Coord {
 	private:
 	public:
-		int x, y;
-		Coord(int x, int y);
+		float x;
+		float y;
 		Coord();
-		~Coord();
-		bool equals(Coord coord) const;
-		bool operator==(const Coord& b) const;
-		bool operator!=(const Coord& b) const;
+		virtual ~Coord() = default;
+		Coord(float x, float y);
+		virtual bool equals(Coord coord) const;
+		virtual bool operator==(const Coord& b) const;
+		virtual bool operator!=(const Coord& b) const;
 	};
 }

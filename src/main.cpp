@@ -8,13 +8,13 @@
 using namespace pm;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-Main* m;
+HelloWorld* m;
 
 int main() {
 	auto window = std::make_unique<WindowManager>();
 	window->createWindow("hello", 800, 600);
 
-	m = new Main(window.get());
+	m = new HelloWorld(window.get());
 	m->create();
 
 	double lastFrame = 0.0;
@@ -28,7 +28,7 @@ int main() {
         
         frameCount++;
         if (currentFrame - prevTime >= 1.0f) {
-            fmt::print("{} fps\n", frameCount);
+            //fmt::print("{} fps\n", frameCount);
             frameCount = 0;
             prevTime = currentFrame;
         }

@@ -16,20 +16,17 @@ using namespace pm;
 
 struct GLFWwindow;
 
-class Main {
+class HelloWorld {
 private:
 	std::unique_ptr<Camera> cam;
 	std::unique_ptr<InputManager> input;
 	Texture* tex;
-	Texture* tex2;
 	std::unique_ptr<Sprite> sprite;
-	std::unique_ptr<Sprite> sprite2;
 	WindowManager* window;
-	std::unique_ptr<Hud> hud;
 	Shader* sh;
 public:
-	Main(WindowManager* window);
-	~Main();
+	HelloWorld(WindowManager* window);
+	virtual ~HelloWorld() = default;
 	void create();
 	void render(float dt);
 	void resize(int width, int height);

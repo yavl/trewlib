@@ -2,14 +2,15 @@
 
 using namespace pm;
 
-Coord::Coord(int x, int y) {
+Coord::Coord() {
+	x = 0.f;
+	y = 0.f;
+}
+
+Coord::Coord(float x, float y) {
 	this->x = x;
 	this->y = y;
 }
-
-Coord::Coord() {}
-
-Coord::~Coord() {}
 
 bool Coord::equals(Coord coord) const {
 	if (x == coord.x && y == coord.y)

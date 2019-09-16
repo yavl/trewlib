@@ -9,15 +9,12 @@ FileManager::FileManager(const char* path) {
 		fmt::print("[ERROR] Could not read file: {}\n", path);
 }
 
-FileManager::~FileManager() {
-}
-
-std::string FileManager::as_string() {
+std::string FileManager::asString() {
 	std::stringstream sstr;
 	sstr << fin.rdbuf();
 	return sstr.str();
 }
 
-bool FileManager::is_open() const {
+bool FileManager::isOpen() const {
 	return fin.is_open();
 }

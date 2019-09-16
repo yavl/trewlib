@@ -14,11 +14,11 @@ namespace pm {
 		virtual ~WindowManager();
 		virtual void createWindow(std::string title, int width, int height);
 		virtual void onResize(int width, int height);
-		virtual int getWidth();
-		virtual int getHeight();
-		virtual std::pair<int, int> getSize();
-		virtual bool shouldClose();
-		virtual GLFWwindow* getGlfwWindow();
+		virtual int getWidth() const;
+		virtual int getHeight() const;
+		virtual std::pair<int, int> getSize() const;
+		virtual bool shouldClose() const;
+		virtual GLFWwindow* getGlfwWindow() const;
 		static void framebuffer_size_callback(GLFWwindow*, int width, int height);
 	};
 }

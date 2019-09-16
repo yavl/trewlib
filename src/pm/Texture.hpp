@@ -17,8 +17,8 @@ namespace pm {
 		float x, y;
 	public:
 		Texture(const char* path, Shader* shader, Camera* cam);
-		~Texture();
-		void draw(float x, float y);
-		void set_shader(Shader* shader);
+		virtual ~Texture();
+		virtual void draw(float x, float y);
+		virtual void setShader(Shader* shader);
 	};
 }

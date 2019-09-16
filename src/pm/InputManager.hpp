@@ -7,8 +7,8 @@ namespace pm {
 		WindowManager* window;
 	public:
 		InputManager(WindowManager* window);
-		InputManager();
-		~InputManager();
-		void update();
+		InputManager() = default;
+		virtual ~InputManager() = default;
+		virtual void update();
 	};
 }
