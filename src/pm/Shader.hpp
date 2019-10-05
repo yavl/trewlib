@@ -1,18 +1,26 @@
 #pragma once
 
 #include "pm.hpp"
+#include "Asset.hpp"
+#include <fmt/core.h>
 
 namespace pm {
-	class Shader {
-	private:
-		GLuint shaderProgram;
+	class Shader : public Asset {
 	public:
-		Shader(const char* vert_path, const char* frag_path);
+		Shader(std::string vertShaderSource, std::string fragShaderSource);
 		virtual ~Shader() = default;
 		virtual GLuint getShaderProgram();
+		virtual void compile();
 		virtual void use();
-		virtual void setUniform(const char* uniform_name, glm::mat4 uniform_mat4);
-		virtual void setUniform(const char* uniform_name, GLint uniform_i);
-		virtual void setUniform(const char* uniform_name, GLfloat uniform_fv[4]);
+		virtual void setPathInfos(std::string vertPath, std::string fragPath);
+		virtual void setUniform(const char* uniformName, glm::mat4 uniform_mat4);
+		virtual void setUniform(const char* uniformName, GLint uniform_i);
+		virtual void setUniform(const char* uniformName, GLfloat uniform_fv[4]);
+	private:
+		GLuint shaderProgram;
+		std::string vertShaderSource;
+		std::string fragShaderSource;
+		std::string vertPath;
+		std::string fragPath;
 	};
 }

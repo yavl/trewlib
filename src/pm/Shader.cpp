@@ -1,50 +1,52 @@
 #include "Shader.hpp"
 #include "FileManager.hpp"
+#include "Logger.hpp"
 
 using namespace pm;
 
-Shader::Shader(const char* vert_path, const char* frag_path) {
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		fmt::print("Failed to initialize GLAD\n");
-	}
+const std::string logTag = "Shader";
 
+Shader::Shader(std::string vertShaderSource, std::string fragShaderSource) {
+	this->vertShaderSource = vertShaderSource;
+	this->fragShaderSource = fragShaderSource;
+}
+
+void Shader::compile() {
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		logError("Shader", "Failed to initialize GLAD\n");
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	FileManager vert_file(vert_path);
-	std::string vert_str = vert_file.asString();
-	const char* vert = vert_str.c_str();
-	glShaderSource(vertex_shader, 1, &vert, nullptr);
+	auto vertStr = vertShaderSource.c_str();
+	glShaderSource(vertex_shader, 1, &vertStr, nullptr);
 	glCompileShader(vertex_shader);
 	GLint success;
 	char infoLog[512];
 	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success || !vert_file.isOpen()) {
+	if (!success) {
 		glGetShaderInfoLog(vertex_shader, 512, nullptr, infoLog);
-		fmt::print("[ERROR] vertex shader compilation failed: {}\n", infoLog);
+		logError(logTag, fmt::format("<{}> vertex shader compilation failed: {}", infoLog));
 	}
 	else {
-		fmt::print("[SUCCESS] <{}> succesfully compiled\n", vert_path);
+		log(logTag, fmt::format("<{}> succesfully compiled", vertPath));
 	}
 
 	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	FileManager frag_file(frag_path);
-	std::string frag_str = frag_file.asString();
-	const char* frag = frag_str.c_str();
-	glShaderSource(fragment_shader, 1, &frag, nullptr);
+	auto fragStr = fragShaderSource.c_str();
+	glShaderSource(fragment_shader, 1, &fragStr, nullptr);
 	glCompileShader(fragment_shader);
 	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-	if (!success || !frag_file.isOpen()) {
+	if (!success) {
 		glGetShaderInfoLog(fragment_shader, 512, nullptr, infoLog);
-		fmt::print("[ERROR] fragment shader compilation failed: {}\n", infoLog);
+		logError(logTag, fmt::format("<{}> fragment shader compilation failed: {}", infoLog));
 	}
 	else {
-		fmt::print("[SUCCESS] <{}> succesfully compiled\n", frag_path);
+		log(logTag, fmt::format("<{}> succesfully compiled", fragPath));
 	}
 
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertex_shader);
 	glAttachShader(shaderProgram, fragment_shader);
 	glLinkProgram(shaderProgram);
-	
+
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 }
@@ -57,28 +59,33 @@ void Shader::use() {
 	glUseProgram(shaderProgram);
 }
 
-void Shader::setUniform(const char* uniform_name, glm::mat4 uniform_mat4) {
-	GLuint id = glGetUniformLocation(shaderProgram, uniform_name);
+void Shader::setPathInfos(std::string vertPath, std::string fragPath) {
+	this->vertPath = vertPath;
+	this->fragPath = fragPath;
+}
+
+void Shader::setUniform(const char* uniformName, glm::mat4 uniform_mat4) {
+	GLuint id = glGetUniformLocation(shaderProgram, uniformName);
 	if (id == -1) {
-		fmt::print("Error: glGetUniformLocation {}\n", uniform_name);
+		logError(logTag, fmt::format("error: glGetUniformLocation {}\n", uniformName));
 	}
 	assert(id != -1);
 	glUniformMatrix4fv(id, 1, GL_FALSE, glm::value_ptr(uniform_mat4));
 }
 
-void Shader::setUniform(const char* uniform_name, GLint uniform_i) {
-	GLuint id = glGetUniformLocation(shaderProgram, uniform_name);
+void Shader::setUniform(const char* uniformName, GLint uniform_i) {
+	GLuint id = glGetUniformLocation(shaderProgram, uniformName);
 	if (id == -1) {
-		fmt::print("Error: glGetUniformLocation {}\n", uniform_name);
+		logError(logTag, fmt::format("error: glGetUniformLocation {}\n", uniformName));
 	}
 	assert(id != -1);
 	glUniform1i(id, uniform_i);
 }
 
-void Shader::setUniform(const char* uniform_name, GLfloat uniform_fv[4]) {
-	GLuint id = glGetUniformLocation(shaderProgram, uniform_name);
+void Shader::setUniform(const char* uniformName, GLfloat uniform_fv[4]) {
+	GLuint id = glGetUniformLocation(shaderProgram, uniformName);
 	if (id == -1) {
-		fmt::print("Error: glGetUniformLocation {}\n", uniform_name);
+		logError(logTag, fmt::format("error: glGetUniformLocation {}\n", uniformName));
 	}
 	assert(id != -1);
 	glUniform4fv(id, 4, uniform_fv);

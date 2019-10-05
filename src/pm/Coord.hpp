@@ -2,7 +2,6 @@
 
 namespace pm {
 	class Coord {
-	private:
 	public:
 		float x;
 		float y;
@@ -12,5 +11,6 @@ namespace pm {
 		virtual bool equals(Coord coord) const;
 		virtual bool operator==(const Coord& b) const;
 		virtual bool operator!=(const Coord& b) const;
+	private:
 	};
 }

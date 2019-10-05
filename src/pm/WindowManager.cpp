@@ -1,5 +1,6 @@
 #include "WindowManager.hpp"
 #include "pm.hpp"
+#include <fmt/core.h>
 
 using namespace pm;
 

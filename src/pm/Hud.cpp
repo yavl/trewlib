@@ -1,6 +1,7 @@
 #include "Hud.hpp"
 #include <algorithm>
 #include <thread>
+#include <fmt/core.h>
 
 using namespace pm;
 

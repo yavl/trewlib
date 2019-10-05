@@ -30,6 +30,7 @@ add_executable(pmEngine ${SRC} ${SRC_pm} ${SRC_imgui} ${SRC_glad})
 source_group("imgui" FILES ${SRC_imgui})
 source_group("glad" FILES ${SRC_glad})
 source_group("pm" FILES ${SRC_pm})
+source_group("game" FILES ${SRC})
 
 if(WIN32)
 	include_directories(pmEngine ../extlibs/include)

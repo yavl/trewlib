@@ -7,14 +7,14 @@
 
 namespace pm {
 	class Hud {
-	private:
-		bool show_window;
-		ImVec4 clear_color;
-		ImFont* font;
 	public:
 		Hud();
 		Hud(GLFWwindow* window);
 		~Hud();
 		void display();
+	private:
+		bool show_window;
+		ImVec4 clear_color;
+		ImFont* font;
 	};
 }

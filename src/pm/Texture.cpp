@@ -3,42 +3,46 @@
 #include <stb_image.h>
 #include "Camera.hpp"
 #include "Shader.hpp"
+#include "Logger.hpp"
 
 using namespace pm;
 
-Texture::Texture(const char* path, Shader* shader, Camera* cam) {
+const std::string logTag = "Texture";
+
+Texture::Texture(std::string path) {
 	this->name = path;
-	this->shader = shader;
-	this->cam = cam;
-	this->matrix = glm::mat4(1.0f);
-	this->x = 0.0f;
-	this->y = 0.0f;
+	this->matrix = glm::mat4(1.f);
+	this->x = 0.f;
+	this->y = 0.f;
+	shader = nullptr;
+	cam = nullptr;
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	stbi_set_flip_vertically_on_load(true);
-	this->image = stbi_load(path, &width, &height, 0, STBI_rgb_alpha);
+	this->image = stbi_load(path.c_str(), &width, &height, 0, STBI_rgb_alpha);
 	if (this->image) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		fmt::print("[LOADED] Texture <{}> with size: {}x{}\n", name, width, height);
+		log(logTag, fmt::format("<{}> loaded with size: {}x{}", name, width, height));
 	}
 	else {
-        fmt::print("[ERROR] Can't load texture <{}>", name);
+		logError(logTag, fmt::format("error loading <{}>", name));
 	}
 	stbi_image_free(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	// todo write and use SpriteBatch instead of below lines
 	float widthf = (float)width;
 	float heightf = (float)height;
 
 	float vertices[] = {
 		 // positions			 // colors           // texture coords
-		 widthf,  heightf, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-		 widthf, -heightf, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-		-widthf, -heightf, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-		-widthf,  heightf, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+		 widthf,  heightf, 0.f,   1.f, 0.f, 0.f,   1.f, 1.f, // top right
+		 widthf, -heightf, 0.f,   0.f, 1.f, 0.f,   1.f, 0.f, // bottom right
+		-widthf, -heightf, 0.f,   0.f, 0.f, 1.f,   0.f, 0.f, // bottom left
+		-widthf,  heightf, 0.f,   1.f, 1.f, 0.f,   0.f, 1.f  // top left 
 	};
 	
 	unsigned int indices[] = {
@@ -74,12 +78,13 @@ Texture::~Texture() {
 }
 
 void Texture::draw(float x, float y) {
+	// todo draw with spritebatch instead of this
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	shader->use();
 	matrix = glm::mat4(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(x, y, 0));
-	shader->setUniform("u_projTrans", cam->projection_matrix * matrix);
+	shader->setUniform("u_projTrans", cam->projection_matrix * matrix); // todo fix that
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -88,4 +93,8 @@ void Texture::draw(float x, float y) {
 
 void Texture::setShader(Shader* shader) {
 	this->shader = shader;
+}
+
+void Texture::setCamera(Camera* cam) {
+	this->cam = cam;
 }

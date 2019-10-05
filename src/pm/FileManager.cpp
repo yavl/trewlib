@@ -1,12 +1,13 @@
 #include "FileManager.hpp"
 #include <sstream>
+#include "Logger.hpp"
+#include <fmt/core.h>
 
 using namespace pm;
 
-FileManager::FileManager(const char* path) {
-	fin.open(path);
+FileManager::FileManager(const char* path) : fin(path) {
 	if (!fin)
-		fmt::print("[ERROR] Could not read file: {}\n", path);
+		logError("FileManager", fmt::format("Could not read file: {}\n", path));
 }
 
 std::string FileManager::asString() {

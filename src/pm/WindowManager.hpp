@@ -7,8 +7,6 @@ struct GLFWwindow;
 namespace pm {
 	// A wrapper class to handle single window
 	class WindowManager {
-	private:
-		GLFWwindow* window;
 	public:
 		WindowManager();
 		virtual ~WindowManager();
@@ -20,5 +18,7 @@ namespace pm {
 		virtual bool shouldClose() const;
 		virtual GLFWwindow* getGlfwWindow() const;
 		static void framebuffer_size_callback(GLFWwindow*, int width, int height);
+	private:
+		GLFWwindow* window;
 	};
 }

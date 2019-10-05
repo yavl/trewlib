@@ -6,6 +6,8 @@
 #include "pm/Shader.hpp"
 #include "pm/InputManager.hpp"
 #include "pm/WindowManager.hpp"
+#include "pm/AssetManager.hpp"
+#include "pm/Logger.hpp"
 
 HelloWorld::HelloWorld(WindowManager* window) {
 	this->window = window;
@@ -14,10 +16,18 @@ HelloWorld::HelloWorld(WindowManager* window) {
 }
 
 void HelloWorld::create() {
-	Shader* sh = new Shader("default.vert", "default.frag");
+	assets = new AssetManager("assets");
+	assets->load("default", AssetType::SHADER);
+	assets->load("tex.png", AssetType::TEXTURE);
 
-	tex = new Texture("tex.png", sh, cam.get());
+	Shader* sh = assets->getShader("default").value();
+	tex = assets->getTexture("tex.png").value();
+	tex->setShader(sh);
+	tex->setCamera(cam.get());
 	sprite = std::make_unique<Sprite>(tex);
+
+	logDebug("hwasas", "asd");
+	logError("qweqwee", "aswed");
 }
 
 void HelloWorld::render(float dt) {
