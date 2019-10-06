@@ -1,7 +1,4 @@
 #include "Logger.hpp"
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
-#include <fmt/color.h>
 
 using namespace pm;
 
@@ -18,7 +15,7 @@ void Logger::log(std::string tag, std::string message) {
 	std::string logTag = fmt::format("[INFO]");
 	fmt::print("{:>10}", logTag);
 	std::string messageTag = fmt::format("[{}]", tag);
-	fmt::print("{:>10} {}\n", messageTag, message);
+	fmt::print("{} {}\n", messageTag, message);
 }
 
 void pm::Logger::error(std::string tag, std::string message) {
@@ -27,7 +24,7 @@ void pm::Logger::error(std::string tag, std::string message) {
 	std::string errorTag = fmt::format("[ERROR]");
 	fmt::print("{:>10}", errorTag);
 	std::string messageTag = fmt::format("[{}]", tag);
-	fmt::print("{:>10} {}\n", messageTag, message);
+	fmt::print("{} {}\n", messageTag, message);
 }
 
 void pm::Logger::debug(std::string tag, std::string message) {
@@ -36,7 +33,7 @@ void pm::Logger::debug(std::string tag, std::string message) {
 	std::string debugTag = fmt::format("[DEBUG]");
 	fmt::print("{:>10}", debugTag);
 	std::string messageTag = fmt::format("[{}]", tag);
-	fmt::print("{:>10} {}\n", messageTag, message);
+	fmt::print("{} {}\n", messageTag, message);
 }
 
 void Logger::setLogLevel(LogLevel logLevel) {

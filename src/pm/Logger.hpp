@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#define FMT_HEADER_ONLY
+#include <fmt/format.h>
 
 namespace pm {
 	enum class LogLevel {

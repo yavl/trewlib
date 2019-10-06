@@ -1,6 +1,6 @@
 #include "WindowManager.hpp"
 #include "pm.hpp"
-#include <fmt/core.h>
+#include "Logger.hpp"
 
 using namespace pm;
 
@@ -24,7 +24,7 @@ void WindowManager::createWindow(std::string title, int width, int height) {
 
 	window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (!window) {
-		fmt::print("Failed to create GLFW window");
+		logError("WindowManager", "Failed to create GLFW window");
 		glfwTerminate();
 	}
 

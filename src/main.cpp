@@ -16,7 +16,6 @@ int main() {
 
 	m = new HelloWorld(window.get());
 	m->create();
-
 	double lastFrame = 0.0;
 	double currentFrame, dt;
     int frameCount = 0;

@@ -2,7 +2,7 @@
 
 #include "pm.hpp"
 #include "Asset.hpp"
-#include <fmt/core.h>
+#include <string>
 
 namespace pm {
 	class Shader : public Asset {

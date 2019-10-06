@@ -1,7 +1,6 @@
 #include "FileManager.hpp"
 #include <sstream>
 #include "Logger.hpp"
-#include <fmt/core.h>
 
 using namespace pm;
 
