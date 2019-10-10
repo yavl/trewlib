@@ -8,6 +8,7 @@
 using namespace pm;
 
 AssetManager::AssetManager(std::string path) {
+    // todo set assets path
 }
 
 AssetManager::~AssetManager() {

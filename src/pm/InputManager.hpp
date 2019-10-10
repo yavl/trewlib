@@ -5,7 +5,6 @@ namespace pm {
 	class InputManager {
 	public:
 		InputManager(WindowManager* window);
-		InputManager() = default;
 		virtual ~InputManager() = default;
 		virtual void update();
 	private:

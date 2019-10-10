@@ -10,5 +10,6 @@ Sprite::Sprite(Texture* texture) {
 }
 
 void Sprite::draw() {
+    // todo draw via spritebatch instead
 	texture->draw(x, y);
 }

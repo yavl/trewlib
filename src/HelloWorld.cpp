@@ -15,19 +15,18 @@ HelloWorld::HelloWorld(WindowManager* window) {
 	input = std::make_unique<InputManager>(window);
 }
 
+HelloWorld::~HelloWorld() {}
+
 void HelloWorld::create() {
 	assets = new AssetManager("assets");
 	assets->load("default", AssetType::SHADER);
 	assets->load("tex.png", AssetType::TEXTURE);
 
-	Shader* sh = assets->getShader("default").value();
-	tex = assets->getTexture("tex.png").value();
+	auto sh = assets->getShader("default").value();
+	auto tex = assets->getTexture("tex.png").value();
 	tex->setShader(sh);
 	tex->setCamera(cam.get());
 	sprite = std::make_unique<Sprite>(tex);
-
-	logDebug("hwasas", "asd");
-	logError("qweqwee", "aswed");
 }
 
 void HelloWorld::render(float dt) {
