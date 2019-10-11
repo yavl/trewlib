@@ -21,18 +21,25 @@ void HelloWorld::create() {
 	assets = new AssetManager("assets");
 	assets->load("default", AssetType::SHADER);
 	assets->load("tex.png", AssetType::TEXTURE);
+	assets->load("tex2.png", AssetType::TEXTURE);
 
 	auto sh = assets->getShader("default").value();
 	auto tex = assets->getTexture("tex.png").value();
 	tex->setShader(sh);
 	tex->setCamera(cam.get());
 	sprite = std::make_unique<Sprite>(tex);
+
+	auto tex2 = assets->getTexture("tex2.png").value();
+	tex2->setShader(sh);
+	tex2->setCamera(cam.get());
+	sprite2 = std::make_unique<Sprite>(tex2);
 }
 
 void HelloWorld::render(float dt) {
 	cam->update(dt);
 	input->update();
 	sprite->draw();
+	sprite2->draw();
 }
 
 void HelloWorld::resize(int width, int height) {

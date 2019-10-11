@@ -28,6 +28,7 @@ private:
 	std::unique_ptr<Camera> cam;
 	std::unique_ptr<InputManager> input;
 	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> sprite2;
 	WindowManager* window;
 	AssetManager* assets;
 };

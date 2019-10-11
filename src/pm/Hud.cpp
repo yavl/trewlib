@@ -1,7 +1,7 @@
 #include "Hud.hpp"
 #include <algorithm>
 #include <thread>
-#include <fmt/core.h>
+#include "Logger.hpp"
 
 using namespace pm;
 
@@ -52,7 +52,7 @@ void Hud::display() {
 		ImGui::InputInt("port", &port);
 		if (ImGui::Button("Connect")) {
 			show_window = false;
-			fmt::print("ip: {}\nport: {}\n", ip, port);
+			log("Hud", fmt::format("ip: {}\nport: {}\n", ip, port));
 			// connection code was here
 		}
 		ImGui::End();
