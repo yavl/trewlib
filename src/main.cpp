@@ -4,15 +4,26 @@
 #include "pm/InputManager.hpp"
 #include "HelloWorld.hpp"
 #include "pm/WindowManager.hpp"
+#include <nlohmann/json.hpp>
+#include "pm/FileHandle.hpp"
+#include "pm/Logger.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace pm;
+using namespace nlohmann;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 HelloWorld* m;
 
 int main() {
+	json j;
+	j["window"]["width"] = 800;
+	j["window"]["height"] = 600;
+	FileHandle("settings.json").writeString(j.dump(4));
+	auto file = FileHandle("settings.json").asString();
+	log("asd", file);
 	auto window = std::make_unique<WindowManager>();
-	window->createWindow("hello", 800, 600);
+	window->createWindow("asd", 800, 600);
 
 	m = new HelloWorld(window.get());
 	m->create();

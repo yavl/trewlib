@@ -1,6 +1,6 @@
 #include "AssetManager.hpp"
 #include <cassert>
-#include "FileManager.hpp"
+#include "FileHandle.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include <fmt/core.h>
@@ -28,8 +28,8 @@ void AssetManager::load(std::string path, AssetType type) {
 		auto fragPathStr = fmt::format("{}.frag", path);
 		const char* vertPath = vertPathStr.c_str();
 		const char* fragPath = fragPathStr.c_str();
-		FileManager vert(vertPath);
-		FileManager frag(fragPath);
+		FileHandle vert(vertPath);
+		FileHandle frag(fragPath);
 		auto ownerVert = vert.asString();
 		auto ownerFrag = frag.asString();
 		auto vertStr = ownerVert.c_str();
