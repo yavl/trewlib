@@ -1,16 +1,36 @@
 #include "Camera.hpp"
 #include "WindowManager.hpp"
+#include <functional>
+#include "Logger.hpp"
 
 using namespace pm;
 
-Camera::Camera(WindowManager* window, int width, int height) {
+Camera::Camera(WindowManager* window, int width, int height) :
+	projection(1.0f),
+	view(1.0f)
+{
 	this->window = window;
 	camSpeed = 500.0f;
 	zoomFactor = 0.15f;
-	int winWidth = window->getWidth();
-	int winHeight = window->getHeight();
-	glfwSetScrollCallback(window->getGlfwWindow(), scroll_callback);
+	zoom = 1.0f;
 	oldState = GLFW_RELEASE;
+
+	window->addScrollCallback([this](GLFWwindow* window, double xoffset, double yoffset) {
+		if (yoffset > 0)
+			zoom += zoomFactor * zoom;
+		else
+			zoom -= zoomFactor * zoom;
+	});
+
+	window->addMouseButtonCallback([this](GLFWwindow* window, int button, int action, int mods) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			double x, y;
+			glfwGetCursorPos(window, &x, &y);
+			auto screenPos = glm::vec2(x, this->window->getHeight() - y);
+			auto world = glm::unProject(glm::vec3(screenPos, 0), view, projection, glm::vec4(0, 0, this->window->getWidth(), this->window->getHeight()));
+			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
+		}
+	});
 }
 
 void Camera::update(float dt) {
@@ -60,11 +80,3 @@ void Camera::translate(float x, float y) {
 	pos.x -= x;
 	pos.y -= y;
 }
-
-void Camera::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-	if (yoffset > 0)
-		zoom += 0.15f * zoom;
-	else zoom -= 0.15f * zoom;
-}
-
-float Camera::zoom = 1.0f;

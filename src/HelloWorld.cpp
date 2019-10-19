@@ -33,7 +33,7 @@ void HelloWorld::create() {
 	tex2->setShader(sh);
 	tex2->setCamera(cam.get());
 	sprite2 = std::make_unique<Sprite>(tex2);
-	sprite2->setXY(0, 300);
+	sprite2->setX(-800);
 
 	hud = std::make_unique<Hud>(window->getGlfwWindow());
 }

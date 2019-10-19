@@ -12,12 +12,9 @@ namespace pm {
 		virtual void update(float dt);
 		virtual void setPosition(float x, float y);
 		virtual void translate(float x, float y);
-		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
         
         glm::mat4 projection;
 		glm::mat4 view;
-		glm::mat4 model;
-        static float zoom;
 	private:
 		WindowManager* window;
 		float camSpeed;
@@ -25,5 +22,6 @@ namespace pm {
 		Coord pos;
 		Coord dragNew, dragOld;
 		int oldState;
+		float zoom;
 	};
 }

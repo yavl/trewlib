@@ -12,14 +12,6 @@ WindowManager::~WindowManager() {
 	glfwTerminate();
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-		log("glfw", fmt::format("Cursor pos: {}, {}", xpos, ypos));
-	}
-}
-
 void WindowManager::createWindow(std::string title, int width, int height) {
 	assert(window == nullptr);
 	glfwInit();
@@ -42,12 +34,8 @@ void WindowManager::createWindow(std::string title, int width, int height) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
-}
-
-void WindowManager::onResize(int width, int height) {
-	glViewport(0, 0, width, height);
-	//fmt::print("on resize\n");
 }
 
 int WindowManager::getWidth() const {
@@ -58,7 +46,7 @@ int WindowManager::getHeight() const {
 	return getSize().second;
 }
 
-std::pair<int, int> pm::WindowManager::getSize() const {
+std::pair<int, int> WindowManager::getSize() const {
 	int width;
 	int height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -73,7 +61,45 @@ GLFWwindow* WindowManager::getGlfwWindow() const {
 	return window;
 }
 
+void WindowManager::addFramebufferSizeCallback(FramebufferSizeCallback&& f) {
+	framebufferSizeCallbacks.emplace_back(f);
+}
+
+void WindowManager::addScrollCallback(ScrollCallback&& f) {
+	scrollCallbacks.emplace_back(f);
+}
+
+void WindowManager::addMouseButtonCallback(MouseButtonCallback&& f) {
+	mouseButtonCallbacks.emplace_back(f);
+}
+
+void WindowManager::onResize(int width, int height) {
+	glViewport(0, 0, width, height);
+	for (auto f : framebufferSizeCallbacks) {
+		f(window, width, height);
+	}
+}
+
+void WindowManager::onScroll(double xoffset, double yoffset) {
+	for (auto f : scrollCallbacks) {
+		f(window, xoffset, yoffset);
+	}
+}
+
+void WindowManager::onMouseButton(int button, int action, int mods) {
+	for (auto f : mouseButtonCallbacks) {
+		f(window, button, action, mods);
+	}
+}
+
 void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onResize(width, height);
 }
 
+void WindowManager::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onScroll(xoffset, yoffset);
+}
+
+void WindowManager::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onMouseButton(button, action, mods);
+}
