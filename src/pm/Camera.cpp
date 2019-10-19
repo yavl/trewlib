@@ -5,7 +5,7 @@
 
 using namespace pm;
 
-Camera::Camera(WindowManager* window, int width, int height) :
+Camera::Camera(std::shared_ptr<WindowManager> window, int width, int height) :
 	projection(1.0f),
 	view(1.0f)
 {
@@ -51,11 +51,11 @@ void Camera::update(float dt) {
 	float mouseX = static_cast<float>(xpos);
 	float mouseY = static_cast<float>(ypos);
 	if (state == GLFW_PRESS && oldState == GLFW_RELEASE) {
-		dragNew = Coord(mouseX, mouseY);
+		dragNew = Vector2(mouseX, mouseY);
 		dragOld = dragNew;
 	}
 	if (state == GLFW_PRESS) {
-		dragNew = Coord(mouseX, mouseY);
+		dragNew = Vector2(mouseX, mouseY);
 		if (dragNew != dragOld) {
 			translate((dragOld.x - dragNew.x) * 2, (dragNew.y - dragOld.y) * 2);
 			dragOld = dragNew;

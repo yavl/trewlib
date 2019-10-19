@@ -1,13 +1,14 @@
 #pragma once
 
 #include "pm.hpp"
-#include "Coord.hpp"
+#include "Vector2.hpp"
+#include <memory>
 
 namespace pm {
 	class WindowManager;
 	class Camera {
 	public:
-		Camera(WindowManager* window, int width, int height);
+		Camera(std::shared_ptr<WindowManager> window, int width, int height);
 		virtual ~Camera() = default;
 		virtual void update(float dt);
 		virtual void setPosition(float x, float y);
@@ -16,11 +17,11 @@ namespace pm {
         glm::mat4 projection;
 		glm::mat4 view;
 	private:
-		WindowManager* window;
+		std::shared_ptr<WindowManager> window;
 		float camSpeed;
 		float zoomFactor;
-		Coord pos;
-		Coord dragNew, dragOld;
+		Vector2 pos;
+		Vector2 dragNew, dragOld;
 		int oldState;
 		float zoom;
 	};

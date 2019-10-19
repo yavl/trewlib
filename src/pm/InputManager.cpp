@@ -4,7 +4,7 @@
 
 using namespace pm;
 
-InputManager::InputManager(WindowManager* window) {
+InputManager::InputManager(std::shared_ptr<WindowManager> window) {
 	this->window = window;
 }
 

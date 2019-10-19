@@ -9,7 +9,7 @@
 #include "pm/AssetManager.hpp"
 #include "pm/Logger.hpp"
 
-HelloWorld::HelloWorld(WindowManager* window) {
+HelloWorld::HelloWorld(std::shared_ptr<WindowManager> window) {
 	this->window = window;
 	cam = std::make_unique<Camera>(window, window->getWidth(), window->getHeight());
 	input = std::make_unique<InputManager>(window);
@@ -18,7 +18,7 @@ HelloWorld::HelloWorld(WindowManager* window) {
 HelloWorld::~HelloWorld() {}
 
 void HelloWorld::create() {
-	assets = new AssetManager("assets");
+	assets = std::make_unique<AssetManager>("assets");
 	assets->load("default", AssetType::SHADER);
 	assets->load("tex.png", AssetType::TEXTURE);
 	assets->load("tex2.png", AssetType::TEXTURE);

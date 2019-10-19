@@ -1,13 +1,15 @@
 #pragma once
 
+#include <memory>
+
 namespace pm {
 	class WindowManager;
 	class InputManager {
 	public:
-		InputManager(WindowManager* window);
+		InputManager(std::shared_ptr<WindowManager> window);
 		virtual ~InputManager() = default;
 		virtual void update();
 	private:
-		WindowManager* window;
+		std::shared_ptr<WindowManager> window;
 	};
 }

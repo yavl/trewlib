@@ -8,8 +8,6 @@
 using namespace pm;
 using namespace nlohmann;
 
-std::unique_ptr<HelloWorld> m;
-
 int main() {
 	auto file = FileHandle("properties.json").asString();
 	json j = json::parse(file);
@@ -18,10 +16,10 @@ int main() {
 	int height = windowProperties["height"].get<int>();
 	std::string title = windowProperties["title"].get<std::string>();
 
-	auto window = std::make_unique<WindowManager>();
+	auto window = std::make_shared<WindowManager>();
 	window->createWindow(title, width, height);
 
-	m = std::make_unique<HelloWorld>(window.get());
+	auto m = std::make_unique<HelloWorld>(window);
 	m->create();
 	double lastFrame = 0.0;
 	double currentFrame, dt;

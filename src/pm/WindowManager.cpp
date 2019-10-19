@@ -36,6 +36,7 @@ void WindowManager::createWindow(std::string title, int width, int height) {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetKeyCallback(window, key_callback);
 }
 
 int WindowManager::getWidth() const {
@@ -61,18 +62,6 @@ GLFWwindow* WindowManager::getGlfwWindow() const {
 	return window;
 }
 
-void WindowManager::addFramebufferSizeCallback(FramebufferSizeCallback&& f) {
-	framebufferSizeCallbacks.emplace_back(f);
-}
-
-void WindowManager::addScrollCallback(ScrollCallback&& f) {
-	scrollCallbacks.emplace_back(f);
-}
-
-void WindowManager::addMouseButtonCallback(MouseButtonCallback&& f) {
-	mouseButtonCallbacks.emplace_back(f);
-}
-
 void WindowManager::onResize(int width, int height) {
 	glViewport(0, 0, width, height);
 	for (auto f : framebufferSizeCallbacks) {
@@ -92,6 +81,28 @@ void WindowManager::onMouseButton(int button, int action, int mods) {
 	}
 }
 
+void WindowManager::onKey(int key, int scancode, int action, int mods) {
+	for (auto f : keyCallbacks) {
+		f(window, key, scancode, action, mods);
+	}
+}
+
+void WindowManager::addFramebufferSizeCallback(FramebufferSizeCallback&& f) {
+	framebufferSizeCallbacks.emplace_back(f);
+}
+
+void WindowManager::addScrollCallback(ScrollCallback&& f) {
+	scrollCallbacks.emplace_back(f);
+}
+
+void WindowManager::addMouseButtonCallback(MouseButtonCallback&& f) {
+	mouseButtonCallbacks.emplace_back(f);
+}
+
+void WindowManager::addKeyCallback(KeyCallback&& f) {
+	keyCallbacks.emplace_back(f);
+}
+
 void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onResize(width, height);
 }
@@ -102,4 +113,7 @@ void WindowManager::scroll_callback(GLFWwindow* window, double xoffset, double y
 
 void WindowManager::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onMouseButton(button, action, mods);
+}
+
+void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 }
