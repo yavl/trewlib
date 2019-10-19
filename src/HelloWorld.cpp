@@ -36,6 +36,10 @@ void HelloWorld::create() {
 	sprite2->setX(-800);
 
 	hud = std::make_unique<Hud>(window->getGlfwWindow());
+
+	window->addFramebufferSizeCallback([this](GLFWwindow*, int width, int height) {
+		resize(width, height);
+	});
 }
 
 void HelloWorld::render(float dt) {
@@ -47,4 +51,5 @@ void HelloWorld::render(float dt) {
 }
 
 void HelloWorld::resize(int width, int height) {
+	glViewport(0, 0, width, height);
 }

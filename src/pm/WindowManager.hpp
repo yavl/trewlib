@@ -23,15 +23,15 @@ namespace pm {
 		virtual std::pair<int, int> getSize() const;
 		virtual bool shouldClose() const;
 		virtual GLFWwindow* getGlfwWindow() const;
-		virtual void onResize(int width, int height);
-		virtual void onScroll(double xoffset, double yoffset);
-		virtual void onMouseButton(int button, int action, int mods);
-		virtual void onKey(int key, int scancode, int action, int mods);
 		virtual void addFramebufferSizeCallback(FramebufferSizeCallback&& f);
 		virtual void addScrollCallback(ScrollCallback&& f);
 		virtual void addMouseButtonCallback(MouseButtonCallback&& f);
 		virtual void addKeyCallback(KeyCallback&& f);
 	private:
+		virtual void onResize(int width, int height);
+		virtual void onScroll(double xoffset, double yoffset);
+		virtual void onMouseButton(int button, int action, int mods);
+		virtual void onKey(int key, int scancode, int action, int mods);
 		static void framebuffer_size_callback(GLFWwindow*, int width, int height);
 		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 		static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

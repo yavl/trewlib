@@ -62,8 +62,23 @@ GLFWwindow* WindowManager::getGlfwWindow() const {
 	return window;
 }
 
+void WindowManager::addFramebufferSizeCallback(FramebufferSizeCallback&& f) {
+	framebufferSizeCallbacks.emplace_back(f);
+}
+
+void WindowManager::addScrollCallback(ScrollCallback&& f) {
+	scrollCallbacks.emplace_back(f);
+}
+
+void WindowManager::addMouseButtonCallback(MouseButtonCallback&& f) {
+	mouseButtonCallbacks.emplace_back(f);
+}
+
+void WindowManager::addKeyCallback(KeyCallback&& f) {
+	keyCallbacks.emplace_back(f);
+}
+
 void WindowManager::onResize(int width, int height) {
-	glViewport(0, 0, width, height);
 	for (auto f : framebufferSizeCallbacks) {
 		f(window, width, height);
 	}
@@ -87,22 +102,6 @@ void WindowManager::onKey(int key, int scancode, int action, int mods) {
 	}
 }
 
-void WindowManager::addFramebufferSizeCallback(FramebufferSizeCallback&& f) {
-	framebufferSizeCallbacks.emplace_back(f);
-}
-
-void WindowManager::addScrollCallback(ScrollCallback&& f) {
-	scrollCallbacks.emplace_back(f);
-}
-
-void WindowManager::addMouseButtonCallback(MouseButtonCallback&& f) {
-	mouseButtonCallbacks.emplace_back(f);
-}
-
-void WindowManager::addKeyCallback(KeyCallback&& f) {
-	keyCallbacks.emplace_back(f);
-}
-
 void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onResize(width, height);
 }
@@ -116,4 +115,5 @@ void WindowManager::mouse_button_callback(GLFWwindow* window, int button, int ac
 }
 
 void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	static_cast<WindowManager*>(glfwGetWindowUserPointer(window))->onKey(key, scancode, action, mods);
 }
