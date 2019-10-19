@@ -26,8 +26,6 @@ Hud::Hud(GLFWwindow* window) {
 	font = io.Fonts->AddFontFromFileTTF("Ubuntu-Regular.ttf", font_size, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 }
 
-Hud::Hud() {}
-
 Hud::~Hud() {}
 
 void Hud::display() {

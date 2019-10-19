@@ -8,7 +8,6 @@
 namespace pm {
 	class Hud {
 	public:
-		Hud();
 		Hud(GLFWwindow* window);
 		~Hud();
 		void display();

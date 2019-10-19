@@ -1,10 +1,6 @@
 #include "pm/pm.hpp"
-#include "pm/Texture.hpp"
-#include "pm/Shader.hpp"
-#include "pm/InputManager.hpp"
 #include "HelloWorld.hpp"
 #include "pm/WindowManager.hpp"
-#include <nlohmann/json.hpp>
 #include "pm/FileHandle.hpp"
 #include "pm/Logger.hpp"
 #include <nlohmann/json.hpp>
@@ -12,20 +8,20 @@
 using namespace pm;
 using namespace nlohmann;
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-HelloWorld* m;
+std::unique_ptr<HelloWorld> m;
 
 int main() {
-	json j;
-	j["window"]["width"] = 800;
-	j["window"]["height"] = 600;
-	FileHandle("settings.json").writeString(j.dump(4));
-	auto file = FileHandle("settings.json").asString();
-	log("asd", file);
-	auto window = std::make_unique<WindowManager>();
-	window->createWindow("asd", 800, 600);
+	auto file = FileHandle("properties.json").asString();
+	json j = json::parse(file);
+	auto windowProperties = j["window"];
+	int width = windowProperties["width"].get<int>();
+	int height = windowProperties["height"].get<int>();
+	std::string title = windowProperties["title"].get<std::string>();
 
-	m = new HelloWorld(window.get());
+	auto window = std::make_unique<WindowManager>();
+	window->createWindow(title, width, height);
+
+	m = std::make_unique<HelloWorld>(window.get());
 	m->create();
 	double lastFrame = 0.0;
 	double currentFrame, dt;
@@ -50,11 +46,4 @@ int main() {
 		glfwPollEvents();
 	}
 	glfwTerminate();
-	delete m;
-	m = nullptr;
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-	m->resize(width, height);
 }

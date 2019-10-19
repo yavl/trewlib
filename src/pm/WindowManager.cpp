@@ -12,6 +12,14 @@ WindowManager::~WindowManager() {
 	glfwTerminate();
 }
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		log("glfw", fmt::format("Cursor pos: {}, {}", xpos, ypos));
+	}
+}
+
 void WindowManager::createWindow(std::string title, int width, int height) {
 	assert(window == nullptr);
 	glfwInit();
@@ -34,11 +42,12 @@ void WindowManager::createWindow(std::string title, int width, int height) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	glfwSetWindowPos(window, (mode->width - width) / 2, (mode->height - height) / 2);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 }
 
 void WindowManager::onResize(int width, int height) {
 	glViewport(0, 0, width, height);
-	fmt::print("on resize\n");
+	//fmt::print("on resize\n");
 }
 
 int WindowManager::getWidth() const {
