@@ -9,7 +9,6 @@ Camera::Camera(WindowManager* window, int width, int height) {
 	zoomFactor = 0.15f;
 	int winWidth = window->getWidth();
 	int winHeight = window->getHeight();
-	projection_matrix = glm::ortho(-winWidth * zoom, winWidth * zoom, -winHeight * zoom, winHeight * zoom, -1.0f, 1.0f);
 	glfwSetScrollCallback(window->getGlfwWindow(), scroll_callback);
 	oldState = GLFW_RELEASE;
 }
@@ -38,17 +37,18 @@ void Camera::update(float dt) {
 	if (state == GLFW_PRESS) {
 		dragNew = Coord(mouseX, mouseY);
 		if (dragNew != dragOld) {
-			this->translate((dragOld.x - dragNew.x) * zoom*2, (dragNew.y - dragOld.y) * zoom*2);
+			translate((dragOld.x - dragNew.x) * 2, (dragNew.y - dragOld.y) * 2);
 			dragOld = dragNew;
 		}		
 	}
 	oldState = state;
 
 	// todo fix projection_matrix
-	int winWidth = window->getWidth();
-	int winHeight = window->getHeight();
-	projection_matrix = glm::ortho(-winWidth * zoom, winWidth * zoom, -winHeight * zoom, winHeight * zoom, -1.0f, 1.0f);
-	projection_matrix = glm::translate(projection_matrix, glm::vec3(pos.x, pos.y, 0));
+	float winWidth = static_cast<float>(window->getWidth());
+	float winHeight = static_cast<float>(window->getHeight());
+	projection = glm::ortho(-winWidth, winWidth, -winHeight, winHeight, -1.0f, 1.0f);
+	view = glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, pos.y, 0));
+	view = glm::scale(view, glm::vec3(zoom, zoom, 1.f));
 }
 
 void Camera::setPosition(float x, float y) {
@@ -63,8 +63,8 @@ void Camera::translate(float x, float y) {
 
 void Camera::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 	if (yoffset > 0)
-		zoom -= 0.15f * zoom;
-	else zoom += 0.15f * zoom;
+		zoom += 0.15f * zoom;
+	else zoom -= 0.15f * zoom;
 }
 
 float Camera::zoom = 1.0f;

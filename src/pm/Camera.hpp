@@ -14,7 +14,9 @@ namespace pm {
 		virtual void translate(float x, float y);
 		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
         
-        glm::mat4 projection_matrix;
+        glm::mat4 projection;
+		glm::mat4 view;
+		glm::mat4 model;
         static float zoom;
 	private:
 		WindowManager* window;

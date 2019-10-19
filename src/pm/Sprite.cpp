@@ -13,3 +13,24 @@ void Sprite::draw() {
     // todo draw via spritebatch instead
 	texture->draw(x, y);
 }
+
+float Sprite::getX() const {
+	return x;
+}
+
+void Sprite::setX(float x) {
+	this->x = x;
+}
+
+float Sprite::getY() const {
+	return y;
+}
+
+void Sprite::setY(float y) {
+	this->y = y;
+}
+
+void Sprite::setXY(float x, float y) {
+	this->x = x;
+	this->y = y;
+}

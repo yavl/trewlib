@@ -84,7 +84,7 @@ void Texture::draw(float x, float y) {
 	shader->use();
 	matrix = glm::mat4(1.0f);
 	matrix = glm::translate(matrix, glm::vec3(x, y, 0));
-	shader->setUniform("u_projTrans", cam->projection_matrix * matrix); // todo fix that
+	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix); // todo fix that
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
