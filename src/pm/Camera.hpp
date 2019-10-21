@@ -11,7 +11,7 @@ namespace pm {
 		Camera(std::shared_ptr<WindowManager> window, int width, int height);
 		virtual ~Camera() = default;
 		virtual void update(float dt);
-		virtual void setPosition(float x, float y);
+		virtual void setPosXY(float x, float y);
 		virtual void translate(float x, float y);
         
         glm::mat4 projection;

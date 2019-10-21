@@ -34,8 +34,8 @@ Texture::Texture(std::string path) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// todo write and use SpriteBatch instead of below lines
-	float widthf = (float)width;
-	float heightf = (float)height;
+	float widthf = static_cast<float>(width);
+	float heightf = static_cast<float>(height);
 
 	float vertices[] = {
 		 // positions			 // colors           // texture coords
@@ -82,8 +82,8 @@ void Texture::draw(float x, float y) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	shader->use();
-	matrix = glm::mat4(1.0f);
-	matrix = glm::translate(matrix, glm::vec3(x, y, 0));
+	matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 0));
+	matrix = glm::scale(matrix, glm::vec3(0.5f));
 	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix); // todo fix that
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
