@@ -10,10 +10,10 @@ namespace pm {
 	// A wrapper class to handle single window
 	class WindowManager {
 	public:
-		typedef std::function<void(GLFWwindow* window, int width, int height)> FramebufferSizeCallback;
-		typedef std::function<void(GLFWwindow* window, double xoffset, double yoffset)> ScrollCallback;
-		typedef std::function<void(GLFWwindow* window, int button, int action, int mods)> MouseButtonCallback;
-		typedef std::function<void(GLFWwindow* window, int key, int scancode, int action, int mods)> KeyCallback;
+		typedef std::function<void(int width, int height)> FramebufferSizeCallback;
+		typedef std::function<void(double xoffset, double yoffset)> ScrollCallback;
+		typedef std::function<void(int button, int action, int mods)> MouseButtonCallback;
+		typedef std::function<void(int key, int scancode, int action, int mods)> KeyCallback;
 
 		WindowManager();
 		virtual ~WindowManager();

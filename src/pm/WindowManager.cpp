@@ -80,25 +80,25 @@ void WindowManager::addKeyCallback(KeyCallback&& f) {
 
 void WindowManager::onResize(int width, int height) {
 	for (auto f : framebufferSizeCallbacks) {
-		f(window, width, height);
+		f(width, height);
 	}
 }
 
 void WindowManager::onScroll(double xoffset, double yoffset) {
 	for (auto f : scrollCallbacks) {
-		f(window, xoffset, yoffset);
+		f(xoffset, yoffset);
 	}
 }
 
 void WindowManager::onMouseButton(int button, int action, int mods) {
 	for (auto f : mouseButtonCallbacks) {
-		f(window, button, action, mods);
+		f(button, action, mods);
 	}
 }
 
 void WindowManager::onKey(int key, int scancode, int action, int mods) {
 	for (auto f : keyCallbacks) {
-		f(window, key, scancode, action, mods);
+		f(key, scancode, action, mods);
 	}
 }
 

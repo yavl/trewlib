@@ -8,7 +8,7 @@ namespace pm {
 	class WindowManager;
 	class Camera {
 	public:
-		Camera(std::shared_ptr<WindowManager> window, int width, int height);
+		Camera(std::shared_ptr<WindowManager> window);
 		virtual ~Camera() = default;
 		virtual void update(float dt);
 		virtual void setPosXY(float x, float y);
@@ -17,6 +17,8 @@ namespace pm {
         glm::mat4 projection;
 		glm::mat4 view;
 	private:
+		virtual void updateProjection(int width, int height);
+
 		std::shared_ptr<WindowManager> window;
 		float camSpeed;
 		float zoomFactor;

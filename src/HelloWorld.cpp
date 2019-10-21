@@ -11,7 +11,7 @@
 
 HelloWorld::HelloWorld(std::shared_ptr<WindowManager> window) {
 	this->window = window;
-	cam = std::make_unique<Camera>(window, window->getWidth(), window->getHeight());
+	cam = std::make_unique<Camera>(window);
 	input = std::make_unique<InputManager>(window);
 }
 
@@ -37,7 +37,7 @@ void HelloWorld::create() {
 
 	hud = std::make_unique<Hud>(window->getGlfwWindow());
 
-	window->addFramebufferSizeCallback([this](GLFWwindow*, int width, int height) {
+	window->addFramebufferSizeCallback([this](int width, int height) {
 		resize(width, height);
 	});
 }

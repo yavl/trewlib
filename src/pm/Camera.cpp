@@ -5,7 +5,7 @@
 
 using namespace pm;
 
-Camera::Camera(std::shared_ptr<WindowManager> window, int width, int height) :
+Camera::Camera(std::shared_ptr<WindowManager> window) :
 	view(1.0f)
 {
 	this->window = window;
@@ -13,33 +13,31 @@ Camera::Camera(std::shared_ptr<WindowManager> window, int width, int height) :
 	zoomFactor = 0.15f;
 	zoom = 1.0f;
 	oldState = GLFW_RELEASE;
-	float widthf = static_cast<float>(window->getWidth());
-	float heightf = static_cast<float>(window->getHeight());
-	projection = glm::ortho(-widthf, widthf, -heightf, heightf, -1.0f, 1.0f);
-	projection = glm::scale(projection, glm::vec3(2.0f));
+	float halfWidth = static_cast<float>(window->getWidth()) / 2.f;
+	float halfHeight = static_cast<float>(window->getHeight()) / 2.f;
+	updateProjection(window->getWidth(), window->getHeight());
 
-	window->addScrollCallback([this](GLFWwindow* window, double xoffset, double yoffset) {
+	window->addScrollCallback([this](double xoffset, double yoffset) {
 		if (yoffset > 0)
 			zoom += zoomFactor * zoom;
 		else
 			zoom -= zoomFactor * zoom;
 	});
 
-	window->addMouseButtonCallback([=](GLFWwindow* window, int button, int action, int mods) {
+	window->addMouseButtonCallback([=](int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			double x, y;
-			glfwGetCursorPos(window, &x, &y);
+			glfwGetCursorPos(window->getGlfwWindow(), &x, &y);
+			int width = window->getWidth();
+			int height = window->getHeight();
 			auto screenPos = glm::vec2(x, height - y);
 			auto world = glm::unProject(glm::vec3(screenPos, 0), view, projection, glm::vec4(0, 0, width, height));
 			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
 		}
 	});
 
-	window->addFramebufferSizeCallback([this](GLFWwindow* window, int width, int height) {
-		float widthf = static_cast<float>(width);
-		float heightf = static_cast<float>(height);
-		projection = glm::ortho(-widthf, widthf, -heightf, heightf, -1.0f, 1.0f);
-		projection = glm::scale(projection, glm::vec3(2.0f));
+	window->addFramebufferSizeCallback([this](int width, int height) {
+		updateProjection(width, height);
 	});
 }
 
@@ -84,4 +82,10 @@ void Camera::setPosXY(float x, float y) {
 void Camera::translate(float x, float y) {
 	pos.x -= x;
 	pos.y -= y;
+}
+
+void Camera::updateProjection(int width, int height) {
+	float halfWidth = static_cast<float>(width) / 2.f;
+	float halfHeight = static_cast<float>(height) / 2.f;
+	projection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
 }
