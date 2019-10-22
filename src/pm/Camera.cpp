@@ -13,8 +13,6 @@ Camera::Camera(std::shared_ptr<WindowManager> window) :
 	zoomFactor = 0.15f;
 	zoom = 1.0f;
 	oldState = GLFW_RELEASE;
-	float halfWidth = static_cast<float>(window->getWidth()) / 2.f;
-	float halfHeight = static_cast<float>(window->getHeight()) / 2.f;
 	updateProjection(window->getWidth(), window->getHeight());
 
 	window->addScrollCallback([this](double xoffset, double yoffset) {
