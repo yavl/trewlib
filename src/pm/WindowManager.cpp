@@ -50,7 +50,7 @@ int WindowManager::getHeight() const {
 std::pair<int, int> WindowManager::getSize() const {
 	int width;
 	int height;
-	glfwGetFramebufferSize(window, &width, &height);
+	glfwGetWindowSize(window, &width, &height);
 	return std::make_pair(width, height);
 }
 
