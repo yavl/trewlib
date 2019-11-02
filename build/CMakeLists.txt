@@ -16,6 +16,10 @@ file(GLOB SRC_pm
 	"../src/pm/*.hpp"
 	"../src/pm/*.cpp"
 )
+file(GLOB SRC_pm_nodes
+	"../src/pm/nodes/*.hpp"
+	"../src/pm/nodes/*.cpp"
+)
 file(GLOB SRC_imgui
 	"../extlibs/include/imgui/*.hpp"
 	"../extlibs/include/imgui/*.cpp"
@@ -25,11 +29,13 @@ file(GLOB SRC_glad
 	"../extlibs/include/glad/*.c"
 )
 
-add_executable(pmEngine ${SRC} ${SRC_pm} ${SRC_imgui} ${SRC_glad})
+add_executable(pmEngine ${SRC} ${SRC_pm} ${SRC_pm_nodes} ${SRC_imgui} ${SRC_glad})
 
+include_directories(pmEngine "../src")
 source_group("imgui" FILES ${SRC_imgui})
 source_group("glad" FILES ${SRC_glad})
 source_group("pm" FILES ${SRC_pm})
+source_group("pm\\nodes" FILES ${SRC_pm_nodes})
 source_group("game" FILES ${SRC})
 
 if(WIN32)
