@@ -11,12 +11,14 @@ namespace pm {
 	public:
 		Texture(std::string path);
 		~Texture();
-		virtual void draw(float x, float y);
+		virtual void draw(float x, float y, float width, float height);
 		virtual void setShader(Shader* shader);
 		virtual void setCamera(Camera* cam);
+		virtual int getWidth() const;
+		virtual int getHeight() const;
 	private:
 		unsigned char* image;
-		int width, height;
+		int texWidth, texHeight;
 		GLuint texture, VAO, VBO, EBO;
 		Shader* shader;
 		std::string name;

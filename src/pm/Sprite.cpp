@@ -3,34 +3,15 @@
 
 using namespace pm;
 
-Sprite::Sprite(Texture* texture) {
+Sprite::Sprite(Texture* texture) : Node() {
 	this->texture = texture;
-	this->x = 0.0f;
-	this->y = 0.0f;
+	float width = static_cast<float>(texture->getWidth());
+	float height = static_cast<float>(texture->getHeight());
+	setSize(width, height);
 }
 
 void Sprite::draw() {
     // todo draw via spritebatch instead
-	texture->draw(x, y);
-}
-
-float Sprite::getX() const {
-	return x;
-}
-
-void Sprite::setX(float x) {
-	this->x = x;
-}
-
-float Sprite::getY() const {
-	return y;
-}
-
-void Sprite::setY(float y) {
-	this->y = y;
-}
-
-void Sprite::setXY(float x, float y) {
-	this->x = x;
-	this->y = y;
+	texture->draw(getX(), getY(), getWidth(), getHeight());
+	Node::draw();
 }

@@ -39,9 +39,36 @@ void Node::setXY(float x, float y) {
 	pos.y = y;
 }
 
+float Node::getWidth() const {
+	return size.x;
+}
+
+void Node::setWidth(float width) {
+	setSize(width, getHeight());
+}
+
+float Node::getHeight() const {
+	return size.y;
+}
+
+void Node::setHeight(float height) {
+	setSize(getWidth(), height);
+}
+
+void Node::setSize(float width, float height) {
+	size.x = width;
+	size.y = height;
+}
+
+void Node::draw() {
+	for (auto child : children) {
+		child->draw();
+	}
+}
+
 void Node::addChild(Node* node) {
-	bool isPresent = std::find(children.begin(), children.end(), node) == children.end();
-	assert(isPresent && "can't add child twice");
+	bool isPresent = std::find(children.begin(), children.end(), node) != children.end();
+	assert(!isPresent && "can't add child twice");
 	node->parent = this;
 	children.emplace_back(std::move(node));
 }

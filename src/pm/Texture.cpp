@@ -21,11 +21,11 @@ Texture::Texture(std::string path) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	stbi_set_flip_vertically_on_load(true);
-	this->image = stbi_load(path.c_str(), &width, &height, 0, STBI_rgb_alpha);
+	this->image = stbi_load(path.c_str(), &texWidth, &texHeight, 0, STBI_rgb_alpha);
 	if (this->image) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		log(logTag, fmt::format("<{}> loaded with size: {}x{}", name, width, height));
+		log(logTag, fmt::format("<{}> loaded with size: {}x{}", name, texWidth, texHeight));
 	}
 	else {
 		logError(logTag, fmt::format("error loading <{}>", name));
@@ -34,8 +34,8 @@ Texture::Texture(std::string path) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// todo write and use SpriteBatch instead of below lines
-	float widthf = static_cast<float>(width);
-	float heightf = static_cast<float>(height);
+	float widthf = static_cast<float>(texWidth);
+	float heightf = static_cast<float>(texHeight);
 
 	float vertices[] = {
 		 // positions			 // colors           // texture coords
@@ -77,12 +77,14 @@ Texture::~Texture() {
 	glDeleteBuffers(1, &VBO);
 }
 
-void Texture::draw(float x, float y) {
+void Texture::draw(float x, float y, float width, float height) {
 	// todo draw with spritebatch instead of this
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	shader->use();
 	matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 0));
+	matrix = glm::scale(matrix, glm::vec3(1.f / texWidth, 1.f / texHeight, 1.f));
+	matrix = glm::scale(matrix, glm::vec3(width, height, 1.f));
 	matrix = glm::scale(matrix, glm::vec3(0.5f));
 	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix); // todo fix that
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -97,4 +99,12 @@ void Texture::setShader(Shader* shader) {
 
 void Texture::setCamera(Camera* cam) {
 	this->cam = cam;
+}
+
+int Texture::getWidth() const {
+	return texWidth;
+}
+
+int Texture::getHeight() const {
+	return texHeight;
 }

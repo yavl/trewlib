@@ -32,8 +32,9 @@ void HelloWorld::create() {
 	auto tex2 = assets->getTexture("tex2.png").value();
 	tex2->setShader(sh);
 	tex2->setCamera(cam.get());
-	sprite2 = std::make_unique<Sprite>(tex2);
+	auto sprite2 = new Sprite(tex2);
 	sprite2->setXY(400, 300);
+	sprite->addChild(sprite2);
 
 	hud = std::make_unique<Hud>(window->getGlfwWindow());
 
@@ -46,7 +47,6 @@ void HelloWorld::render(float dt) {
 	cam->update(dt);
 	input->update();
 	sprite->draw();
-	sprite2->draw();
 	hud->display();
 }
 
