@@ -23,19 +23,18 @@ int main() {
 	m->create();
 	double lastFrame = 0.0;
 	double currentFrame, dt;
-    int frameCount = 0;
-    double prevTime = glfwGetTime();
+	int frameCount = 0;
+	double prevTime = glfwGetTime();
 	while (!window->shouldClose()) {
 		currentFrame = glfwGetTime();
 		dt = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-        
-        frameCount++;
-        if (currentFrame - prevTime >= 1.0f) {
-            //fmt::print("{} fps\n", frameCount);
-            frameCount = 0;
-            prevTime = currentFrame;
-        }
+		frameCount++;
+		if (currentFrame - prevTime >= 1.0f) {
+			//fmt::print("{} fps\n", frameCount);
+			frameCount = 0;
+			prevTime = currentFrame;
+		}
 
 		glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
