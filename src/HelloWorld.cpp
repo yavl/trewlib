@@ -43,8 +43,11 @@ void HelloWorld::create() {
 	});
 }
 
-void HelloWorld::render(float dt) {
+void HelloWorld::update(float dt) {
 	cam->update(dt);
+}
+
+void HelloWorld::render() {
 	input->update();
 	sprite->draw();
 	hud->display();

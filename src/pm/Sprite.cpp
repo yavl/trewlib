@@ -12,6 +12,9 @@ Sprite::Sprite(Texture* texture) : Node() {
 
 void Sprite::draw() {
     // todo draw via spritebatch instead
-	texture->draw(getX(), getY(), getWidth(), getHeight());
+	if (getParent())
+		texture->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight());
+	else
+		texture->draw(getX(), getY(), getWidth(), getHeight());
 	Node::draw();
 }

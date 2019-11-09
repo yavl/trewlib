@@ -38,7 +38,8 @@ int main() {
 
 		glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		m->render((float) dt);
+		m->update(static_cast<float>(dt));
+		m->render();
 		glfwSwapBuffers(window->getGlfwWindow());
 		glfwPollEvents();
 	}

@@ -22,7 +22,8 @@ public:
 	HelloWorld(std::shared_ptr<WindowManager> window);
 	virtual ~HelloWorld();
 	void create();
-	void render(float dt);
+	void update(float dt);
+	void render();
 	void resize(int width, int height);
 private:
 	std::shared_ptr<WindowManager> window;

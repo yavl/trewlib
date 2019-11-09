@@ -22,6 +22,7 @@ namespace pm {
 		virtual float getHeight() const;
 		virtual void setHeight(float height);
 		virtual void setSize(float width, float height);
+		virtual Node* getParent() const;
 		virtual void draw();
 		virtual void addChild(Node* node);
 		virtual const std::vector<Node*> getChildren() const;

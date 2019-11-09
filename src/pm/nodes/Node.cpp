@@ -60,6 +60,10 @@ void Node::setSize(float width, float height) {
 	size.y = height;
 }
 
+Node* Node::getParent() const {
+	return parent;
+}
+
 void Node::draw() {
 	for (auto child : children) {
 		child->draw();
