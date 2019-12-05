@@ -22,7 +22,10 @@ namespace pm {
 		virtual std::optional<Shader*> getShader(std::string path);
 		virtual std::optional<Texture*> getTexture(std::string path);
 	private:
-		std::unordered_map<std::string, Asset*> assets;
 		virtual std::optional<Asset*> getAsset(std::string path);
+
+		std::unordered_map<std::string, Asset*> assets;
+		std::string assetsPath;
+		std::string shadersPath;
 	};
 }

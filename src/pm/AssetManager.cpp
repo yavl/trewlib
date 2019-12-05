@@ -8,6 +8,10 @@
 using namespace pm;
 
 AssetManager::AssetManager(std::string path) {
+	assetsPath = path;
+	if (!path.empty() && path.back() != '/')
+		assetsPath += '/';
+	shadersPath = assetsPath + "shaders/";
     // todo set assets path
 }
 
@@ -20,6 +24,7 @@ AssetManager::~AssetManager() {
 }
 
 void AssetManager::load(std::string path, AssetType type) {
+	path = assetsPath + path;
 	const char* message = fmt::format("resource {} already loaded", path).c_str();
 	assert(!getAsset(path).has_value() && message);
 	switch (type) {
@@ -67,6 +72,7 @@ std::optional<Texture*> AssetManager::getTexture(std::string path) {
 }
 
 std::optional<Asset*> AssetManager::getAsset(std::string path) {
+	path = assetsPath + path;
 	if (auto asset = assets.find(path); asset != assets.end())
 		return asset->second;
 	return std::nullopt;

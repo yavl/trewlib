@@ -23,7 +23,7 @@ Hud::Hud(GLFWwindow* window) {
 	// IMGUI end
 
 	float font_size = 24.0f;
-	font = io.Fonts->AddFontFromFileTTF("Ubuntu-Regular.ttf", font_size, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+	font = io.Fonts->AddFontFromFileTTF("assets/Ubuntu-Regular.ttf", font_size, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 }
 
 Hud::~Hud() {}
