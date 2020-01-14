@@ -1,13 +1,13 @@
 #include "HelloWorld.hpp"
-#include "pm/Texture.hpp"
-#include "pm/Sprite.hpp"
-#include "pm/Hud.hpp"
-#include "pm/Camera.hpp"
-#include "pm/Shader.hpp"
-#include "pm/InputManager.hpp"
-#include "pm/WindowManager.hpp"
-#include "pm/AssetManager.hpp"
-#include "pm/Logger.hpp"
+#include "trew/Texture.hpp"
+#include "trew/Sprite.hpp"
+#include "trew/Hud.hpp"
+#include "trew/Camera.hpp"
+#include "trew/Shader.hpp"
+#include "trew/InputManager.hpp"
+#include "trew/WindowManager.hpp"
+#include "trew/AssetManager.hpp"
+#include "trew/Logger.hpp"
 
 HelloWorld::HelloWorld(std::shared_ptr<WindowManager> window) {
 	this->window = window;

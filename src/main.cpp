@@ -1,15 +1,15 @@
-#include "pm/pm.hpp"
+#include "trew/pm.hpp"
 #include "HelloWorld.hpp"
-#include "pm/WindowManager.hpp"
-#include "pm/FileHandle.hpp"
-#include "pm/Logger.hpp"
+#include "trew/WindowManager.hpp"
+#include "trew/FileHandle.hpp"
+#include "trew/Logger.hpp"
 #include <nlohmann/json.hpp>
 
-using namespace pm;
+using namespace trew;
 using namespace nlohmann;
 
 int main() {
-	auto file = FileHandle("properties.json").asString();
+	auto file = FileHandle("assets/properties.json").asString();
 	json j = json::parse(file);
 	auto windowProperties = j["window"];
 	int width = windowProperties["width"].get<int>();

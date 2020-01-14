@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace pm {
+namespace trew {
 	class Texture;
 	class Shader;
 	class Camera;
@@ -13,7 +13,7 @@ namespace pm {
 	class AssetManager;
 }
 
-using namespace pm;
+using namespace trew;
 
 struct GLFWwindow;
 
