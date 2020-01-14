@@ -1,5 +1,5 @@
-# pm
-very tiny cross-platform 2D game library
+# Trewlib
+very tiny cross-platform 2D game library (WIP, not ready to use yet)
 ### Features
 * OpenGL 3.3 renderer
 * Compiles on Windows, macOS, Linux
