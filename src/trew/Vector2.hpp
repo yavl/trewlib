@@ -6,9 +6,12 @@ namespace trew {
 		Vector2();
         Vector2(float x, float y);
 		virtual ~Vector2() = default;
-		virtual bool equals(Vector2 coord) const;
+		virtual Vector2 operator*(float scalar) const;
 		virtual bool operator==(const Vector2& b) const;
 		virtual bool operator!=(const Vector2& b) const;
+		virtual Vector2 normalized() const;
+		virtual float length() const;
+		virtual float distance(const Vector2& b) const;
         
         float x;
         float y;

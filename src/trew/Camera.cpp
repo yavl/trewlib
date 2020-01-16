@@ -43,13 +43,13 @@ void Camera::update(float dt) {
 	// todo cleanup
 	auto win = window->getGlfwWindow();
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
-		pos.y -= camSpeed * dt * zoom;
+		pos.y -= camSpeed * dt;
 	if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
-		pos.x += camSpeed * dt * zoom;
+		pos.x += camSpeed * dt;
 	if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
-		pos.y += camSpeed * dt * zoom;
+		pos.y += camSpeed * dt;
 	if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
-		pos.x -= camSpeed * dt * zoom;
+		pos.x -= camSpeed * dt;
 
 	int state = glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE);
 	double xpos, ypos;

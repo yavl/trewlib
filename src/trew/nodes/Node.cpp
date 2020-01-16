@@ -1,5 +1,6 @@
 #include "Node.hpp"
-#include "trew/Logger.hpp"
+#include <trew/Logger.hpp>
+#include <trew/actions/Action.hpp>
 
 using namespace trew;
 
@@ -15,6 +16,9 @@ Node::~Node() {
 	logDebug("node", fmt::format("{} destructed", name));
 	for (auto child : children) {
 		delete child;
+	}
+	for (auto action : actions) {
+		delete action;
 	}
 }
 
@@ -77,7 +81,7 @@ void Node::addChild(Node* node) {
 	children.emplace_back(std::move(node));
 }
 
-const std::vector<Node*> Node::getChildren() const {
+const std::vector<Node*>& Node::getChildren() const {
 	return children;
 }
 
@@ -95,4 +99,14 @@ std::optional<Node*> Node::findChild(std::string name) {
 
 std::string Node::getName() const {
 	return name;
+}
+
+void Node::act(float dt) {
+	for (auto action : actions) {
+		action->update(dt, *this);
+	}
+}
+
+void Node::addAction(Action* action) {
+	actions.push_back(action);
 }

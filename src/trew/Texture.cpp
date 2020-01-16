@@ -12,8 +12,6 @@ const std::string logTag = "Texture";
 Texture::Texture(std::string path) {
 	this->name = path;
 	this->matrix = glm::mat4(1.f);
-	this->x = 0.f;
-	this->y = 0.f;
 	shader = nullptr;
 	cam = nullptr;
 

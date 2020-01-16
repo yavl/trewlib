@@ -24,6 +24,5 @@ namespace trew {
 		std::string name;
 		Camera* cam;
 		glm::mat4 matrix;
-		float x, y;
 	};
 }

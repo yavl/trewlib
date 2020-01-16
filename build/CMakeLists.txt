@@ -20,6 +20,10 @@ file(GLOB SRC_trew_nodes
 	"../src/trew/nodes/*.hpp"
 	"../src/trew/nodes/*.cpp"
 )
+file(GLOB SRC_trew_actions
+	"../src/trew/actions/*.hpp"
+	"../src/trew/actions/*.cpp"
+)
 file(GLOB SRC_imgui
 	"../extlibs/include/imgui/*.hpp"
 	"../extlibs/include/imgui/*.cpp"
@@ -29,13 +33,14 @@ file(GLOB SRC_glad
 	"../extlibs/include/glad/*.c"
 )
 
-add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_nodes} ${SRC_imgui} ${SRC_glad})
+add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_nodes} ${SRC_trew_actions} ${SRC_imgui} ${SRC_glad})
 
 include_directories(Trewlib "../src")
 source_group("imgui" FILES ${SRC_imgui})
 source_group("glad" FILES ${SRC_glad})
 source_group("trew" FILES ${SRC_trew})
 source_group("trew\\nodes" FILES ${SRC_trew_nodes})
+source_group("trew\\actions" FILES ${SRC_trew_actions})
 source_group("game" FILES ${SRC})
 
 if(WIN32)
