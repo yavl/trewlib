@@ -21,8 +21,7 @@ void MoveAction::update(float dt, Node& node) {
 
 	if (distTravel > dist) {
 		node.setXY(destX, destY);
-	}
-	else {
+	} else {
 		node.setX(node.getX() + travelX);
 		node.setY(node.getY() + travelY);
 	}

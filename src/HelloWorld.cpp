@@ -36,7 +36,7 @@ void HelloWorld::create() {
 	auto sprite2 = new Sprite(tex2);
 	sprite2->setXY(400, 300);
 	sprite->addChild(sprite2);
-	sprite->addAction(new MoveAction(2000, 1000, 2.f));
+	//sprite->addAction(new MoveAction(2000, 1000, 2.f));
 
 	hud = std::make_unique<Hud>(window->getGlfwWindow());
 

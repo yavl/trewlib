@@ -24,8 +24,7 @@ void Shader::compile() {
 	if (!success) {
 		glGetShaderInfoLog(vertex_shader, 512, nullptr, infoLog);
 		logError(logTag, fmt::format("<{}> vertex shader compilation failed: {}", infoLog));
-	}
-	else {
+	} else {
 		log(logTag, fmt::format("<{}> succesfully compiled", vertPath));
 	}
 
@@ -37,8 +36,7 @@ void Shader::compile() {
 	if (!success) {
 		glGetShaderInfoLog(fragment_shader, 512, nullptr, infoLog);
 		logError(logTag, fmt::format("<{}> fragment shader compilation failed: {}", infoLog));
-	}
-	else {
+	} else {
 		log(logTag, fmt::format("<{}> succesfully compiled", fragPath));
 	}
 

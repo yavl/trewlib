@@ -13,6 +13,9 @@ namespace trew {
 		virtual void update(float dt);
 		virtual void setPosXY(float x, float y);
 		virtual void translate(float x, float y);
+		virtual float getX() const;
+		virtual float getY() const;
+		virtual Vector2 screenToSpace(float x, float y);
         
         glm::mat4 projection;
 		glm::mat4 view;

@@ -24,8 +24,7 @@ Texture::Texture(std::string path) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		log(logTag, fmt::format("<{}> loaded with size: {}x{}", name, texWidth, texHeight));
-	}
-	else {
+	} else {
 		logError(logTag, fmt::format("error loading <{}>", name));
 	}
 	stbi_image_free(image);
