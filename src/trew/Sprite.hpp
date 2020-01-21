@@ -8,7 +8,7 @@ namespace trew {
 	public:
 		Sprite(Texture* tex);
 		virtual ~Sprite() = default;
-		void draw() override;
+		void draw() const override;
 	private:
 		Texture* texture;
 	};

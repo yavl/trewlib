@@ -10,7 +10,7 @@ Sprite::Sprite(Texture* texture) : Node() {
 	setSize(width, height);
 }
 
-void Sprite::draw() {
+void Sprite::draw() const {
     // todo draw via spritebatch instead
 	if (getParent())
 		texture->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight());

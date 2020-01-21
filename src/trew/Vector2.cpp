@@ -17,6 +17,12 @@ Vector2 Vector2::operator*(float scalar) const {
 	return Vector2(x * scalar, y * scalar);
 }
 
+void Vector2::operator*=(float scalar)
+{
+	x *= scalar;
+	y *= scalar;
+}
+
 bool Vector2::operator==(const Vector2& b) const {
 	if (x == b.x && y == b.y)
 		return true;

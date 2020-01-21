@@ -7,6 +7,7 @@ namespace trew {
         Vector2(float x, float y);
 		virtual ~Vector2() = default;
 		virtual Vector2 operator*(float scalar) const;
+		virtual void operator*=(float scalar);
 		virtual bool operator==(const Vector2& b) const;
 		virtual bool operator!=(const Vector2& b) const;
 		virtual Vector2 normalized() const;

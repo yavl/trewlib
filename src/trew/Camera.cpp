@@ -76,8 +76,9 @@ void Camera::update(float dt) {
 		cameraUp);
 	view = glm::scale(view, glm::vec3(zoom, zoom, 1.f));
 
+	auto asd = screenToSpace(window->getWidth() / 2.f, window->getHeight() / 2.f);
 	glm::vec3 center(window->getWidth() / 2, window->getHeight() / 2, 0.f);
-	view = glm::translate(view, center);
+	//view = glm::translate(view, -center);
 }
 
 void Camera::setPosXY(float x, float y) {

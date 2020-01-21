@@ -14,12 +14,6 @@ Node::Node(std::string name) : Node() {
 
 Node::~Node() {
 	logDebug("node", fmt::format("{} destructed", name));
-	for (auto child : children) {
-		delete child;
-	}
-	for (auto action : actions) {
-		delete action;
-	}
 }
 
 float Node::getX() const {
@@ -68,33 +62,16 @@ Node* Node::getParent() const {
 	return parent;
 }
 
-void Node::draw() {
-	for (auto child : children) {
+void Node::draw() const {
+	for (auto& child : children) {
 		child->draw();
 	}
 }
 
 void Node::addChild(Node* node) {
-	bool isPresent = std::find(children.begin(), children.end(), node) != children.end();
-	assert(!isPresent && "can't add child twice");
-	node->parent = this;
-	children.emplace_back(std::move(node));
-}
-
-const std::vector<Node*>& Node::getChildren() const {
-	return children;
-}
-
-std::optional<Node*> Node::findChild(const std::function<bool(Node*)>& condition) {
-	auto childIt = std::find_if(children.begin(), children.end(), condition);
-	if (childIt != children.end())
-		return *childIt;
-	return std::nullopt;
-}
-
-std::optional<Node*> Node::findChild(std::string name) {
-	auto child = findChild([name](Node* node) -> bool { return node->getName() == name; });
-	return child;
+	std::unique_ptr<Node> nodePtr(node);
+	nodePtr->parent = this;
+	children.push_back(std::move(nodePtr));
 }
 
 std::string Node::getName() const {
@@ -102,11 +79,12 @@ std::string Node::getName() const {
 }
 
 void Node::act(float dt) {
-	for (auto action : actions) {
+	for (auto& action : actions) {
 		action->update(dt, *this);
 	}
 }
 
 void Node::addAction(Action* action) {
-	actions.push_back(action);
+	std::unique_ptr<Action> actionPtr(action);
+	actions.push_back(std::move(actionPtr));
 }

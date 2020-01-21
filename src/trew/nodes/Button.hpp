@@ -10,7 +10,7 @@ namespace trew {
 	public:
 		Button(std::string name);
 		virtual ~Button();
-		void draw() override;
+		void draw() const override;
 	private:
 		std::unique_ptr<Texture> tex;
 		std::unique_ptr<Sprite> sprite;

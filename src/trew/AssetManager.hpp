@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <optional>
+#include <memory>
 
 namespace trew {
 	class Texture;
@@ -16,16 +17,15 @@ namespace trew {
 
 	class AssetManager {
 	public:
-		AssetManager(std::string path);
-		virtual ~AssetManager();
+		AssetManager(std::string jsonFilePath);
+		virtual ~AssetManager() = default;
 		virtual void load(std::string path, AssetType type);
 		virtual std::optional<Shader*> getShader(std::string path);
 		virtual std::optional<Texture*> getTexture(std::string path);
 	private:
 		virtual std::optional<Asset*> getAsset(std::string path);
 
-		std::unordered_map<std::string, Asset*> assets;
-		std::string assetsPath;
-		std::string shadersPath;
+		std::unordered_map<std::string, std::unique_ptr<Asset>> assets;
+		std::string assetsJsonFilePath;
 	};
 }

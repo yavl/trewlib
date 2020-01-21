@@ -4,27 +4,13 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include <fmt/core.h>
+#include <nlohmann/json.hpp>
 
 using namespace trew;
 
-AssetManager::AssetManager(std::string path) {
-	assetsPath = path;
-	if (!path.empty() && path.back() != '/')
-		assetsPath += '/';
-	shadersPath = assetsPath + "shaders/";
-    // todo set assets path
-}
-
-AssetManager::~AssetManager() {
-	for (auto& [key, value] : assets) {
-		if (getAsset(key).has_value()) {
-			delete getAsset(key).value();
-		}
-	}
-}
+AssetManager::AssetManager(std::string jsonFilePath) : assetsJsonFilePath(jsonFilePath) {}
 
 void AssetManager::load(std::string path, AssetType type) {
-	path = assetsPath + path;
 	const char* message = fmt::format("resource {} already loaded", path).c_str();
 	assert(!getAsset(path).has_value() && message);
 	switch (type) {
@@ -39,15 +25,15 @@ void AssetManager::load(std::string path, AssetType type) {
 		auto ownerFrag = frag.asString();
 		auto vertStr = ownerVert.c_str();
 		auto fragStr = ownerFrag.c_str();
-		auto shader = new Shader(vertStr, fragStr);
+		auto shader = std::make_unique<Shader>(vertStr, fragStr);
 		shader->setPathInfos(vertPathStr, fragPathStr);
 		shader->compile();
-		assets[path] = shader;
+		assets[path] = std::move(shader);
 		break;
 	}
 	case AssetType::TEXTURE: {
-		auto texture = new Texture(path);
-		assets[path] = texture;
+		auto texture = std::make_unique<Texture>(path);
+		assets[path] = std::move(texture);
 		break;
 	}
 	default:
@@ -72,8 +58,7 @@ std::optional<Texture*> AssetManager::getTexture(std::string path) {
 }
 
 std::optional<Asset*> AssetManager::getAsset(std::string path) {
-	path = assetsPath + path;
 	if (auto asset = assets.find(path); asset != assets.end())
-		return asset->second;
+		return asset->second.get();
 	return std::nullopt;
 }

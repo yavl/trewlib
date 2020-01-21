@@ -11,6 +11,6 @@ Button::Button(std::string name) : Widget(name) {
 
 Button::~Button() {}
 
-void Button::draw() {
+void Button::draw() const {
 	sprite->draw();
 }

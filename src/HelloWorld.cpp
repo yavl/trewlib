@@ -19,18 +19,18 @@ HelloWorld::HelloWorld(std::shared_ptr<WindowManager> window) {
 HelloWorld::~HelloWorld() {}
 
 void HelloWorld::create() {
-	assets = std::make_unique<AssetManager>("assets");
-	assets->load("default", AssetType::SHADER);
-	assets->load("tex.png", AssetType::TEXTURE);
-	assets->load("tex2.png", AssetType::TEXTURE);
+	assets = std::make_unique<AssetManager>("assets/assets.json");
+	assets->load("assets/default", AssetType::SHADER);
+	assets->load("assets/tex.png", AssetType::TEXTURE);
+	assets->load("assets/tex2.png", AssetType::TEXTURE);
 
-	auto sh = assets->getShader("default").value();
-	auto tex = assets->getTexture("tex.png").value();
+	auto sh = assets->getShader("assets/default").value();
+	auto tex = assets->getTexture("assets/tex.png").value();
 	tex->setShader(sh);
 	tex->setCamera(cam.get());
 	sprite = std::make_unique<Sprite>(tex);
 
-	auto tex2 = assets->getTexture("tex2.png").value();
+	auto tex2 = assets->getTexture("assets/tex2.png").value();
 	tex2->setShader(sh);
 	tex2->setCamera(cam.get());
 	auto sprite2 = new Sprite(tex2);

@@ -42,6 +42,7 @@ source_group("trew" FILES ${SRC_trew})
 source_group("trew\\nodes" FILES ${SRC_trew_nodes})
 source_group("trew\\actions" FILES ${SRC_trew_actions})
 source_group("game" FILES ${SRC})
+target_link_libraries (Trewlib spdlog)
 
 if(WIN32)
 	include_directories(Trewlib ../extlibs/include)
