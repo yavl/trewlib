@@ -3,13 +3,13 @@
 #include "trew/nodes/Node.hpp"
 
 namespace trew {
-	class Texture;
+	class Drawable;
 	class Sprite : public Node {
 	public:
-		Sprite(Texture* tex);
+		Sprite(Drawable* drawable);
 		virtual ~Sprite() = default;
 		void draw() const override;
 	private:
-		Texture* texture;
+		Drawable* drawable;
 	};
 }

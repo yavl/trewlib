@@ -1,10 +1,10 @@
 #pragma once
 
 namespace trew {
-	class Node;
+	class Actor;
 	class Action {
 	public:
 		virtual ~Action() = default;
-		virtual void update(float dt, Node& node) = 0;
+		virtual void update(float dt, Actor& actor) = 0;
 	};
 }

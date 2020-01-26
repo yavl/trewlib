@@ -1,20 +1,21 @@
 #include "Sprite.hpp"
 #include "Texture.hpp"
+#include <trew/Drawable.hpp>
 
 using namespace trew;
 
-Sprite::Sprite(Texture* texture) : Node() {
-	this->texture = texture;
-	float width = static_cast<float>(texture->getWidth());
-	float height = static_cast<float>(texture->getHeight());
+Sprite::Sprite(Drawable* drawable) : Node() {
+	this->drawable = drawable;
+	float width = static_cast<float>(drawable->getImageWidth());
+	float height = static_cast<float>(drawable->getImageHeight());
 	setSize(width, height);
 }
 
 void Sprite::draw() const {
     // todo draw via spritebatch instead
 	if (getParent())
-		texture->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight());
+		drawable->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight());
 	else
-		texture->draw(getX(), getY(), getWidth(), getHeight());
+		drawable->draw(getX(), getY(), getWidth(), getHeight());
 	Node::draw();
 }

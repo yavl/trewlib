@@ -7,11 +7,11 @@ MoveAction::MoveAction(float x, float y, float time) : dest(x, y) {
 	this->time = time;
 }
 
-void MoveAction::update(float dt, Node& node) {
+void MoveAction::update(float dt, Actor& actor) {
 	// WIP
 	float speed = dt / time;
-	float destX = dest.x - node.getX();
-	float destY = dest.y - node.getY();
+	float destX = dest.x - actor.getX();
+	float destY = dest.y - actor.getY();
 	Vector2 des = Vector2(destX, destY).normalized();
 	float dist = Vector2(destX, destY).length();
 
@@ -20,9 +20,9 @@ void MoveAction::update(float dt, Node& node) {
 	float distTravel = sqrt(travelX*travelX + travelY*travelY);
 
 	if (distTravel > dist) {
-		node.setXY(destX, destY);
+		actor.setXY(destX, destY);
 	} else {
-		node.setX(node.getX() + travelX);
-		node.setY(node.getY() + travelY);
+		actor.setX(actor.getX() + travelX);
+		actor.setY(actor.getY() + travelY);
 	}
 }

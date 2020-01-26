@@ -7,7 +7,7 @@ namespace trew {
 	class MoveAction : public Action {
 	public:
 		MoveAction(float x, float y, float time);
-		void update(float dt, Node& node) override;
+		void update(float dt, Actor& actor) override;
 	private:
 		Vector2 dest;
 		float time;

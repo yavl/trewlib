@@ -90,18 +90,18 @@ void Texture::draw(float x, float y, float width, float height) {
 	glBindVertexArray(0);
 }
 
+int Texture::getImageWidth() const {
+	return texWidth;
+}
+
+int Texture::getImageHeight() const {
+	return texHeight;
+}
+
 void Texture::setShader(Shader* shader) {
 	this->shader = shader;
 }
 
 void Texture::setCamera(Camera* cam) {
 	this->cam = cam;
-}
-
-int Texture::getWidth() const {
-	return texWidth;
-}
-
-int Texture::getHeight() const {
-	return texHeight;
 }
