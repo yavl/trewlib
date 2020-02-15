@@ -6,6 +6,7 @@ using namespace trew;
 
 Node::Node() {
 	parent = nullptr;
+	logDebug("node", fmt::format("{} constructed", name));
 }
 
 Node::Node(std::string name) : Node() {

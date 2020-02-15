@@ -9,6 +9,8 @@ using namespace trew;
 using namespace nlohmann;
 
 int main() {
+	Logger::getInstance().setLogLevel(LogLevel::LOG_DEBUG);
+
 	auto file = FileHandle("assets/properties.json").asString();
 	json j = json::parse(file);
 	auto windowProperties = j["window"];
