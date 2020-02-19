@@ -1,5 +1,6 @@
 #include "MoveAction.hpp"
 #include <trew/nodes/Node.hpp>
+#include <cmath>
 
 using namespace trew;
 
@@ -17,7 +18,7 @@ void MoveAction::update(float dt, Actor& actor) {
 
 	float travelX = destX * speed;
 	float travelY = destY * speed;
-	float distTravel = sqrt(travelX*travelX + travelY*travelY);
+	float distTravel = std::sqrt(travelX*travelX + travelY*travelY);
 
 	if (distTravel > dist) {
 		actor.setXY(destX, destY);
