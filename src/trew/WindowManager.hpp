@@ -1,33 +1,31 @@
 #pragma once
 
-#include <string>
+#include "Window.hpp"
 #include <vector>
-#include <functional>
 
 struct GLFWwindow;
 
 namespace trew {
 	// A wrapper class to handle single window
-	class WindowManager {
+	class WindowManager : public Window {
 	public:
-		typedef std::function<void(int width, int height)> FramebufferSizeCallback;
-		typedef std::function<void(double xoffset, double yoffset)> ScrollCallback;
-		typedef std::function<void(int button, int action, int mods)> MouseButtonCallback;
 		typedef std::function<void(int key, int scancode, int action, int mods)> KeyCallback;
 
 		WindowManager();
 		virtual ~WindowManager();
-		virtual void createWindow(std::string title, int width, int height);
-		virtual int getWidth() const;
-		virtual int getHeight() const;
-		virtual std::pair<int, int> getSize() const;
-		virtual bool shouldClose() const;
+		void createWindow(const std::string& title, int width, int height) override;
+		void swapBuffersPollEvents() override;
+		int getWidth() const override;
+		int getHeight() const override;
+		bool shouldClose() const override;
+
 		virtual GLFWwindow* getGlfwWindow() const;
-		virtual void addFramebufferSizeCallback(FramebufferSizeCallback&& f);
-		virtual void addScrollCallback(ScrollCallback&& f);
-		virtual void addMouseButtonCallback(MouseButtonCallback&& f);
+		void addResizeCallback(std::function<void(int width, int height)>&& resizeCallback) override;
+		virtual void addScrollCallback(std::function<void(double xoffset, double yoffset)>&& scrollCallback) override;
+		virtual void addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback);
 		virtual void addKeyCallback(KeyCallback&& f);
 	private:
+		virtual std::pair<int, int> getSize() const;
 		virtual void onResize(int width, int height);
 		virtual void onScroll(double xoffset, double yoffset);
 		virtual void onMouseButton(int button, int action, int mods);
@@ -38,9 +36,9 @@ namespace trew {
 		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 		GLFWwindow* window;
-		std::vector<FramebufferSizeCallback> framebufferSizeCallbacks;
-		std::vector<ScrollCallback> scrollCallbacks;
-		std::vector<MouseButtonCallback> mouseButtonCallbacks;
+		std::vector<std::function<void(int width, int height)>> framebufferSizeCallbacks;
+		std::vector<std::function<void(double xoffset, double yoffset)>> scrollCallbacks;
+		std::vector<std::function<void(int button, int action, int mods)>> mouseButtonCallbacks;
 		std::vector<KeyCallback> keyCallbacks;
 	};
 }

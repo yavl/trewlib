@@ -3,13 +3,13 @@
 #include <memory>
 
 namespace trew {
-	class WindowManager;
+	class Window;
 	class InputManager {
 	public:
-		InputManager(std::shared_ptr<WindowManager> window);
+		InputManager(std::shared_ptr<Window> window);
 		virtual ~InputManager() = default;
 		virtual void update();
 	private:
-		std::shared_ptr<WindowManager> window;
+		std::shared_ptr<Window> window;
 	};
 }

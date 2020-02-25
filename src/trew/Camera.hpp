@@ -1,14 +1,14 @@
 #pragma once
 
-#include "pm.hpp"
+#include "trew.hpp"
 #include "Vector2.hpp"
 #include <memory>
 
 namespace trew {
-	class WindowManager;
+	class Window;
 	class Camera {
 	public:
-		Camera(std::shared_ptr<WindowManager> window);
+		Camera(std::shared_ptr<Window> window);
 		virtual ~Camera() = default;
 		virtual void update(float dt);
 		virtual void setPosXY(float x, float y);
@@ -22,7 +22,7 @@ namespace trew {
 	private:
 		virtual void updateProjection(int width, int height);
 
-		std::shared_ptr<WindowManager> window;
+		std::shared_ptr<Window> window;
 		float camSpeed;
 		float zoomFactor;
 		Vector2 pos;

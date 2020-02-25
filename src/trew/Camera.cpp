@@ -5,7 +5,7 @@
 
 using namespace trew;
 
-Camera::Camera(std::shared_ptr<WindowManager> window) :
+Camera::Camera(std::shared_ptr<Window> window) :
 	view(1.f)
 {
 	this->window = window;
@@ -25,20 +25,21 @@ Camera::Camera(std::shared_ptr<WindowManager> window) :
 	window->addMouseButtonCallback([=](int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			double x, y;
-			glfwGetCursorPos(window->getGlfwWindow(), &x, &y);
+			auto win = static_cast<WindowManager*>(window.get());
+			glfwGetCursorPos(win->getGlfwWindow(), &x, &y);
 			auto world = screenToSpace(static_cast<float>(x), static_cast<float>(y));
 			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
 		}
 	});
 
-	window->addFramebufferSizeCallback([this](int width, int height) {
+	window->addResizeCallback([this](int width, int height) {
 		updateProjection(width, height);
 	});
 }
 
 void Camera::update(float dt) {
 	// todo cleanup
-	auto win = window->getGlfwWindow();
+	auto win = static_cast<WindowManager*>(window.get())->getGlfwWindow();
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
 		pos.y += camSpeed * dt;
 	if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)

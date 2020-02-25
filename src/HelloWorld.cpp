@@ -1,7 +1,6 @@
 #include "HelloWorld.hpp"
 #include "trew/Texture.hpp"
 #include "trew/Sprite.hpp"
-#include "trew/Hud.hpp"
 #include "trew/Camera.hpp"
 #include "trew/Shader.hpp"
 #include "trew/InputManager.hpp"
@@ -10,7 +9,7 @@
 #include "trew/Logger.hpp"
 #include "trew/actions/MoveAction.hpp"
 
-HelloWorld::HelloWorld(std::shared_ptr<WindowManager> window) {
+HelloWorld::HelloWorld(std::shared_ptr<Window> window) {
 	this->window = window;
 	cam = std::make_unique<Camera>(window);
 	input = std::make_unique<InputManager>(window);
@@ -38,9 +37,7 @@ void HelloWorld::create() {
 	sprite->addChild(sprite2);
 	//sprite->addAction(new MoveAction(2000, 1000, 2.f));
 
-	hud = std::make_unique<Hud>(window->getGlfwWindow());
-
-	window->addFramebufferSizeCallback([this](int width, int height) {
+	window->addResizeCallback([this](int width, int height) {
 		resize(width, height);
 	});
 }
@@ -51,9 +48,11 @@ void HelloWorld::update(float dt) {
 }
 
 void HelloWorld::render() {
+	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 	input->update();
 	sprite->draw();
-	hud->display();
+	window->swapBuffersPollEvents();
 }
 
 void HelloWorld::resize(int width, int height) {

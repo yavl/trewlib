@@ -8,7 +8,7 @@ MoveAction::MoveAction(float x, float y, float time) : dest(x, y) {
 	this->time = time;
 }
 
-void MoveAction::update(float dt, Actor& actor) {
+void MoveAction::update(float dt, Node& actor) {
 	// WIP
 	float speed = dt / time;
 	float destX = dest.x - actor.getX();

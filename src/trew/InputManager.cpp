@@ -1,14 +1,14 @@
 #include "InputManager.hpp"
-#include "pm.hpp"
+#include "trew.hpp"
 #include "WindowManager.hpp"
 
 using namespace trew;
 
-InputManager::InputManager(std::shared_ptr<WindowManager> window) {
+InputManager::InputManager(std::shared_ptr<Window> window) {
 	this->window = window;
 }
 
 void InputManager::update() {
-	if (glfwGetKey(window->getGlfwWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window->getGlfwWindow(), true);
+	//if (glfwGetKey(window->getGlfwWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	//	glfwSetWindowShouldClose(window->getGlfwWindow(), true);
 }

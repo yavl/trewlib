@@ -1,4 +1,4 @@
-#include "trew/pm.hpp"
+#include "trew/trew.hpp"
 #include "HelloWorld.hpp"
 #include "trew/WindowManager.hpp"
 #include "trew/FileHandle.hpp"
@@ -38,12 +38,8 @@ int main() {
 			prevTime = currentFrame;
 		}
 
-		glClearColor(0.f, 0.5f, 0.7f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		m->update(static_cast<float>(dt));
 		m->render();
-		glfwSwapBuffers(window->getGlfwWindow());
-		glfwPollEvents();
 	}
 	glfwTerminate();
 }

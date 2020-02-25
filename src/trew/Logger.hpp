@@ -25,7 +25,7 @@ namespace trew {
 		void debug(std::string tag, std::string message);
 		void setLogLevel(LogLevel logLevel);
 	private:
-		Logger(bool overwriteLogfile = false);
+		Logger(bool overwriteLogfile = true);
 		~Logger();
 		LogLevel logLevel;
 	};

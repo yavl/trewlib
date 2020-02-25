@@ -1,5 +1,5 @@
 #include "WindowManager.hpp"
-#include "pm.hpp"
+#include "trew.hpp"
 #include "Logger.hpp"
 
 using namespace trew;
@@ -12,7 +12,7 @@ WindowManager::~WindowManager() {
 	glfwTerminate();
 }
 
-void WindowManager::createWindow(std::string title, int width, int height) {
+void WindowManager::createWindow(const std::string& title, int width, int height) {
 	assert(window == nullptr);
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -39,6 +39,11 @@ void WindowManager::createWindow(std::string title, int width, int height) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
+void WindowManager::swapBuffersPollEvents() {
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}
+
 int WindowManager::getWidth() const {
 	return getSize().first;
 }
@@ -62,16 +67,16 @@ GLFWwindow* WindowManager::getGlfwWindow() const {
 	return window;
 }
 
-void WindowManager::addFramebufferSizeCallback(FramebufferSizeCallback&& f) {
-	framebufferSizeCallbacks.emplace_back(f);
+void WindowManager::addResizeCallback(std::function<void(int width, int height)>&& resizeCallback) {
+	framebufferSizeCallbacks.emplace_back(resizeCallback);
 }
 
-void WindowManager::addScrollCallback(ScrollCallback&& f) {
-	scrollCallbacks.emplace_back(f);
+void WindowManager::addScrollCallback(std::function<void(double xoffset, double yoffset)>&& scrollCallback) {
+	scrollCallbacks.emplace_back(scrollCallback);
 }
 
-void WindowManager::addMouseButtonCallback(MouseButtonCallback&& f) {
-	mouseButtonCallbacks.emplace_back(f);
+void WindowManager::addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback) {
+	mouseButtonCallbacks.emplace_back(mouseButtonCallback);
 }
 
 void WindowManager::addKeyCallback(KeyCallback&& f) {
