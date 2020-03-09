@@ -18,12 +18,14 @@ namespace trew {
 		int getWidth() const override;
 		int getHeight() const override;
 		bool shouldClose() const override;
+		void close() override;
 
 		virtual GLFWwindow* getGlfwWindow() const;
 		void addResizeCallback(std::function<void(int width, int height)>&& resizeCallback) override;
-		virtual void addScrollCallback(std::function<void(double xoffset, double yoffset)>&& scrollCallback) override;
-		virtual void addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback);
+		void addScrollCallback(std::function<void(double xoffset, double yoffset)>&& scrollCallback) override;
+		void addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback);
 		virtual void addKeyCallback(KeyCallback&& f);
+		virtual Input& getInput() const;
 	private:
 		virtual std::pair<int, int> getSize() const;
 		virtual void onResize(int width, int height);
@@ -36,6 +38,7 @@ namespace trew {
 		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 		GLFWwindow* window;
+		std::unique_ptr<Input> input;
 		std::vector<std::function<void(int width, int height)>> framebufferSizeCallbacks;
 		std::vector<std::function<void(double xoffset, double yoffset)>> scrollCallbacks;
 		std::vector<std::function<void(int button, int action, int mods)>> mouseButtonCallbacks;

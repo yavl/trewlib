@@ -4,6 +4,7 @@
 
 namespace trew {
 	class Window;
+	class Input;
 	class InputManager {
 	public:
 		InputManager(std::shared_ptr<Window> window);
@@ -11,5 +12,6 @@ namespace trew {
 		virtual void update();
 	private:
 		std::shared_ptr<Window> window;
+		Input& input;
 	};
 }

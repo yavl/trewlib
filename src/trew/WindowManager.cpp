@@ -1,6 +1,7 @@
 #include "WindowManager.hpp"
 #include "trew.hpp"
 #include "Logger.hpp"
+#include <trew/input/impl/GlfwInput.hpp>
 
 using namespace trew;
 
@@ -37,6 +38,7 @@ void WindowManager::createWindow(const std::string& title, int width, int height
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetKeyCallback(window, key_callback);
+	input = std::make_unique<GlfwInput>(window);
 }
 
 void WindowManager::swapBuffersPollEvents() {
@@ -63,6 +65,10 @@ bool WindowManager::shouldClose() const {
 	return glfwWindowShouldClose(window);
 }
 
+void WindowManager::close() {
+	glfwSetWindowShouldClose(window, true);
+}
+
 GLFWwindow* WindowManager::getGlfwWindow() const {
 	return window;
 }
@@ -81,6 +87,10 @@ void WindowManager::addMouseButtonCallback(std::function<void(int button, int ac
 
 void WindowManager::addKeyCallback(KeyCallback&& f) {
 	keyCallbacks.emplace_back(f);
+}
+
+Input& WindowManager::getInput() const {
+	return *input;
 }
 
 void WindowManager::onResize(int width, int height) {
