@@ -2,8 +2,7 @@
 
 #include <vector>
 #include <string>
-#include <functional>
-#include <optional>
+#include <memory>
 #include <trew/Vector2.hpp>
 #include <trew/actions/Actor.hpp>
 
