@@ -53,13 +53,13 @@ source_group("trew\\input" FILES ${SRC_trew_input})
 source_group("trew\\input\\impl" FILES ${SRC_trew_input_impl})
 source_group("game" FILES ${SRC})
 
+
+include_directories(Trewlib ../extlibs/include)
 if(WIN32)
-	include_directories(Trewlib ../extlibs/include)
 	target_link_libraries (Trewlib opengl32)
 endif()
 
 if(APPLE)
-	include_directories(Trewlib ../extlibs/include)
 	include_directories(Trewlib /usr/local/include)
 	link_directories(Trewlib /usr/local/lib)
 	target_link_libraries (Trewlib glfw)
