@@ -56,14 +56,17 @@ source_group("game" FILES ${SRC})
 
 include_directories(Trewlib ../extlibs/include)
 if(WIN32)
-	target_link_libraries (Trewlib opengl32)
+	target_link_libraries(Trewlib opengl32)
 endif()
 
 if(APPLE)
 	include_directories(Trewlib /usr/local/include)
 	link_directories(Trewlib /usr/local/lib)
-	target_link_libraries (Trewlib glfw)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit")
 endif()
 
-target_link_libraries (Trewlib spdlog)
+if(UNIX AND NOT APPLE)
+	target_link_libraries(Trewlib dl)
+endif()
+
+target_link_libraries(Trewlib spdlog glfw)
