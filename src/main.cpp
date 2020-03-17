@@ -41,5 +41,4 @@ int main() {
 		m->update(static_cast<float>(dt));
 		m->render();
 	}
-	glfwTerminate();
 }

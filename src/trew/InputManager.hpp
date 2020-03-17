@@ -7,11 +7,11 @@ namespace trew {
 	class Input;
 	class InputManager {
 	public:
-		InputManager(std::shared_ptr<Window> window);
+		InputManager(std::weak_ptr<Window> window);
 		virtual ~InputManager() = default;
 		virtual void update();
 	private:
-		std::shared_ptr<Window> window;
+		std::weak_ptr<Window> window;
 		Input& input;
 	};
 }

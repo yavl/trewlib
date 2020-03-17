@@ -9,7 +9,7 @@
 #include "trew/Logger.hpp"
 #include "trew/actions/MoveAction.hpp"
 
-HelloWorld::HelloWorld(std::shared_ptr<Window> window) {
+HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 	this->window = window;
 	cam = std::make_unique<Camera>(window);
 	input = std::make_unique<InputManager>(window);
@@ -37,7 +37,7 @@ void HelloWorld::create() {
 	sprite->addChild(sprite2);
 	//sprite->addAction(new MoveAction(2000, 1000, 2.f));
 
-	window->addResizeCallback([this](int width, int height) {
+	window.lock()->addResizeCallback([this](int width, int height) {
 		resize(width, height);
 	});
 }
@@ -52,7 +52,7 @@ void HelloWorld::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	input->update();
 	sprite->draw();
-	window->swapBuffersPollEvents();
+	window.lock()->swapBuffersPollEvents();
 }
 
 void HelloWorld::resize(int width, int height) {

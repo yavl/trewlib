@@ -8,7 +8,7 @@ namespace trew {
 	class Window;
 	class Camera {
 	public:
-		Camera(std::shared_ptr<Window> window);
+		Camera(std::weak_ptr<Window> window);
 		virtual ~Camera() = default;
 		virtual void update(float dt);
 		virtual void setPosXY(float x, float y);
@@ -22,7 +22,7 @@ namespace trew {
 	private:
 		virtual void updateProjection(int width, int height);
 
-		std::shared_ptr<Window> window;
+		std::weak_ptr<Window> window;
 		float camSpeed;
 		float zoomFactor;
 		Vector2 pos;
