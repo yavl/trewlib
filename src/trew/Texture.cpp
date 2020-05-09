@@ -72,6 +72,7 @@ Texture::Texture(std::string path) {
 Texture::~Texture() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 }
 
 void Texture::draw(float x, float y, float width, float height) {
