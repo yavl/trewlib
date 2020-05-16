@@ -80,9 +80,12 @@ std::string Node::getName() const {
 }
 
 void Node::act(float dt) {
-	for (auto& action : actions) {
+	actions.erase(std::remove_if(actions.begin(), actions.end(), [&](std::unique_ptr<Action>& action) -> bool {
+		if (action->hasFinished())
+			return true;
 		action->update(dt, *this);
-	}
+		return false;
+	}), actions.end());
 }
 
 void Node::addAction(Action* action) {

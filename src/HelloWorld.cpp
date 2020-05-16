@@ -35,7 +35,7 @@ void HelloWorld::create() {
 	auto sprite2 = new Sprite(tex2);
 	sprite2->setXY(400, 300);
 	sprite->addChild(sprite2);
-	//sprite->addAction(new MoveAction(2000, 1000, 2.f));
+	sprite->addAction(new MoveAction(2000.f, 1000.f, 10.f));
 
 	window.lock()->addResizeCallback([this](int width, int height) {
 		resize(width, height);
