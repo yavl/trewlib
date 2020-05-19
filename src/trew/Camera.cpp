@@ -2,6 +2,7 @@
 #include "WindowManager.hpp"
 #include <functional>
 #include "Logger.hpp"
+#include "input/Input.hpp"
 
 using namespace trew;
 
@@ -38,15 +39,17 @@ Camera::Camera(std::weak_ptr<Window> window) :
 }
 
 void Camera::update(float dt) {
-	// todo cleanup
+	// todo cleanup & make it implementation aware (no glfw)
 	auto win = static_cast<WindowManager*>(window.lock().get())->getGlfwWindow();
-	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
+	auto& input = window.lock().get()->getInput();
+
+	if (input.isKeyPressed(Key::W))
 		pos.y += camSpeed * dt;
-	if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
+	if (input.isKeyPressed(Key::A))
 		pos.x -= camSpeed * dt;
-	if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
+	if (input.isKeyPressed(Key::S))
 		pos.y -= camSpeed * dt;
-	if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
+	if (input.isKeyPressed(Key::D))
 		pos.x += camSpeed * dt;
 
 	int state = glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE);

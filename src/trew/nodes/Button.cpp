@@ -14,3 +14,13 @@ Button::~Button() {}
 void Button::draw() const {
 	sprite->draw();
 }
+
+void Button::onClick() {
+	for (auto& clickCb : clickCallbacks) {
+		clickCb();
+	}
+}
+
+void Button::addOnClickCallback(std::function<void()>&& clickCb) {
+	clickCallbacks.emplace_back(clickCb);
+}

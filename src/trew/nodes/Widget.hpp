@@ -6,6 +6,7 @@ namespace trew {
 	public:
 		Widget(std::string name);
 		virtual ~Widget() = default;
+		virtual void onClick() = 0;
 	private:
 	};
 }

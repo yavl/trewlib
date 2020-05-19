@@ -2,7 +2,11 @@
 
 namespace trew {
 	enum class Key {
-		ESCAPE
+		ESCAPE,
+		W,
+		A,
+		S,
+		D
 	};
 
 	class Input {

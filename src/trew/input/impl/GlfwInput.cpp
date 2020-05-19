@@ -14,9 +14,27 @@ bool GlfwInput::isKeyPressed(Key key) const {
 }
 
 int GlfwInput::keyToGlfwKey(Key key) const {
+	// todo make this smarter
 	switch (key) {
 	case Key::ESCAPE: {
 		return GLFW_KEY_ESCAPE;
+		break;
+	}
+	case Key::W: {
+		return GLFW_KEY_W;
+		break;
+	}
+	case Key::A: {
+		return GLFW_KEY_A;
+		break;
+	}
+	case Key::S: {
+		return GLFW_KEY_S;
+		break;
+	}
+	case Key::D: {
+		return GLFW_KEY_D;
+		break;
 	}
 	default:
 		return 0;
