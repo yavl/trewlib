@@ -9,7 +9,7 @@ GlfwInput::GlfwInput(GLFWwindow* window) {
 
 bool GlfwInput::isKeyPressed(Key key) const {
 	if (glfwGetKey(window, keyToGlfwKey(key)) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+		return true;
 	return false;
 }
 

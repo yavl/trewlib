@@ -6,11 +6,13 @@
 
 using namespace trew;
 
+const int CAMERA_SPEED = 500.f;
+
 Camera::Camera(std::weak_ptr<Window> window) :
 	view(1.f)
 {
 	this->window = window;
-	camSpeed = 500.0f;
+	camSpeed = CAMERA_SPEED;
 	zoomFactor = 0.15f;
 	zoom = 1.f;
 	oldState = GLFW_RELEASE;
@@ -59,10 +61,12 @@ void Camera::update(float dt) {
 	float mouseY = static_cast<float>(ypos);
 	if (state == GLFW_PRESS && oldState == GLFW_RELEASE) {
 		dragNew = Vector2(mouseX, mouseY);
+		dragNew *= 1.f / zoom;
 		dragOld = dragNew;
 	}
 	if (state == GLFW_PRESS) {
 		dragNew = Vector2(mouseX, mouseY);
+		dragNew *= 1.f / zoom;
 		if (dragNew != dragOld) {
 			translate(dragOld.x - dragNew.x, dragNew.y - dragOld.y);
 			dragOld = dragNew;
@@ -78,11 +82,13 @@ void Camera::update(float dt) {
 		cameraPos,
 		cameraPos + cameraFront,
 		cameraUp);
-	view = glm::scale(view, glm::vec3(zoom, zoom, 1.f));
 
 	auto asd = screenToSpace(window.lock()->getWidth() / 2.f, window.lock()->getHeight() / 2.f);
-	glm::vec3 center(window.lock()->getWidth() / 2, window.lock()->getHeight() / 2, 0.f);
-	//view = glm::translate(view, -center);
+	glm::vec3 center(asd.x, asd.y, 0.f);
+	view = glm::translate(view, glm::vec3(center.x, center.y, 0.f));
+	view = glm::scale(view, glm::vec3(zoom, zoom, 1.f));
+	view = glm::translate(view, glm::vec3(-center.x, -center.y, 0.f));
+	camSpeed = CAMERA_SPEED * 1.f/zoom;
 }
 
 void Camera::setPosXY(float x, float y) {
