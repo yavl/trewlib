@@ -1,6 +1,6 @@
 #include "HelloWorld.hpp"
 #include <trew/trew.hpp>
-#include <trew/WindowManager.hpp>
+#include <trew/app/impl_glfw/GlfwWindow.hpp>
 #include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
 #include <nlohmann/json.hpp>
@@ -18,7 +18,7 @@ int main() {
 	int height = windowProperties["height"].get<int>();
 	std::string title = windowProperties["title"].get<std::string>();
 
-	auto window = std::make_shared<WindowManager>();
+	auto window = std::make_shared<GlfwWindow>();
 	window->createWindow(title, width, height);
 
 	auto m = std::make_unique<HelloWorld>(window);

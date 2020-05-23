@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Window.hpp"
+#include "../Window.hpp"
 #include <vector>
 #include <memory>
 
@@ -8,12 +8,12 @@ struct GLFWwindow;
 
 namespace trew {
 	// A wrapper class to handle single window
-	class WindowManager : public Window {
+	class GlfwWindow : public Window {
 	public:
 		typedef std::function<void(int key, int scancode, int action, int mods)> KeyCallback;
 
-		WindowManager();
-		virtual ~WindowManager();
+		GlfwWindow();
+		virtual ~GlfwWindow();
 		void createWindow(const std::string& title, int width, int height) override;
 		void swapBuffersPollEvents() override;
 		int getWidth() const override;
@@ -21,7 +21,7 @@ namespace trew {
 		bool shouldClose() const override;
 		void close() override;
 
-		virtual GLFWwindow* getGlfwWindow() const;
+		virtual GLFWwindow* getRawGlfwWindow() const;
 		void addResizeCallback(std::function<void(int width, int height)>&& resizeCallback) override;
 		void addScrollCallback(std::function<void(double xoffset, double yoffset)>&& scrollCallback) override;
 		void addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback);

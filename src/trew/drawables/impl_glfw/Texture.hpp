@@ -2,7 +2,7 @@
 
 #include <trew/trew.hpp>
 #include <trew/Asset.hpp>
-#include <trew/Drawable.hpp>
+#include <trew/drawables/Drawable.hpp>
 #include <string>
 
 namespace trew {

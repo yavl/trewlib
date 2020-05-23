@@ -1,10 +1,10 @@
 #include "HelloWorld.hpp"
-#include <trew/Texture.hpp>
-#include <trew/Sprite.hpp>
+#include <trew/drawables/impl_glfw/Texture.hpp>
+#include <trew/nodes/Sprite.hpp>
 #include <trew/Camera.hpp>
 #include <trew/Shader.hpp>
 #include <trew/InputManager.hpp>
-#include <trew/WindowManager.hpp>
+#include <trew/app/impl_glfw/GlfwWindow.hpp>
 #include <trew/AssetManager.hpp>
 #include <trew/Logger.hpp>
 #include <trew/actions/MoveAction.hpp>

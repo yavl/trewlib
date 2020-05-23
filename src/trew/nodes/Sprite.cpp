@@ -1,5 +1,5 @@
 #include "Sprite.hpp"
-#include <trew/Drawable.hpp>
+#include <trew/drawables/Drawable.hpp>
 
 using namespace trew;
 

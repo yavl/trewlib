@@ -1,5 +1,5 @@
 #include "Camera.hpp"
-#include <trew/WindowManager.hpp>
+#include <trew/app/impl_glfw/GlfwWindow.hpp>
 #include <trew/Logger.hpp>
 #include <trew/input/Input.hpp>
 #include <functional>
@@ -28,8 +28,8 @@ Camera::Camera(std::weak_ptr<Window> window) :
 	window.lock()->addMouseButtonCallback([=](int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			double x, y;
-			auto win = static_cast<WindowManager*>(window.lock().get());
-			glfwGetCursorPos(win->getGlfwWindow(), &x, &y);
+			auto win = static_cast<GlfwWindow*>(window.lock().get());
+			glfwGetCursorPos(win->getRawGlfwWindow(), &x, &y);
 			auto world = screenToSpace(static_cast<float>(x), static_cast<float>(y));
 			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
 		}
@@ -42,7 +42,7 @@ Camera::Camera(std::weak_ptr<Window> window) :
 
 void Camera::update(float dt) {
 	// todo cleanup & make it implementation aware (no glfw)
-	auto win = static_cast<WindowManager*>(window.lock().get())->getGlfwWindow();
+	auto win = static_cast<GlfwWindow*>(window.lock().get())->getRawGlfwWindow();
 	auto& input = window.lock().get()->getInput();
 
 	if (input.isKeyPressed(Key::W))

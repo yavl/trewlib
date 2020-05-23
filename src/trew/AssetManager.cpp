@@ -1,7 +1,7 @@
 #include "AssetManager.hpp"
 #include <trew/FileHandle.hpp>
 #include <trew/Shader.hpp>
-#include <trew/Texture.hpp>
+#include <trew/drawables/impl_glfw/Texture.hpp>
 #include <cassert>
 #include <fmt/core.h>
 #include <nlohmann/json.hpp>
