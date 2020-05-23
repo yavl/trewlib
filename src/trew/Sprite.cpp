@@ -1,5 +1,4 @@
 #include "Sprite.hpp"
-#include "Texture.hpp"
 #include <trew/Drawable.hpp>
 
 using namespace trew;

@@ -1,10 +1,10 @@
 #pragma once
 
+#include <trew/Vector2.hpp>
+#include <trew/actions/Actor.hpp>
 #include <vector>
 #include <string>
 #include <memory>
-#include <trew/Vector2.hpp>
-#include <trew/actions/Actor.hpp>
 
 namespace trew {
 	class Node : public Actor {

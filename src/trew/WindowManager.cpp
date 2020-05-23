@@ -1,6 +1,6 @@
 #include "WindowManager.hpp"
-#include "trew.hpp"
-#include "Logger.hpp"
+#include <trew/trew.hpp>
+#include <trew/Logger.hpp>
 #include <trew/input/impl/GlfwInput.hpp>
 
 using namespace trew;

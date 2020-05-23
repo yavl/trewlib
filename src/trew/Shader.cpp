@@ -1,6 +1,6 @@
 #include "Shader.hpp"
-#include "FileHandle.hpp"
-#include "Logger.hpp"
+#include <trew/FileHandle.hpp>
+#include <trew/Logger.hpp>
 
 using namespace trew;
 

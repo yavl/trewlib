@@ -1,8 +1,8 @@
 #include "AssetManager.hpp"
+#include <trew/FileHandle.hpp>
+#include <trew/Shader.hpp>
+#include <trew/Texture.hpp>
 #include <cassert>
-#include "FileHandle.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
 #include <fmt/core.h>
 #include <nlohmann/json.hpp>
 

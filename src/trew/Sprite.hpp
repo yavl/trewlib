@@ -1,6 +1,6 @@
 #pragma once
 
-#include "trew/nodes/Node.hpp"
+#include <trew/nodes/Node.hpp>
 
 namespace trew {
 	class Drawable;

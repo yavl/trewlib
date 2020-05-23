@@ -1,7 +1,7 @@
 #include "Hud.hpp"
+#include <trew/Logger.hpp>
 #include <algorithm>
 #include <thread>
-#include "Logger.hpp"
 
 using namespace trew;
 

@@ -1,6 +1,6 @@
 #include "Button.hpp"
-#include "trew/Sprite.hpp"
-#include "trew/Texture.hpp"
+#include <trew/Sprite.hpp>
+#include <trew/Texture.hpp>
 
 using namespace trew;
 

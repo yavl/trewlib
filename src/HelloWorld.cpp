@@ -1,13 +1,13 @@
 #include "HelloWorld.hpp"
-#include "trew/Texture.hpp"
-#include "trew/Sprite.hpp"
-#include "trew/Camera.hpp"
-#include "trew/Shader.hpp"
-#include "trew/InputManager.hpp"
-#include "trew/WindowManager.hpp"
-#include "trew/AssetManager.hpp"
-#include "trew/Logger.hpp"
-#include "trew/actions/MoveAction.hpp"
+#include <trew/Texture.hpp>
+#include <trew/Sprite.hpp>
+#include <trew/Camera.hpp>
+#include <trew/Shader.hpp>
+#include <trew/InputManager.hpp>
+#include <trew/WindowManager.hpp>
+#include <trew/AssetManager.hpp>
+#include <trew/Logger.hpp>
+#include <trew/actions/MoveAction.hpp>
 
 HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 	this->window = window;

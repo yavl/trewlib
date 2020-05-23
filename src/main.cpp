@@ -1,8 +1,8 @@
-#include "trew/trew.hpp"
 #include "HelloWorld.hpp"
-#include "trew/WindowManager.hpp"
-#include "trew/FileHandle.hpp"
-#include "trew/Logger.hpp"
+#include <trew/trew.hpp>
+#include <trew/WindowManager.hpp>
+#include <trew/FileHandle.hpp>
+#include <trew/Logger.hpp>
 #include <nlohmann/json.hpp>
 
 using namespace trew;

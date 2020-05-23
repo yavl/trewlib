@@ -1,9 +1,9 @@
 #include "Texture.hpp"
+#include <trew/Camera.hpp>
+#include <trew/Shader.hpp>
+#include <trew/Logger.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-#include "Camera.hpp"
-#include "Shader.hpp"
-#include "Logger.hpp"
 
 using namespace trew;
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "trew.hpp"
-#include "Vector2.hpp"
+#include <trew/trew.hpp>
+#include <trew/Vector2.hpp>
 #include <memory>
 
 namespace trew {

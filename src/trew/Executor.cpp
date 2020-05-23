@@ -1,7 +1,7 @@
 #include "Executor.hpp"
+#include <trew/Logger.hpp>
 #include <chrono>
 #include <thread>
-#include "Logger.hpp"
 
 using namespace trew;
 

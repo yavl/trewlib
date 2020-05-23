@@ -1,7 +1,7 @@
 #pragma once
 
-#include "trew.hpp"
-#include "Asset.hpp"
+#include <trew/trew.hpp>
+#include <trew/Asset.hpp>
 #include <string>
 
 namespace trew {

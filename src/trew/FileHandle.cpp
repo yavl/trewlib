@@ -1,6 +1,6 @@
 #include "FileHandle.hpp"
+#include <trew/Logger.hpp>
 #include <sstream>
-#include "Logger.hpp"
 
 using namespace trew;
 

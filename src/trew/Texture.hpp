@@ -1,9 +1,9 @@
 #pragma once
 
-#include "trew.hpp"
-#include "Asset.hpp"
-#include <string>
+#include <trew/trew.hpp>
+#include <trew/Asset.hpp>
 #include <trew/Drawable.hpp>
+#include <string>
 
 namespace trew {
 	class Camera;
