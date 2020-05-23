@@ -1,5 +1,6 @@
 #pragma once
 
+#include <trew/app/Application.hpp>
 #include <memory>
 
 namespace trew {
@@ -16,14 +17,14 @@ using namespace trew;
 
 struct GLFWwindow;
 
-class HelloWorld {
+class HelloWorld : public Application {
 public:
 	HelloWorld(std::weak_ptr<Window> window);
 	virtual ~HelloWorld();
-	void create();
-	void update(float dt);
-	void render();
-	void resize(int width, int height);
+	void create() override;
+	void update(float dt) override;
+	void render() override;
+	void resize(int width, int height) override;
 private:
 	std::weak_ptr<Window> window;
 	std::unique_ptr<Camera> cam;
