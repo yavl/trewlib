@@ -8,6 +8,7 @@
 #include <trew/AssetManager.hpp>
 #include <trew/Logger.hpp>
 #include <trew/actions/MoveAction.hpp>
+#include <trew/drawables/impl_glfw/Text.hpp>
 
 HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 	this->window = window;
@@ -20,6 +21,7 @@ HelloWorld::~HelloWorld() {}
 void HelloWorld::create() {
 	assets = std::make_unique<AssetManager>("assets/assets.json");
 	assets->load("assets/default", AssetType::SHADER);
+	assets->load("assets/text", AssetType::SHADER);
 	assets->load("assets/tex.png", AssetType::TEXTURE);
 	assets->load("assets/tex2.png", AssetType::TEXTURE);
 
@@ -40,9 +42,13 @@ void HelloWorld::create() {
 	window.lock()->addResizeCallback([this](int width, int height) {
 		resize(width, height);
 	});
+
+	auto textSh = assets->getShader("assets/text").value();
+	text = std::make_unique<Text>(textSh, cam.get());
 }
 
 void HelloWorld::update(float dt) {
+	input->update();
 	cam->update(dt);
 	sprite->act(dt);
 }
@@ -50,8 +56,8 @@ void HelloWorld::update(float dt) {
 void HelloWorld::render() {
 	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	input->update();
 	sprite->draw();
+	text->draw("Example freetype text", 0.f, 800.f, 1.f, glm::vec3(0.5, 0.8f, 0.2f));
 	window.lock()->swapBuffersPollEvents();
 }
 

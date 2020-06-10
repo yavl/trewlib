@@ -11,6 +11,7 @@ namespace trew {
 	class InputManager;
 	class Window;
 	class AssetManager;
+	class Text;
 }
 
 using namespace trew;
@@ -31,4 +32,5 @@ private:
 	std::unique_ptr<InputManager> input;
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<AssetManager> assets;
+	std::unique_ptr<Text> text;
 };
