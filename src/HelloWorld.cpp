@@ -57,7 +57,7 @@ void HelloWorld::render() {
 	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	sprite->draw();
-	text->draw("пример freetype text", 0.f, 800.f, 1.f, glm::vec3(0.5, 0.8f, 0.2f));
+	text->draw("Example freetype text", 0.f, 600.f, 1.f, glm::vec3(0.5, 0.8f, 0.2f));
 	window.lock()->swapBuffersPollEvents();
 }
 
