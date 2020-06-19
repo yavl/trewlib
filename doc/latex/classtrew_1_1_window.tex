@@ -1,0 +1,46 @@
+\hypertarget{classtrew_1_1_window}{}\doxysection{trew\+::Window Class Reference}
+\label{classtrew_1_1_window}\index{trew::Window@{trew::Window}}
+Inheritance diagram for trew\+::Window\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classtrew_1_1_window}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a1ebc6f77e84720f59f3c0401be998919}\label{classtrew_1_1_window_a1ebc6f77e84720f59f3c0401be998919}} 
+virtual void {\bfseries create\+Window} (const std\+::string \&title, int width, int height)=0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a4bc814f41ac9501e2b106712ebe5cf98}\label{classtrew_1_1_window_a4bc814f41ac9501e2b106712ebe5cf98}} 
+virtual void {\bfseries swap\+Buffers\+Poll\+Events} ()=0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a4e26065e89654cacec8f91b548d9f653}\label{classtrew_1_1_window_a4e26065e89654cacec8f91b548d9f653}} 
+virtual int {\bfseries get\+Width} () const =0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a1b4ccb29d05af6c7feef221fe716ed36}\label{classtrew_1_1_window_a1b4ccb29d05af6c7feef221fe716ed36}} 
+virtual int {\bfseries get\+Height} () const =0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a7eda325b12493c7fe4e0f1f333119066}\label{classtrew_1_1_window_a7eda325b12493c7fe4e0f1f333119066}} 
+virtual bool {\bfseries should\+Close} () const =0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a66ec00c73517258db5222c1317b12b7b}\label{classtrew_1_1_window_a66ec00c73517258db5222c1317b12b7b}} 
+virtual void {\bfseries close} ()=0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_aa04d55fe0fef671c5faedaea4491f6db}\label{classtrew_1_1_window_aa04d55fe0fef671c5faedaea4491f6db}} 
+virtual void {\bfseries add\+Resize\+Callback} (std\+::function$<$ void(int width, int height)$>$ \&\&resize\+Callback)=0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a719b63f80b7d88255efef29b7ad3ac21}\label{classtrew_1_1_window_a719b63f80b7d88255efef29b7ad3ac21}} 
+virtual void {\bfseries add\+Scroll\+Callback} (std\+::function$<$ void(double xoffset, double yoffset)$>$ \&\&scroll\+Callback)=0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a43556d6bdcc66bf320a0d759beaa30fa}\label{classtrew_1_1_window_a43556d6bdcc66bf320a0d759beaa30fa}} 
+virtual void {\bfseries add\+Mouse\+Button\+Callback} (std\+::function$<$ void(int button, int action, int mods)$>$ \&\&mouse\+Button\+Callback)=0
+\item 
+\mbox{\Hypertarget{classtrew_1_1_window_a2edf328c49ed8ff06e762e0c118c18bd}\label{classtrew_1_1_window_a2edf328c49ed8ff06e762e0c118c18bd}} 
+virtual \mbox{\hyperlink{classtrew_1_1_input}{Input}} \& {\bfseries get\+Input} () const =0
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+trew/app/Window.\+hpp\end{DoxyCompactItemize}

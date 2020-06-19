@@ -1,0 +1,59 @@
+\hypertarget{classtrew_1_1_glfw_window}{}\doxysection{trew\+::Glfw\+Window Class Reference}
+\label{classtrew_1_1_glfw_window}\index{trew::GlfwWindow@{trew::GlfwWindow}}
+Inheritance diagram for trew\+::Glfw\+Window\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classtrew_1_1_glfw_window}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_aa27aa6234f409c892195bae346af5ed3}\label{classtrew_1_1_glfw_window_aa27aa6234f409c892195bae346af5ed3}} 
+typedef std\+::function$<$ void(int key, int scancode, int action, int mods)$>$ {\bfseries Key\+Callback}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_a1f0387731491b8058f9a86d5184f4230}\label{classtrew_1_1_glfw_window_a1f0387731491b8058f9a86d5184f4230}} 
+void {\bfseries create\+Window} (const std\+::string \&title, int width, int height) override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_acf4477f43db495364df7de0b66c5b2b0}\label{classtrew_1_1_glfw_window_acf4477f43db495364df7de0b66c5b2b0}} 
+void {\bfseries swap\+Buffers\+Poll\+Events} () override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_a166b7942b5daa54028ae2f68496a20c9}\label{classtrew_1_1_glfw_window_a166b7942b5daa54028ae2f68496a20c9}} 
+int {\bfseries get\+Width} () const override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_aeaecd4396a21f55a33c9e08b2a4478b8}\label{classtrew_1_1_glfw_window_aeaecd4396a21f55a33c9e08b2a4478b8}} 
+int {\bfseries get\+Height} () const override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_a97fef7fe16d0a628c0d3801305feb058}\label{classtrew_1_1_glfw_window_a97fef7fe16d0a628c0d3801305feb058}} 
+bool {\bfseries should\+Close} () const override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_a4a43ab49d2582b3f50f0165e75bbbdbe}\label{classtrew_1_1_glfw_window_a4a43ab49d2582b3f50f0165e75bbbdbe}} 
+void {\bfseries close} () override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_af2dcb380aa1e697b11fbaa131c15cc3f}\label{classtrew_1_1_glfw_window_af2dcb380aa1e697b11fbaa131c15cc3f}} 
+virtual G\+L\+F\+Wwindow $\ast$ {\bfseries get\+Raw\+Glfw\+Window} () const
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_aecd24ed2bdac83a04d7869d838e2edd6}\label{classtrew_1_1_glfw_window_aecd24ed2bdac83a04d7869d838e2edd6}} 
+void {\bfseries add\+Resize\+Callback} (std\+::function$<$ void(int width, int height)$>$ \&\&resize\+Callback) override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_abc7b4d3d7ccdbbc54b2c12029407a10c}\label{classtrew_1_1_glfw_window_abc7b4d3d7ccdbbc54b2c12029407a10c}} 
+void {\bfseries add\+Scroll\+Callback} (std\+::function$<$ void(double xoffset, double yoffset)$>$ \&\&scroll\+Callback) override
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_a9769d16ac1ae1bc9757603d77b8c0ed0}\label{classtrew_1_1_glfw_window_a9769d16ac1ae1bc9757603d77b8c0ed0}} 
+void {\bfseries add\+Mouse\+Button\+Callback} (std\+::function$<$ void(int button, int action, int mods)$>$ \&\&mouse\+Button\+Callback)
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_aed00f4e3c2865f53206e9cf58ceefd4b}\label{classtrew_1_1_glfw_window_aed00f4e3c2865f53206e9cf58ceefd4b}} 
+virtual void {\bfseries add\+Key\+Callback} (Key\+Callback \&\&f)
+\item 
+\mbox{\Hypertarget{classtrew_1_1_glfw_window_af061c4b06f666553ebcfd93a35a4362b}\label{classtrew_1_1_glfw_window_af061c4b06f666553ebcfd93a35a4362b}} 
+virtual \mbox{\hyperlink{classtrew_1_1_input}{Input}} \& {\bfseries get\+Input} () const
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+trew/app/impl\+\_\+glfw/Glfw\+Window.\+hpp\item 
+trew/app/impl\+\_\+glfw/Glfw\+Window.\+cpp\end{DoxyCompactItemize}
