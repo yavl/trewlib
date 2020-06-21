@@ -63,4 +63,5 @@ void HelloWorld::render() {
 
 void HelloWorld::resize(int width, int height) {
 	glViewport(0, 0, width, height);
+	render();
 }

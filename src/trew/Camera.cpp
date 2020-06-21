@@ -6,7 +6,7 @@
 
 using namespace trew;
 
-const int CAMERA_SPEED = 500.f;
+const float CAMERA_SPEED = 500.f;
 
 Camera::Camera(std::weak_ptr<Window> window) :
 	view(1.f)
