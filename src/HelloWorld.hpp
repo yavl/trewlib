@@ -2,6 +2,8 @@
 
 #include <trew/app/Application.hpp>
 #include <memory>
+#include <vector>
+#include <string>
 
 namespace trew {
 	class Texture;
@@ -33,4 +35,5 @@ private:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<AssetManager> assets;
 	std::unique_ptr<Text> text;
+	std::vector<std::string> texts;
 };

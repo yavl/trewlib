@@ -9,6 +9,7 @@
 #include <trew/Logger.hpp>
 #include <trew/actions/MoveAction.hpp>
 #include <trew/drawables/impl_glfw/Text.hpp>
+#include <rapidcsv.h>
 
 HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 	this->window = window;
@@ -45,6 +46,13 @@ void HelloWorld::create() {
 
 	auto textSh = assets->getShader("assets/text").value();
 	text = std::make_unique<Text>(textSh, cam.get());
+	
+	rapidcsv::Document doc("assets/colhdr.csv");
+	std::vector<float> col = doc.GetColumn<float>("Close");
+	for (auto& each : col) {
+		fmt::print("{}\n", each);
+		texts.push_back(std::to_string(each));
+	}
 }
 
 void HelloWorld::update(float dt) {
@@ -57,7 +65,13 @@ void HelloWorld::render() {
 	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	sprite->draw();
-	text->draw("Example freetype text", 0.f, 600.f, 1.f, glm::vec3(0.5, 0.8f, 0.2f));
+
+	float offset = 100.f;
+	float prevY = 200.f;
+	for (auto& textStr : texts) {
+		text->draw(textStr, -1000.f, prevY + offset, 1.f, glm::vec3(0.5, 0.8f, 0.2f));
+		prevY += offset;
+	}
 	window.lock()->swapBuffersPollEvents();
 }
 
