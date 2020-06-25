@@ -4,6 +4,8 @@
 
 namespace trew {
 	class Drawable;
+    /// Sprite class to draw and transform textures.
+    /** extends from Node class. */
 	class Sprite : public Node {
 	public:
 		Sprite(Drawable* drawable);
