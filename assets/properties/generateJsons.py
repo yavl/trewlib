@@ -4,7 +4,7 @@ data = {
 	"window": {
 		"width": 800,
 		"height": 600,
-		"title": "Netrew"
+		"title": "Trewlib"
 	}
 }
 

@@ -69,7 +69,7 @@ void HelloWorld::render() {
 	float offset = 100.f;
 	float prevY = 200.f;
 	for (auto& textStr : texts) {
-		text->draw(textStr, -1000.f, prevY + offset, 1.f, glm::vec3(0.5, 0.8f, 0.2f));
+		text->draw(textStr, -1000.f, prevY + offset, 1.f, glm::vec3(1.f, 1.f, 1.f));
 		prevY += offset;
 	}
 	window.lock()->swapBuffersPollEvents();
