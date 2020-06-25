@@ -10,6 +10,9 @@ namespace trew {
 	public:
 		Sprite(Drawable* drawable);
 		virtual ~Sprite() = default;
+		/// <summary>
+		/// draws sprite
+		/// </summary>
 		void draw() const override;
 	private:
 		Drawable* drawable;
