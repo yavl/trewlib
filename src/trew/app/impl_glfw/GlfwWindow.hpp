@@ -24,9 +24,9 @@ namespace trew {
 		virtual GLFWwindow* getRawGlfwWindow() const;
 		void addResizeCallback(std::function<void(int width, int height)>&& resizeCallback) override;
 		void addScrollCallback(std::function<void(double xoffset, double yoffset)>&& scrollCallback) override;
-		void addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback);
+		void addMouseButtonCallback(std::function<void(int button, int action, int mods)>&& mouseButtonCallback) override;
 		virtual void addKeyCallback(KeyCallback&& f);
-		virtual Input& getInput() const;
+		virtual Input& getInput() const override;
 	private:
 		virtual std::pair<int, int> getSize() const;
 		virtual void onResize(int width, int height);
