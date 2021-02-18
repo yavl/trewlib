@@ -81,9 +81,9 @@ endif()
 
 if(UNIX)
 	if(APPLE)
-		include_directories(Trewlib /usr/local/include)
-		include_directories(Trewlib /usr/local/include/freetype2)
-		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit -L/usr/local/lib")
+		include_directories(Trewlib /opt/homebrew/include)
+		include_directories(Trewlib /opt/homebrew/include/freetype2)
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit -L/opt/homebrew/lib")
 	else() # Linux
 		target_link_libraries(Trewlib dl)
 	endif()
