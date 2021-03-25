@@ -5,6 +5,7 @@
 
 namespace trew {
 	class Input;
+	class Vector2;
 	class Window {
 	public:
 		virtual ~Window() = default;
@@ -12,6 +13,7 @@ namespace trew {
 		virtual void swapBuffersPollEvents() = 0;
 		virtual int getWidth() const = 0;
 		virtual int getHeight() const = 0;
+		virtual Vector2 getCursorPos() const = 0;
 		virtual bool shouldClose() const = 0;
 		virtual void close() = 0;
 		virtual void addResizeCallback(std::function<void(int width, int height)>&& resizeCallback) = 0;

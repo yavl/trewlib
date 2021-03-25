@@ -2,6 +2,7 @@
 #include <trew/trew.hpp>
 #include <trew/Logger.hpp>
 #include <trew/input/impl_glfw/GlfwInput.hpp>
+#include <trew/Vector2.hpp>
 
 using namespace trew;
 
@@ -52,6 +53,12 @@ int GlfwWindow::getWidth() const {
 
 int GlfwWindow::getHeight() const {
 	return getSize().second;
+}
+
+Vector2 GlfwWindow::getCursorPos() const {
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+	return Vector2(x, y);
 }
 
 std::pair<int, int> GlfwWindow::getSize() const {

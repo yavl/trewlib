@@ -18,17 +18,34 @@ Camera::Camera(std::weak_ptr<Window> window) :
 	oldState = GLFW_RELEASE;
 	updateProjection(window.lock()->getWidth(), window.lock()->getHeight());
 
-	window.lock()->addScrollCallback([this](double xoffset, double yoffset) {
-		if (yoffset > 0)
+	window.lock()->addScrollCallback([this, window](double xoffset, double yoffset) {
+		if (yoffset > 0) {
+			auto& win = window.lock();
+			auto screenCoords = Vector2(win->getCursorPos().x, win->getCursorPos().y);
+			auto vec = glm::unProject(glm::vec3(screenCoords.x, screenCoords.y, 0), view, projection, glm::vec4(0, 0, win->getWidth(), win->getHeight()));
+			auto worldCoordsBefore = Vector2(vec.x, vec.y);
 			zoom += zoomFactor * zoom;
-		else
+			auto worldCoordsAfter = screenToSpace(screenCoords.x, screenCoords.y);
+			auto diff = worldCoordsAfter - worldCoordsBefore;
+			pos = pos - diff;
+		}
+		else {
+			auto& win = window.lock();
+			auto screenCoords = Vector2(win->getCursorPos().x, win->getCursorPos().y);
+			auto vec = glm::unProject(glm::vec3(screenCoords.x, screenCoords.y, 0), view, projection, glm::vec4(0, 0, win->getWidth(), win->getHeight()));
+			auto worldCoordsBefore = Vector2(vec.x, vec.y);
 			zoom -= zoomFactor * zoom;
+			auto worldCoordsAfter = screenToSpace(screenCoords.x, screenCoords.y);
+			auto diff = worldCoordsAfter - worldCoordsBefore;
+			pos = pos - diff;
+		}
 	});
 
 	window.lock()->addMouseButtonCallback([=](int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 			double x, y;
-			auto win = static_cast<GlfwWindow*>(window.lock().get());
+			auto winlock = window.lock();
+			auto win = static_cast<GlfwWindow*>(winlock.get());
 			glfwGetCursorPos(win->getRawGlfwWindow(), &x, &y);
 			auto world = screenToSpace(static_cast<float>(x), static_cast<float>(y));
 			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));

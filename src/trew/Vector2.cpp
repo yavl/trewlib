@@ -13,6 +13,14 @@ Vector2::Vector2(float x, float y) {
 	this->y = y;
 }
 
+Vector2 Vector2::operator+(const Vector2& b) const {
+	return Vector2(x + b.x, y + b.y);
+}
+
+Vector2 Vector2::operator-(const Vector2& b) const {
+	return Vector2(x - b.x, y - b.y);
+}
+
 Vector2 Vector2::operator*(float scalar) const {
 	return Vector2(x * scalar, y * scalar);
 }

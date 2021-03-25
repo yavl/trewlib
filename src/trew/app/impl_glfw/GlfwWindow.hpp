@@ -18,6 +18,7 @@ namespace trew {
 		void swapBuffersPollEvents() override;
 		int getWidth() const override;
 		int getHeight() const override;
+		Vector2 getCursorPos() const override;
 		bool shouldClose() const override;
 		void close() override;
 
