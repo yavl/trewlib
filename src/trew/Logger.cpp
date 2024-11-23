@@ -1,5 +1,4 @@
 #include "Logger.hpp"
-#define FMT_HEADER_ONLY
 #include <fmt/core.h>
 
 using namespace trew;
@@ -18,19 +17,19 @@ Logger& Logger::getInstance() {
 void Logger::log(std::string tag, std::string message) {
 	if (logLevel == LogLevel::LOG_NONE || logLevel == LogLevel::LOG_ERROR)
 		return;
-	fmt::print("[{}] {}", tag, message);
+	fmt::print("[{}] {}\n", tag, message);
 }
 
 void Logger::error(std::string tag, std::string message) {
 	if (logLevel == LogLevel::LOG_NONE)
 		return;
-	fmt::print("[{}] {}", tag, message);
+	fmt::print("[{}] {}\n", tag, message);
 }
 
 void Logger::debug(std::string tag, std::string message) {
 	if (logLevel == LogLevel::LOG_NONE || logLevel == LogLevel::LOG_INFO)
 		return;
-	fmt::print("[{}] {}", tag, message);
+	fmt::print("[{}] {}\n", tag, message);
 }
 
 void Logger::setLogLevel(LogLevel logLevel) {
