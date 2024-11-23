@@ -76,7 +76,7 @@ source_group("game" FILES ${SRC})
 
 include_directories(Trewlib ../extlibs/include)
 if(WIN32)
-	target_link_libraries(Trewlib opengl32)
+	target_link_libraries(Trewlib opengl32 glfw3 freetype)
 endif()
 
 if(UNIX)
@@ -90,5 +90,3 @@ if(UNIX)
 	
 	target_link_libraries(Trewlib glfw freetype)
 endif()
-
-target_link_libraries(Trewlib spdlog)
