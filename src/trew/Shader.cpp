@@ -14,31 +14,10 @@ Shader::Shader(std::string vertShaderSource, std::string fragShaderSource) {
 void Shader::compile() {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		logError("Shader", "Failed to initialize GLAD\n");
-	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	auto vertStr = vertShaderSource.c_str();
-	glShaderSource(vertex_shader, 1, &vertStr, nullptr);
-	glCompileShader(vertex_shader);
-	GLint success;
-	char infoLog[512];
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(vertex_shader, 512, nullptr, infoLog);
-		logError(logTag, fmt::format("<{}> vertex shader compilation failed: {}", infoLog));
-	} else {
-		log(logTag, fmt::format("<{}> succesfully compiled", vertPath));
-	}
-
-	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	auto fragStr = fragShaderSource.c_str();
-	glShaderSource(fragment_shader, 1, &fragStr, nullptr);
-	glCompileShader(fragment_shader);
-	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(fragment_shader, 512, nullptr, infoLog);
-		logError(logTag, fmt::format("<{}> fragment shader compilation failed: {}", infoLog));
-	} else {
-		log(logTag, fmt::format("<{}> succesfully compiled", fragPath));
-	}
+	GLuint vertex_shader = compileShader(vertStr, Type::VERTEX);
+	GLuint fragment_shader = compileShader(fragStr, Type::FRAGMENT);
 
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertex_shader);
@@ -87,4 +66,30 @@ void Shader::setUniform(const char* uniformName, GLfloat uniform_fv[4]) {
 	}
 	assert(id != -1);
 	glUniform4fv(id, 4, uniform_fv);
+}
+
+GLuint trew::Shader::compileShader(const char* shaderSource, Type shaderType) {
+	GLuint shaderId;
+	if (shaderType == Type::VERTEX) {
+		shaderId = glCreateShader(GL_VERTEX_SHADER);
+	} else {
+		shaderId = glCreateShader(GL_FRAGMENT_SHADER);
+	}
+	glShaderSource(shaderId, 1, &shaderSource, nullptr);
+	glCompileShader(shaderId);
+
+	int result;
+	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+	if (result == GL_FALSE) {
+		int length;
+		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
+		char* message = (char*)_malloca(length * sizeof(char));
+		glGetShaderInfoLog(shaderId, length, &length, message);
+		fmt::print("Error: failed to compile shader of type: {}",(shaderType ==
+			Type::VERTEX ? "vertex" : "fragment"));
+		fmt::println("{}", message);
+		glDeleteShader(shaderId);
+		return -1;
+	}
+	return shaderId;
 }

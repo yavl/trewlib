@@ -6,6 +6,9 @@
 
 namespace trew {
 	class Shader : public Asset {
+		enum Type {
+			VERTEX, FRAGMENT
+		};
 	public:
 		Shader(std::string vertShaderSource, std::string fragShaderSource);
 		virtual ~Shader() = default;
@@ -22,5 +25,6 @@ namespace trew {
 		std::string fragShaderSource;
 		std::string vertPath;
 		std::string fragPath;
+		virtual GLuint compileShader(const char* shaderSource, Type shaderType);
 	};
 }
