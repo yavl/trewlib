@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 project(Trewlib)
 
 set (Trewlib_VERSION_MAJOR 1)
@@ -48,6 +48,10 @@ file(GLOB SRC_trew_nodes
 	"../src/trew/nodes/*.hpp"
 	"../src/trew/nodes/*.cpp"
 )
+file(GLOB SRC_trew_scripting
+	"../src/trew/scripting/*.hpp"
+	"../src/trew/scripting/*.cpp"
+)
 file(GLOB SRC_imgui
 	"../extlibs/include/imgui/*.hpp"
 	"../extlibs/include/imgui/*.cpp"
@@ -56,10 +60,22 @@ file(GLOB SRC_glad
 	"../extlibs/include/glad/*.h"
 	"../extlibs/include/glad/*.c"
 )
+file(GLOB_RECURSE SRC_angelscript
+	"../extlibs/include/angelscript/*.h"
+	"../extlibs/include/angelscript/*.cpp"
+)
 
-add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_imgui} ${SRC_glad})
+if(WIN32)
+	file(GLOB SRC_angelscript_obj
+		"../extlibs/libs-msvc/x64/as_callfunc_x64_msvc_asm.obj"
+	)
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
+else()
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript})
+endif()
 
 include_directories(Trewlib "../src")
+source_group("angelscript" FILES ${SRC_angelscript})
 source_group("imgui" FILES ${SRC_imgui})
 source_group("glad" FILES ${SRC_glad})
 source_group("trew" FILES ${SRC_trew})
@@ -71,10 +87,11 @@ source_group("trew\\drawables\\impl_glfw" FILES ${SRC_trew_drawables_impl_glfw})
 source_group("trew\\input" FILES ${SRC_trew_input})
 source_group("trew\\input\\impl_glfw" FILES ${SRC_trew_input_impl_glfw})
 source_group("trew\\nodes" FILES ${SRC_trew_nodes})
+source_group("trew\\scripting" FILES ${SRC_trew_scripting})
 source_group("game" FILES ${SRC})
 
 
-include_directories(Trewlib ../extlibs/include)
+include_directories(Trewlib ../extlibs/include ../extlibs/include/angelscript/addons)
 if(WIN32)
 	target_link_libraries(Trewlib opengl32 glfw3 freetype)
 endif()

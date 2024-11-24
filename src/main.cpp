@@ -3,6 +3,7 @@
 #include <trew/app/impl_glfw/GlfwWindow.hpp>
 #include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
+#include <trew/scripting/ASManager.hpp>
 #include <nlohmann/json.hpp>
 
 using namespace trew;
@@ -10,6 +11,10 @@ using namespace nlohmann;
 
 int main() {
 	Logger::getInstance().setLogLevel(LogLevel::LOG_DEBUG);
+
+	ASManager as;
+	as.registerScript("assets/scripts/main.as");
+	as.runScript("assets/scripts/main.as");
 
 	auto file = FileHandle("assets/properties.json").asString();
 	json j = json::parse(file);
