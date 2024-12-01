@@ -18,7 +18,7 @@ namespace trew {
 	class AssetManager {
 	public:
 		AssetManager(std::string rootPath);
-		virtual ~AssetManager() = default;
+		virtual ~AssetManager();
 		virtual void load(std::string path, AssetType type);
 		virtual std::optional<Shader*> getShader(std::string path);
 		virtual std::optional<Texture*> getTexture(std::string path);

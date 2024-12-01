@@ -2,18 +2,27 @@
 #include <trew/FileHandle.hpp>
 #include <trew/Shader.hpp>
 #include <trew/drawables/impl_glfw/Texture.hpp>
+#include <trew/Logger.hpp>
 #include <cassert>
 #include <fmt/core.h>
 #include <nlohmann/json.hpp>
 
 using namespace trew;
 
+const std::string logTag = "AssetManager";
+
 AssetManager::AssetManager(std::string rootPath) : rootPath(rootPath) {}
+
+AssetManager::~AssetManager() {
+	log(logTag, "AssetManager destructed");
+}
 
 void AssetManager::load(std::string path, AssetType type) {
 	path = fmt::format("{}/{}", rootPath, path);
-	const char* message = fmt::format("resource {} already loaded", path).c_str();
-	assert(!getAsset(path).has_value() && message);
+	if (assets.count(path) > 0) {
+		log(logTag, fmt::format("resource <{}> was already loaded", path).c_str());
+		return;
+	}
 	switch (type) {
 	case AssetType::SHADER: {
 		auto vertPathStr = fmt::format("{}.vert", path);

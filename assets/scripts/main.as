@@ -1,3 +1,3 @@
 void main() {
-	printee("Hello AngelScript");
+	print("Hello AngelScript");
 }

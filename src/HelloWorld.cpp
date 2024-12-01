@@ -23,7 +23,7 @@ HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 HelloWorld::~HelloWorld() {}
 
 void HelloWorld::create() {
-	assets = std::make_unique<AssetManager>(assetsRootDirectory);
+	assets = std::make_shared<AssetManager>(assetsRootDirectory);
 	assets->load("default", AssetType::SHADER);
 	assets->load("text", AssetType::SHADER);
 	assets->load("tex.png", AssetType::TEXTURE);
@@ -57,7 +57,7 @@ void HelloWorld::create() {
 		texts.push_back(std::to_string(each));
 	}
 
-	ASManager as;
+	ASManager as(assets);
 	as.registerScript("assets/scripts/main.as");
 	as.runScript("assets/scripts/main.as");
 }

@@ -3,13 +3,23 @@
 #include <scriptstdstring/scriptstdstring.h>
 #include <scriptbuilder/scriptbuilder.h>
 #include <fmt/core.h>
+#include <trew/Logger.hpp>
+#include <trew/AssetManager.hpp>
 #include <cassert>
 
 using namespace trew;
 
+const std::string logTag = "AngelScript";
+std::weak_ptr<AssetManager> globalAssets; // todo think where to place this
+
 namespace ASFunction {
-    void printee(std::string& msg) {
+    void print(const std::string& msg) {
         fmt::print("{}\n", msg.c_str());
+    }
+
+    void loadTexture(const std::string& path) {
+        auto assets = globalAssets.lock();
+        assets->load(path, AssetType::TEXTURE);
     }
 }
 
@@ -22,15 +32,16 @@ static void MessageCallback(const asSMessageInfo* msg, void* param) {
     } else if (msg->type == asMSGTYPE_INFORMATION) {
         type = "INFO";
     }
-
-    fmt::print("[ASManager] {} ({}, {}) : {} : {}\n", msg->section, msg->row, msg->col, type, msg->message);
+    logError(logTag, fmt::format("{} ({}, {}) : {} : {}", msg->section, msg->row, msg->col, type, msg->message));
 }
 
-ASManager::ASManager() {
+ASManager::ASManager(std::shared_ptr<AssetManager> assets): assets(assets) {
+    globalAssets = assets;
 	engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
     int r = engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL);
     RegisterStdString(engine);
-    r = engine->RegisterGlobalFunction("void printee(const string& in)", asFUNCTION(ASFunction::printee), asCALL_CDECL);
+    r = engine->RegisterGlobalFunction("void print(const string& in)", asFUNCTION(ASFunction::print), asCALL_CDECL);
+    r = engine->RegisterGlobalFunction("void loadTexture(const string& in)", asFUNCTION(ASFunction::loadTexture), asCALL_CDECL);
     assert(r >= 0);
 }
 
@@ -41,7 +52,7 @@ void ASManager::registerScript(const char* path) {
     {
         // If the code fails here it is usually because there
         // is no more memory to allocate the module
-        fmt::print("Unrecoverable error while starting a new module.\n");
+        logError(logTag, "Unrecoverable error while starting a new module.");
         return;
     }
     r = builder.AddSectionFromFile(path);
@@ -50,7 +61,7 @@ void ASManager::registerScript(const char* path) {
         // The builder wasn't able to load the file. Maybe the file
         // has been removed, or the wrong name was given, or some
         // preprocessing commands are incorrectly written.
-        fmt::print("Please correct the errors in the script and try again.\n");
+        logError(logTag, "Please correct the errors in the script and try again.");
         return;
     }
     r = builder.BuildModule();
@@ -58,7 +69,7 @@ void ASManager::registerScript(const char* path) {
     {
         // An error occurred. Instruct the script writer to fix the 
         // compilation errors that were listed in the output stream.
-        fmt::print("Please correct the errors in the script and try again.\n");
+        logError(logTag, "Please correct the errors in the script and try again.");
         return;
     }
 }
@@ -71,7 +82,7 @@ void ASManager::runScript(const char* path) {
     {
         // The function couldn't be found. Instruct the script writer
         // to include the expected function in the script.
-        fmt::print("The script must have the function 'void main()'. Please add it and try again.\n");
+        logError(logTag, "The script must have the function 'void main()'. Please add it and try again.");
         return;
     }
 
@@ -85,7 +96,7 @@ void ASManager::runScript(const char* path) {
         if (r == asEXECUTION_EXCEPTION)
         {
             // An exception occurred, let the script writer know what happened so it can be corrected.
-            fmt::print("An exception '{}' occurred. Please correct the code and try again.\n", ctx->GetExceptionString());
+            logError(logTag, fmt::format("An exception '{}' occurred. Please correct the code and try again.", ctx->GetExceptionString()));
         }
     }
 }
