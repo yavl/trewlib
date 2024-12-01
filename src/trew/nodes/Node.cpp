@@ -4,17 +4,18 @@
 
 using namespace trew;
 
+const std::string logTag = "Node";
+
 Node::Node() {
-	parent = nullptr;
-	logDebug("node", fmt::format("{} constructed", name));
+	logDebug(logTag, fmt::format("{} constructed", name));
 }
 
-Node::Node(std::string name) : Node() {
-	this->name = name;
+Node::Node(std::string name): name(name) {
+	logDebug(logTag, fmt::format("{} constructed", name));
 }
 
 Node::~Node() {
-	logDebug("node", fmt::format("{} destructed", name));
+	logDebug(logTag, fmt::format("{} destructed", name));
 }
 
 float Node::getX() const {

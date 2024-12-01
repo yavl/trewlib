@@ -33,7 +33,7 @@ namespace trew {
 	private:
 		Vector2 pos;
 		Vector2 size;
-		Node* parent;
+		Node* parent = nullptr;
 		std::vector<std::unique_ptr<Node>> children;
 		std::vector<std::unique_ptr<Action>> actions;
 		std::string name;

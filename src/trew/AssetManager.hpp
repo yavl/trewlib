@@ -17,7 +17,7 @@ namespace trew {
 
 	class AssetManager {
 	public:
-		AssetManager(std::string jsonFilePath);
+		AssetManager(std::string rootPath);
 		virtual ~AssetManager() = default;
 		virtual void load(std::string path, AssetType type);
 		virtual std::optional<Shader*> getShader(std::string path);
@@ -26,6 +26,6 @@ namespace trew {
 		virtual std::optional<Asset*> getAsset(std::string path);
 
 		std::unordered_map<std::string, std::unique_ptr<Asset>> assets;
-		std::string assetsJsonFilePath;
+		std::string rootPath;
 	};
 }

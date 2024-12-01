@@ -3,7 +3,7 @@
 
 using namespace trew;
 
-Sprite::Sprite(Drawable* drawable) : Node() {
+Sprite::Sprite(Drawable* drawable) : Node("Sprite") {
 	this->drawable = drawable;
 	float width = static_cast<float>(drawable->getImageWidth());
 	float height = static_cast<float>(drawable->getImageHeight());

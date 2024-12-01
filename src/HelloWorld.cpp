@@ -9,7 +9,10 @@
 #include <trew/Logger.hpp>
 #include <trew/actions/MoveAction.hpp>
 #include <trew/drawables/impl_glfw/Text.hpp>
+#include <trew/scripting/ASManager.hpp>
 #include <rapidcsv.h>
+
+const char* assetsRootDirectory = "assets";
 
 HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 	this->window = window;
@@ -20,19 +23,19 @@ HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 HelloWorld::~HelloWorld() {}
 
 void HelloWorld::create() {
-	assets = std::make_unique<AssetManager>("assets/assets.json");
-	assets->load("assets/default", AssetType::SHADER);
-	assets->load("assets/text", AssetType::SHADER);
-	assets->load("assets/tex.png", AssetType::TEXTURE);
-	assets->load("assets/tex2.png", AssetType::TEXTURE);
+	assets = std::make_unique<AssetManager>(assetsRootDirectory);
+	assets->load("default", AssetType::SHADER);
+	assets->load("text", AssetType::SHADER);
+	assets->load("tex.png", AssetType::TEXTURE);
+	assets->load("tex2.png", AssetType::TEXTURE);
 
-	auto sh = assets->getShader("assets/default").value();
-	auto tex = assets->getTexture("assets/tex.png").value();
+	auto sh = assets->getShader("default").value();
+	auto tex = assets->getTexture("tex.png").value();
 	tex->setShader(sh);
 	tex->setCamera(cam.get());
 	sprite = std::make_unique<Sprite>(tex);
 
-	auto tex2 = assets->getTexture("assets/tex2.png").value();
+	auto tex2 = assets->getTexture("tex2.png").value();
 	tex2->setShader(sh);
 	tex2->setCamera(cam.get());
 	auto sprite2 = new Sprite(tex2);
@@ -44,7 +47,7 @@ void HelloWorld::create() {
 		resize(width, height);
 	});
 
-	auto textSh = assets->getShader("assets/text").value();
+	auto textSh = assets->getShader("text").value();
 	text = std::make_unique<Text>(textSh, cam.get());
 	
 	rapidcsv::Document doc("assets/colhdr.csv");
@@ -53,6 +56,10 @@ void HelloWorld::create() {
 		fmt::print("{}\n", each);
 		texts.push_back(std::to_string(each));
 	}
+
+	ASManager as;
+	as.registerScript("assets/scripts/main.as");
+	as.runScript("assets/scripts/main.as");
 }
 
 void HelloWorld::update(float dt) {

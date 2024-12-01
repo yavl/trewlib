@@ -8,9 +8,10 @@
 
 using namespace trew;
 
-AssetManager::AssetManager(std::string jsonFilePath) : assetsJsonFilePath(jsonFilePath) {}
+AssetManager::AssetManager(std::string rootPath) : rootPath(rootPath) {}
 
 void AssetManager::load(std::string path, AssetType type) {
+	path = fmt::format("{}/{}", rootPath, path);
 	const char* message = fmt::format("resource {} already loaded", path).c_str();
 	assert(!getAsset(path).has_value() && message);
 	switch (type) {
@@ -58,7 +59,8 @@ std::optional<Texture*> AssetManager::getTexture(std::string path) {
 }
 
 std::optional<Asset*> AssetManager::getAsset(std::string path) {
-	if (auto asset = assets.find(path); asset != assets.end())
+	auto fullPath = fmt::format("{}/{}", rootPath, path);
+	if (auto asset = assets.find(fullPath); asset != assets.end())
 		return asset->second.get();
 	return std::nullopt;
 }

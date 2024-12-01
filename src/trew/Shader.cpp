@@ -17,7 +17,14 @@ void Shader::compile() {
 	auto vertStr = vertShaderSource.c_str();
 	auto fragStr = fragShaderSource.c_str();
 	GLuint vertex_shader = compileShader(vertStr, Type::VERTEX);
+	if (vertex_shader > 0) {
+		log(logTag, fmt::format("Succesfully compiled shader: {}", vertPath));
+	}
+
 	GLuint fragment_shader = compileShader(fragStr, Type::FRAGMENT);
+	if (vertex_shader > 0) {
+		log(logTag, fmt::format("Succesfully compiled shader: {}", fragPath));
+	}
 
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertex_shader);
@@ -85,8 +92,8 @@ GLuint trew::Shader::compileShader(const char* shaderSource, Type shaderType) {
 		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
 		char* message = (char*)_malloca(length * sizeof(char));
 		glGetShaderInfoLog(shaderId, length, &length, message);
-		fmt::print("Error: failed to compile shader of type: {}",(shaderType ==
-			Type::VERTEX ? "vertex" : "fragment"));
+		logError(logTag, fmt::format("Error: failed to compile shader of type: {}", (shaderType ==
+			Type::VERTEX ? "vertex" : "fragment")));
 		fmt::println("{}", message);
 		glDeleteShader(shaderId);
 		return -1;
