@@ -11,6 +11,8 @@
 #include <trew/drawables/impl_glfw/Text.hpp>
 #include <trew/scripting/ASManager.hpp>
 #include <rapidcsv.h>
+#include <mixbox/mixbox.h>
+#include <trew/Color.hpp>
 
 const char* assetsRootDirectory = "assets";
 
@@ -60,6 +62,11 @@ void HelloWorld::create() {
 	ASManager as(assets);
 	as.registerScript("assets/scripts/main.as");
 	as.runScript("assets/scripts/main.as");
+
+	
+	auto c1 = Color(1, 1, 1);
+	auto c2 = Color(0, 0, 0);
+	c1 + c2;
 }
 
 void HelloWorld::update(float dt) {
