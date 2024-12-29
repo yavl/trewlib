@@ -4,9 +4,9 @@
 
 using namespace trew;
 
-Color::Color() : r(0), g(0), b(0) {}
+Color::Color() : r(0), g(0), b(0), a(a) {}
 
-Color::Color(float r, float g, float b): r(r), g(g), b(b) {}
+Color::Color(float r, float g, float b, float a): r(r), g(g), b(b), a(a) {}
 
 Color Color::operator+(const Color& other) const {
 	unsigned char r1 = this->r * 255, g1 = this->g * 255, b1 = this->b * 255;
@@ -22,7 +22,7 @@ Color Color::operator+(const Color& other) const {
 	float red = static_cast<float>(resultR) / 255;
 	float green = static_cast<float>(resultG) / 255;
 	float blue = static_cast<float>(resultB) / 255;
-	return Color(red, green, blue);
+	return Color(red, green, blue, 1.f);
 }
 
 bool Color::operator==(const Color& other) const {

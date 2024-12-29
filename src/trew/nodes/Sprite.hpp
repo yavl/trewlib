@@ -20,6 +20,6 @@ namespace trew {
 		void setColor(Color color);
 	private:
 		Drawable* drawable;
-		Color color = Color(1, 1, 1);
+		Color color = Color(1.f, 1.f, 1.f, 1.f);
 	};
 }

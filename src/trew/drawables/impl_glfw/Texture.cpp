@@ -85,8 +85,8 @@ void Texture::draw(float x, float y, float width, float height, Color color) {
 	matrix = glm::scale(matrix, glm::vec3(1.f / texWidth, 1.f / texHeight, 1.f));
 	matrix = glm::scale(matrix, glm::vec3(width, height, 1.f));
 	matrix = glm::scale(matrix, glm::vec3(0.5f));
-	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix); // todo fix that
-	shader->setUniform("u_color", color); // todo fix that
+	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix);
+	shader->setUniform("u_color", color);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

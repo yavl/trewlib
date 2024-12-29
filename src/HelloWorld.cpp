@@ -71,14 +71,14 @@ void HelloWorld::create() {
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-1000, 0);
-		circleSprite->setColor(Color(0, 0, 0));
+		circleSprite->setColor(Color(0, 0, 1, 1));
 		sprites.push_back(std::move(circleSprite));
 	}
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-800, 0);
-		circleSprite->setColor(Color(1, 1, 1));
+		circleSprite->setColor(Color(1, 1, 0, 1));
 		sprites.push_back(std::move(circleSprite));
 	}
 
@@ -88,6 +88,19 @@ void HelloWorld::create() {
 		circleSprite->setColor(sprites[0].get() ->getColor() + sprites[1].get()->getColor());
 		sprites.push_back(std::move(circleSprite));
 	}
+
+	window.lock()->addMouseButtonCallback([=](int button, int action, int mods) {
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+			double x, y;
+			auto winlock = window.lock();
+			auto win = static_cast<GlfwWindow*>(winlock.get());
+			glfwGetCursorPos(win->getRawGlfwWindow(), &x, &y);
+			auto world = cam->screenToSpace(static_cast<float>(x), static_cast<float>(y));
+			auto moveAction = new MoveAction(world.x, world.y, 1.f);
+			sprites[0]->addAction(moveAction);
+			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
+		}
+	});
 }
 
 void HelloWorld::update(float dt) {

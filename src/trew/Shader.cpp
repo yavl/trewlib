@@ -82,8 +82,8 @@ void Shader::setUniform(const char* uniformName, Color color) {
 		logError(logTag, fmt::format("error: glGetUniformLocation {}\n", uniformName));
 	}
 	assert(id != -1);
-	auto uniform_vec3 = glm::vec3(color.r, color.g, color.b);
-	glUniform3fv(id, 1, glm::value_ptr(uniform_vec3));
+	auto uniform_vec4 = glm::vec4(color.r, color.g, color.b, color.a);
+	glUniform4fv(id, 1, glm::value_ptr(uniform_vec4));
 }
 
 GLuint trew::Shader::compileShader(const char* shaderSource, Type shaderType) {
