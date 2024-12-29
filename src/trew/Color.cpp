@@ -4,7 +4,7 @@
 
 using namespace trew;
 
-Color::Color() : r(0), g(0), b(0), a(a) {}
+Color::Color() : r(1.f), g(1.f), b(1.f), a(1.f) {}
 
 Color::Color(float r, float g, float b, float a): r(r), g(g), b(b), a(a) {}
 
@@ -39,4 +39,5 @@ void trew::Color::operator=(const Color& other) {
 	r = other.r;
 	g = other.g;
 	b = other.b;
+	a = other.a;
 }
