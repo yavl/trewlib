@@ -5,6 +5,7 @@
 #include <string>
 
 namespace trew {
+	class Color;
 	class Shader : public Asset {
 		enum Type {
 			VERTEX, FRAGMENT
@@ -19,6 +20,7 @@ namespace trew {
 		virtual void setUniform(const char* uniformName, glm::mat4 uniform_mat4);
 		virtual void setUniform(const char* uniformName, GLint uniform_i);
 		virtual void setUniform(const char* uniformName, GLfloat uniform_fv[4]);
+		virtual void setUniform(const char* uniformName, Color color);
 	private:
 		GLuint shaderProgram;
 		std::string vertShaderSource;

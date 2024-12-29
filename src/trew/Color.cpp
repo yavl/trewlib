@@ -34,3 +34,9 @@ bool Color::operator==(const Color& other) const {
 bool Color::operator!=(const Color& b) const {
 	return !(*this == b);
 }
+
+void trew::Color::operator=(const Color& other) {
+	r = other.r;
+	g = other.g;
+	b = other.b;
+}

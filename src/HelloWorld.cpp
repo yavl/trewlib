@@ -30,6 +30,7 @@ void HelloWorld::create() {
 	assets->load("text", AssetType::SHADER);
 	assets->load("tex.png", AssetType::TEXTURE);
 	assets->load("tex2.png", AssetType::TEXTURE);
+	assets->load("circle.png", AssetType::TEXTURE);
 
 	auto sh = assets->getShader("default").value();
 	auto tex = assets->getTexture("tex.png").value();
@@ -63,22 +64,48 @@ void HelloWorld::create() {
 	as.registerScript("assets/scripts/main.as");
 	as.runScript("assets/scripts/main.as");
 
-	
-	auto c1 = Color(1, 1, 1);
-	auto c2 = Color(0, 0, 0);
-	c1 + c2;
+	auto circleTex = assets->getTexture("circle.png").value();
+	circleTex->setShader(sh);
+	circleTex->setCamera(cam.get());
+
+	{
+		auto circleSprite = std::make_unique<Sprite>(circleTex);
+		circleSprite->setXY(-1000, 0);
+		circleSprite->setColor(Color(0, 0, 0));
+		sprites.push_back(std::move(circleSprite));
+	}
+
+	{
+		auto circleSprite = std::make_unique<Sprite>(circleTex);
+		circleSprite->setXY(-800, 0);
+		circleSprite->setColor(Color(1, 1, 1));
+		sprites.push_back(std::move(circleSprite));
+	}
+
+	{
+		auto circleSprite = std::make_unique<Sprite>(circleTex);
+		circleSprite->setXY(-600, 0);
+		circleSprite->setColor(sprites[0].get() ->getColor() + sprites[1].get()->getColor());
+		sprites.push_back(std::move(circleSprite));
+	}
 }
 
 void HelloWorld::update(float dt) {
 	input->update();
 	cam->update(dt);
 	sprite->act(dt);
+	for (const auto& sprite : sprites) {
+		sprite.get()->act(dt);
+	}
 }
 
 void HelloWorld::render() {
 	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	sprite->draw();
+	for (const auto& sprite : sprites) {
+		sprite.get()->draw();
+	}
 
 	float offset = 100.f;
 	float prevY = 200.f;

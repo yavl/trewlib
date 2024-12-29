@@ -6,9 +6,9 @@ in vec2 TexCoord;
 out vec4 color;
 
 uniform sampler2D u_texture;
-uniform float mixValue;
+uniform vec3 u_color;
 
 void main()
 {
-	color = texture(u_texture, TexCoord);
+	color = texture(u_texture, TexCoord) * vec4(u_color, 1.0);
 }

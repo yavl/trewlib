@@ -15,7 +15,7 @@ namespace trew {
 		virtual void setShader(Shader* shader);
 		virtual void setCamera(Camera* cam);
 
-		void draw(float x, float y, float width, float height) override;
+		void draw(float x, float y, float width, float height, Color color) override;
 		int getImageWidth() const override;
 		int getImageHeight() const override;
 	private:

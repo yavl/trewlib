@@ -33,6 +33,7 @@ private:
 	std::unique_ptr<Camera> cam;
 	std::unique_ptr<InputManager> input;
 	std::unique_ptr<Sprite> sprite;
+	std::vector<std::unique_ptr<Sprite>> sprites;
 	std::shared_ptr<AssetManager> assets;
 	std::unique_ptr<Text> text;
 	std::vector<std::string> texts;

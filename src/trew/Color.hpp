@@ -9,6 +9,7 @@ namespace trew {
 		virtual Color operator+(const Color&) const;
 		virtual bool operator==(const Color&) const;
 		virtual bool operator!=(const Color&) const;
+		virtual void operator=(const Color&);
 
 		float r, g, b;
 	private:

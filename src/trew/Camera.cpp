@@ -20,24 +20,10 @@ Camera::Camera(std::weak_ptr<Window> window) :
 
 	window.lock()->addScrollCallback([this, window](double xoffset, double yoffset) {
 		if (yoffset > 0) {
-			auto& win = window.lock();
-			auto screenCoords = Vector2(win->getCursorPos().x, win->getCursorPos().y);
-			auto vec = glm::unProject(glm::vec3(screenCoords.x, screenCoords.y, 0), view, projection, glm::vec4(0, 0, win->getWidth(), win->getHeight()));
-			auto worldCoordsBefore = Vector2(vec.x, vec.y);
 			zoom += zoomFactor * zoom;
-			auto worldCoordsAfter = screenToSpace(screenCoords.x, screenCoords.y);
-			auto diff = worldCoordsAfter - worldCoordsBefore;
-			pos = pos - diff;
 		}
 		else {
-			auto& win = window.lock();
-			auto screenCoords = Vector2(win->getCursorPos().x, win->getCursorPos().y);
-			auto vec = glm::unProject(glm::vec3(screenCoords.x, screenCoords.y, 0), view, projection, glm::vec4(0, 0, win->getWidth(), win->getHeight()));
-			auto worldCoordsBefore = Vector2(vec.x, vec.y);
 			zoom -= zoomFactor * zoom;
-			auto worldCoordsAfter = screenToSpace(screenCoords.x, screenCoords.y);
-			auto diff = worldCoordsAfter - worldCoordsBefore;
-			pos = pos - diff;
 		}
 	});
 

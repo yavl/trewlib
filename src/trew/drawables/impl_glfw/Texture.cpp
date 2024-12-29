@@ -2,6 +2,7 @@
 #include <trew/Camera.hpp>
 #include <trew/Shader.hpp>
 #include <trew/Logger.hpp>
+#include <trew/Color.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -75,7 +76,7 @@ Texture::~Texture() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Texture::draw(float x, float y, float width, float height) {
+void Texture::draw(float x, float y, float width, float height, Color color) {
 	// todo draw with spritebatch instead of this
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -85,6 +86,7 @@ void Texture::draw(float x, float y, float width, float height) {
 	matrix = glm::scale(matrix, glm::vec3(width, height, 1.f));
 	matrix = glm::scale(matrix, glm::vec3(0.5f));
 	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix); // todo fix that
+	shader->setUniform("u_color", color); // todo fix that
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

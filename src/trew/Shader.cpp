@@ -1,6 +1,7 @@
 #include "Shader.hpp"
 #include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
+#include <trew/Color.hpp>
 
 using namespace trew;
 
@@ -73,6 +74,16 @@ void Shader::setUniform(const char* uniformName, GLfloat uniform_fv[4]) {
 	}
 	assert(id != -1);
 	glUniform4fv(id, 4, uniform_fv);
+}
+
+void Shader::setUniform(const char* uniformName, Color color) {
+	GLuint id = glGetUniformLocation(shaderProgram, uniformName);
+	if (id == -1) {
+		logError(logTag, fmt::format("error: glGetUniformLocation {}\n", uniformName));
+	}
+	assert(id != -1);
+	auto uniform_vec3 = glm::vec3(color.r, color.g, color.b);
+	glUniform3fv(id, 1, glm::value_ptr(uniform_vec3));
 }
 
 GLuint trew::Shader::compileShader(const char* shaderSource, Type shaderType) {
