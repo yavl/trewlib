@@ -13,7 +13,7 @@
 #include <rapidcsv.h>
 #include <mixbox/mixbox.h>
 #include <trew/Color.hpp>
-#include "Globals.hpp"
+#include <trew/Globals.hpp>
 
 const char* assetsRootDirectory = "assets";
 

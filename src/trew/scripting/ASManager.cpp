@@ -7,7 +7,7 @@
 #include <trew/AssetManager.hpp>
 #include <trew/drawables/impl_glfw/Texture.hpp>
 #include <cassert>
-#include "Globals.hpp"
+#include <trew/Globals.hpp>
 
 using namespace trew;
 
