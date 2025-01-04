@@ -5,12 +5,13 @@
 #include <fmt/core.h>
 #include <trew/Logger.hpp>
 #include <trew/AssetManager.hpp>
+#include <trew/drawables/impl_glfw/Texture.hpp>
 #include <cassert>
+#include "Globals.hpp"
 
 using namespace trew;
 
 const std::string logTag = "AngelScript";
-std::weak_ptr<AssetManager> globalAssets; // todo think where to place this
 
 namespace ASFunction {
     void print(const std::string& msg) {
@@ -18,8 +19,15 @@ namespace ASFunction {
     }
 
     void loadTexture(const std::string& path) {
-        auto assets = globalAssets.lock();
+        auto assets = Globals::assets.get();
         assets->load(path, AssetType::TEXTURE);
+        if (auto texture = assets->getTexture(path); auto tex = texture.value()) {
+            if (auto shader = assets->getShader("default"); auto sh = shader.value()) {
+                tex->setShader(sh);
+            }
+            auto cam = Globals::camera.get();
+            tex->setCamera(cam);
+        }
     }
 }
 
@@ -36,7 +44,6 @@ static void MessageCallback(const asSMessageInfo* msg, void* param) {
 }
 
 ASManager::ASManager(std::shared_ptr<AssetManager> assets): assets(assets) {
-    globalAssets = assets;
 	engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
     int r = engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL);
     RegisterStdString(engine);

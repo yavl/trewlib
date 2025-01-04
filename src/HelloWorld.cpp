@@ -13,24 +13,31 @@
 #include <rapidcsv.h>
 #include <mixbox/mixbox.h>
 #include <trew/Color.hpp>
+#include "Globals.hpp"
 
 const char* assetsRootDirectory = "assets";
 
 HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 	this->window = window;
-	cam = std::make_unique<Camera>(window);
+	Globals::camera = std::make_shared<Camera>(window);
+	cam = Globals::camera;
 	input = std::make_unique<InputManager>(window);
 }
 
 HelloWorld::~HelloWorld() {}
 
 void HelloWorld::create() {
-	assets = std::make_shared<AssetManager>(assetsRootDirectory);
+	Globals::assets = std::make_shared<AssetManager>(assetsRootDirectory);;
+	assets = Globals::assets;
 	assets->load("default", AssetType::SHADER);
 	assets->load("text", AssetType::SHADER);
 	assets->load("tex.png", AssetType::TEXTURE);
 	assets->load("tex2.png", AssetType::TEXTURE);
 	assets->load("circle.png", AssetType::TEXTURE);
+
+	ASManager as(assets);
+	as.registerScript("assets/scripts/main.as");
+	as.runScript("assets/scripts/main.as");
 
 	auto sh = assets->getShader("default").value();
 	auto tex = assets->getTexture("tex.png").value();
@@ -59,10 +66,6 @@ void HelloWorld::create() {
 		fmt::print("{}\n", each);
 		texts.push_back(std::to_string(each));
 	}
-
-	ASManager as(assets);
-	as.registerScript("assets/scripts/main.as");
-	as.runScript("assets/scripts/main.as");
 
 	auto circleTex = assets->getTexture("circle.png").value();
 	circleTex->setShader(sh);
