@@ -6,8 +6,10 @@
 #include <trew/Logger.hpp>
 #include <trew/AssetManager.hpp>
 #include <trew/drawables/impl_glfw/Texture.hpp>
-#include <cassert>
+#include <trew/nodes/Sprite.hpp>
 #include <trew/Globals.hpp>
+#include <cassert>
+#include <memory>
 
 using namespace trew;
 
@@ -29,6 +31,14 @@ namespace ASFunction {
             tex->setCamera(cam);
         }
     }
+    
+    void createSprite(const std::string& texturePath) {
+        auto tex = Globals::assets->getTexture(texturePath).value();
+        auto circleSprite = std::make_unique<Sprite>(tex);
+        circleSprite->setXY(1100, 0);
+        circleSprite->setColor(Color(1, 1, 1, 1));
+        Globals::sprites.push_back(std::move(circleSprite));
+    }
 }
 
 static void MessageCallback(const asSMessageInfo* msg, void* param) {
@@ -49,6 +59,7 @@ ASManager::ASManager(std::shared_ptr<AssetManager> assets): assets(assets) {
     RegisterStdString(engine);
     r = engine->RegisterGlobalFunction("void print(const string& in)", asFUNCTION(ASFunction::print), asCALL_CDECL);
     r = engine->RegisterGlobalFunction("void loadTexture(const string& in)", asFUNCTION(ASFunction::loadTexture), asCALL_CDECL);
+    r = engine->RegisterGlobalFunction("void createSprite(const string& in)", asFUNCTION(ASFunction::createSprite), asCALL_CDECL);
     assert(r >= 0);
 }
 

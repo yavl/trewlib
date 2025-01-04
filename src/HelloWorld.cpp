@@ -31,9 +31,6 @@ void HelloWorld::create() {
 	assets = Globals::assets;
 	assets->load("default", AssetType::SHADER);
 	assets->load("text", AssetType::SHADER);
-	assets->load("tex.png", AssetType::TEXTURE);
-	assets->load("tex2.png", AssetType::TEXTURE);
-	assets->load("circle.png", AssetType::TEXTURE);
 
 	ASManager as(assets);
 	as.registerScript("assets/scripts/main.as");
@@ -41,13 +38,9 @@ void HelloWorld::create() {
 
 	auto sh = assets->getShader("default").value();
 	auto tex = assets->getTexture("tex.png").value();
-	tex->setShader(sh);
-	tex->setCamera(cam.get());
 	sprite = std::make_unique<Sprite>(tex);
 
 	auto tex2 = assets->getTexture("tex2.png").value();
-	tex2->setShader(sh);
-	tex2->setCamera(cam.get());
 	auto sprite2 = new Sprite(tex2);
 	sprite2->setXY(400, 300);
 	sprite->addChild(sprite2);
@@ -68,28 +61,26 @@ void HelloWorld::create() {
 	}
 
 	auto circleTex = assets->getTexture("circle.png").value();
-	circleTex->setShader(sh);
-	circleTex->setCamera(cam.get());
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-1000, 0);
 		circleSprite->setColor(Color(0, 0, 1, 1));
-		sprites.push_back(std::move(circleSprite));
+		Globals::sprites.push_back(std::move(circleSprite));
 	}
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-800, 0);
 		circleSprite->setColor(Color(1, 1, 0, 1));
-		sprites.push_back(std::move(circleSprite));
+		Globals::sprites.push_back(std::move(circleSprite));
 	}
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-600, 0);
-		circleSprite->setColor(sprites[0].get() ->getColor() + sprites[1].get()->getColor());
-		sprites.push_back(std::move(circleSprite));
+		circleSprite->setColor(Globals::sprites[0].get() ->getColor() + Globals::sprites[1].get()->getColor());
+		Globals::sprites.push_back(std::move(circleSprite));
 	}
 
 	window.lock()->addMouseButtonCallback([=](int button, int action, int mods) {
@@ -100,7 +91,7 @@ void HelloWorld::create() {
 			glfwGetCursorPos(win->getRawGlfwWindow(), &x, &y);
 			auto world = cam->screenToSpace(static_cast<float>(x), static_cast<float>(y));
 			auto moveAction = new MoveAction(world.x, world.y, 1.f);
-			sprites[0]->addAction(moveAction);
+			Globals::sprites[0]->addAction(moveAction);
 			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
 		}
 	});
@@ -110,7 +101,7 @@ void HelloWorld::update(float dt) {
 	input->update();
 	cam->update(dt);
 	sprite->act(dt);
-	for (const auto& sprite : sprites) {
+	for (const auto& sprite : Globals::sprites) {
 		sprite.get()->act(dt);
 	}
 }
@@ -119,7 +110,7 @@ void HelloWorld::render() {
 	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	sprite->draw();
-	for (const auto& sprite : sprites) {
+	for (const auto& sprite : Globals::sprites) {
 		sprite.get()->draw();
 	}
 
