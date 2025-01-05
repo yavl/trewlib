@@ -16,6 +16,7 @@ namespace trew {
 		virtual void setCamera(Camera* cam);
 
 		void draw(float x, float y, float width, float height, Color color) override;
+		void draw(float x, float y, float width, float height, Color color, SpriteBatch batch) override;
 		int getImageWidth() const override;
 		int getImageHeight() const override;
 	private:

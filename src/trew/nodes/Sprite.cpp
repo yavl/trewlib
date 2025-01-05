@@ -1,5 +1,6 @@
 #include "Sprite.hpp"
 #include <trew/drawables/Drawable.hpp>
+#include <trew/drawables/SpriteBatch.hpp>
 
 using namespace trew;
 
@@ -17,6 +18,9 @@ void Sprite::draw() const {
 	else
 		drawable->draw(getX(), getY(), getWidth(), getHeight(), color);
 	Node::draw();
+}
+
+void trew::Sprite::draw(SpriteBatch batch) const {
 }
 
 Color Sprite::getColor() const {
