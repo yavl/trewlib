@@ -13,7 +13,7 @@
 
 using namespace trew;
 
-const std::string logTag = "AngelScript";
+#define LOGTAG "AngelScript"
 
 namespace ASFunction {
     void print(const std::string& msg) {
@@ -50,7 +50,7 @@ static void MessageCallback(const asSMessageInfo* msg, void* param) {
     } else if (msg->type == asMSGTYPE_INFORMATION) {
         type = "INFO";
     }
-    logError(logTag, fmt::format("{} ({}, {}) : {} : {}", msg->section, msg->row, msg->col, type, msg->message));
+    logError(LOGTAG, fmt::format("{} ({}, {}) : {} : {}", msg->section, msg->row, msg->col, type, msg->message));
 }
 
 ASManager::ASManager(std::shared_ptr<AssetManager> assets): assets(assets) {
@@ -70,7 +70,7 @@ void ASManager::registerScript(const char* path) {
     {
         // If the code fails here it is usually because there
         // is no more memory to allocate the module
-        logError(logTag, "Unrecoverable error while starting a new module.");
+        logError(LOGTAG, "Unrecoverable error while starting a new module.");
         return;
     }
     r = builder.AddSectionFromFile(path);
@@ -79,7 +79,7 @@ void ASManager::registerScript(const char* path) {
         // The builder wasn't able to load the file. Maybe the file
         // has been removed, or the wrong name was given, or some
         // preprocessing commands are incorrectly written.
-        logError(logTag, "Please correct the errors in the script and try again.");
+        logError(LOGTAG, "Please correct the errors in the script and try again.");
         return;
     }
     r = builder.BuildModule();
@@ -87,7 +87,7 @@ void ASManager::registerScript(const char* path) {
     {
         // An error occurred. Instruct the script writer to fix the 
         // compilation errors that were listed in the output stream.
-        logError(logTag, "Please correct the errors in the script and try again.");
+        logError(LOGTAG, "Please correct the errors in the script and try again.");
         return;
     }
 }
@@ -100,7 +100,7 @@ void ASManager::runScript(const char* path) {
     {
         // The function couldn't be found. Instruct the script writer
         // to include the expected function in the script.
-        logError(logTag, "The script must have the function 'void main()'. Please add it and try again.");
+        logError(LOGTAG, "The script must have the function 'void main()'. Please add it and try again.");
         return;
     }
 
@@ -114,7 +114,7 @@ void ASManager::runScript(const char* path) {
         if (r == asEXECUTION_EXCEPTION)
         {
             // An exception occurred, let the script writer know what happened so it can be corrected.
-            logError(logTag, fmt::format("An exception '{}' occurred. Please correct the code and try again.", ctx->GetExceptionString()));
+            logError(LOGTAG, fmt::format("An exception '{}' occurred. Please correct the code and try again.", ctx->GetExceptionString()));
         }
     }
 }

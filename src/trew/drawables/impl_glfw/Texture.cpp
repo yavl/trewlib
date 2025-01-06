@@ -9,7 +9,7 @@
 
 using namespace trew;
 
-const std::string logTag = "Texture";
+#define LOGTAG "Texture"
 
 Texture::Texture(std::string path) {
 	this->name = path;
@@ -25,9 +25,9 @@ Texture::Texture(std::string path) {
 	if (this->image) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		log(logTag, fmt::format("<{}> loaded with size: {}x{}", name, texWidth, texHeight));
+		log(LOGTAG, fmt::format("<{}> loaded with size: {}x{}", name, texWidth, texHeight));
 	} else {
-		logError(logTag, fmt::format("error loading <{}>", name));
+		logError(LOGTAG, fmt::format("error loading <{}>", name));
 	}
 	stbi_image_free(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -75,6 +75,8 @@ Texture::~Texture() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
+	glDeleteTextures(1, &texture);
+	logDebug(LOGTAG, fmt::format("{} destructed", name));
 }
 
 void Texture::draw(float x, float y, float width, float height, Color color) {
@@ -94,7 +96,7 @@ void Texture::draw(float x, float y, float width, float height, Color color) {
 	glBindVertexArray(0);
 }
 
-void trew::Texture::draw(float x, float y, float width, float height, Color color, SpriteBatch batch) {
+void Texture::draw(float x, float y, float width, float height, Color color, SpriteBatch batch) {
 }
 
 int Texture::getImageWidth() const {
@@ -103,6 +105,10 @@ int Texture::getImageWidth() const {
 
 int Texture::getImageHeight() const {
 	return texHeight;
+}
+
+GLuint Texture::getGLTexture() const {
+	return texture;
 }
 
 void Texture::setShader(Shader* shader) {

@@ -9,18 +9,18 @@
 
 using namespace trew;
 
-const std::string logTag = "AssetManager";
+#define LOGTAG "AssetManager"
 
 AssetManager::AssetManager(std::string rootPath) : rootPath(rootPath) {}
 
 AssetManager::~AssetManager() {
-	log(logTag, "AssetManager destructed");
+	log(LOGTAG, "AssetManager destructed");
 }
 
 void AssetManager::load(std::string path, AssetType type) {
 	path = fmt::format("{}/{}", rootPath, path);
 	if (assets.count(path) > 0) {
-		log(logTag, fmt::format("resource <{}> was already loaded", path).c_str());
+		log(LOGTAG, fmt::format("resource <{}> was already loaded", path).c_str());
 		return;
 	}
 	switch (type) {
