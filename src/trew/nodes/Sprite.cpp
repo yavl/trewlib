@@ -14,9 +14,9 @@ Sprite::Sprite(Drawable* drawable) : Node("Sprite") {
 void Sprite::draw() const {
     // todo draw via spritebatch instead
 	if (getParent())
-		drawable->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight(), color);
+		drawable->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight(), getRotation(), color);
 	else
-		drawable->draw(getX(), getY(), getWidth(), getHeight(), color);
+		drawable->draw(getX(), getY(), getWidth(), getHeight(), getRotation(), color);
 	Node::draw();
 }
 

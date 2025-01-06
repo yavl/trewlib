@@ -27,12 +27,15 @@ namespace trew {
 		virtual float getHeight() const;
 		virtual void setHeight(float height);
 		virtual void setSize(float width, float height);
+		virtual float getRotation() const;
+		virtual void setRotation(float degrees);
 
 		void act(float dt) override;
 		void addAction(Action* action) override;
 	private:
 		Vector2 pos;
 		Vector2 size;
+		float rotation = 0.f;
 		Node* parent = nullptr;
 		std::vector<std::unique_ptr<Node>> children;
 		std::vector<std::unique_ptr<Action>> actions;

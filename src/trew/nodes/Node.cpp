@@ -44,7 +44,7 @@ float Node::getWidth() const {
 }
 
 void Node::setWidth(float width) {
-	setSize(width, getHeight());
+	size.x = width;
 }
 
 float Node::getHeight() const {
@@ -52,7 +52,7 @@ float Node::getHeight() const {
 }
 
 void Node::setHeight(float height) {
-	setSize(getWidth(), height);
+	size.y = height;
 }
 
 void Node::setSize(float width, float height) {
@@ -60,12 +60,20 @@ void Node::setSize(float width, float height) {
 	size.y = height;
 }
 
+float Node::getRotation() const {
+	return rotation;
+}
+
+void Node::setRotation(float degrees) {
+	this->rotation = degrees;
+}
+
 Node* Node::getParent() const {
 	return parent;
 }
 
 void Node::draw() const {
-	for (auto& child : children) {
+	for (const auto& child : children) {
 		child->draw();
 	}
 }
