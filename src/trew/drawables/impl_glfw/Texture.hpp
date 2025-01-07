@@ -15,7 +15,7 @@ namespace trew {
 		virtual void setShader(Shader* shader);
 		virtual void setCamera(Camera* cam);
 
-		void draw(float x, float y, float width, float height, float rotation, Color color) override;
+		void draw(float x, float y, float width, float height, float rotation, std::optional<glm::mat4> parentModelMatrix, Color color) override;
 		void draw(float x, float y, float width, float height, Color color, SpriteBatch batch) override;
 		int getImageWidth() const override;
 		int getImageHeight() const override;

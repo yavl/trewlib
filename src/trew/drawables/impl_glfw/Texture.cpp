@@ -79,7 +79,7 @@ Texture::~Texture() {
 	logDebug(LOGTAG, fmt::format("{} destructed", name));
 }
 
-void Texture::draw(float x, float y, float width, float height, float rotation, Color color) {
+void Texture::draw(float x, float y, float width, float height, float rotation, std::optional<glm::mat4> parentModelMatrix, Color color) {
 	// todo draw with spritebatch instead of this
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -89,6 +89,10 @@ void Texture::draw(float x, float y, float width, float height, float rotation, 
 	matrix = glm::scale(matrix, glm::vec3(width, height, 1.f));
 	matrix = glm::scale(matrix, glm::vec3(0.5f));
 	matrix = glm::rotate(matrix, glm::radians(rotation), glm::vec3(0.f, 0.f, -1.f));
+	if (auto resultOpt = parentModelMatrix) {
+		auto parentMatrix = *resultOpt;
+		matrix = parentMatrix * matrix;
+	}
 	shader->setUniform("u_projTrans", cam->projection * cam->view * matrix);
 	shader->setUniform("u_color", color);
 	glBindTexture(GL_TEXTURE_2D, texture);

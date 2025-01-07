@@ -13,10 +13,14 @@ Sprite::Sprite(Drawable* drawable) : Node("Sprite") {
 
 void Sprite::draw() const {
     // todo draw via spritebatch instead
-	if (getParent())
-		drawable->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight(), getRotation(), color);
-	else
-		drawable->draw(getX(), getY(), getWidth(), getHeight(), getRotation(), color);
+	if (getParent()) {
+		glm::mat4 parentMatrix(1.f);
+		parentMatrix = glm::translate(glm::mat4(1.f), glm::vec3(getParent()->getX(), getParent()->getY(), 0));
+		parentMatrix = glm::rotate(parentMatrix, glm::radians(getParent()->getRotation()), glm::vec3(0.f, 0.f, -1.f));
+		drawable->draw(getX() + getParent()->getX(), getY() + getParent()->getY(), getWidth(), getHeight(), getRotation(), parentMatrix, color);
+	} else {
+		drawable->draw(getX(), getY(), getWidth(), getHeight(), getRotation(), std::nullopt, color);
+	}
 	Node::draw();
 }
 
