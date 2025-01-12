@@ -1,17 +1,19 @@
 # Trewlib
-very tiny cross-platform 2D game library (WIP, not ready to use yet)
+A very tiny cross-platform 2D game library that I plan to use on my dream 2D game for Windows & macOS.
 ### Features
-* OpenGL 3.3 renderer
+* OpenGL 3.3 renderer (Metal renderer planned)
 * Compiles on Windows, macOS, Linux
-* Does nothing except drawing sprites and loading shaders
+* AngelScript as a scripting language (WIP)
 ### Dependencies
 GLFW, stb_image, glm, glad, fmt
 ### Building on Windows
 Go to `build` folder and run `./generateWin64.bat` (CMake and Visual Studio 2022 must be installed).
 ### Building on macOS
-`brew install glfw`\
-`brew install freetype`\
-Go to `build` folder and run `cmake . -G Xcode` (XCode and command-line tools must be installed). Open and build `Trewlib.xcodeproj`, copy `build/assets` folder next to an executable and run.\
+```
+brew install glfw
+brew install freetype
+```
+Go to `build` folder and run `cmake . -G Xcode` (XCode and command-line tools must be installed). Open and build `Trewlib.xcodeproj`, copy `build/assets` folder next to an executable and run.
 ### Example
 ```c++
 #pragma once
