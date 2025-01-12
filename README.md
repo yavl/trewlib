@@ -1,5 +1,5 @@
 # Trewlib
-A very tiny cross-platform 2D game library I plan to use on my dream 2D game for Windows & macOS.
+A very tiny cross-platform 2D game library I plan to use for my dream 2D game for Windows & macOS.
 ### Features
 * OpenGL 3.3 renderer (Metal renderer planned)
 * Compiles on Windows, macOS, Linux
