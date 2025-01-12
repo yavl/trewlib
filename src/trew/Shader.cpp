@@ -86,7 +86,7 @@ void Shader::setUniform(const char* uniformName, Color color) {
 	glUniform4fv(id, 1, glm::value_ptr(uniform_vec4));
 }
 
-GLuint trew::Shader::compileShader(const char* shaderSource, Type shaderType) {
+GLuint Shader::compileShader(const char* shaderSource, Type shaderType) {
 	GLuint shaderId;
 	if (shaderType == Type::VERTEX) {
 		shaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -101,12 +101,13 @@ GLuint trew::Shader::compileShader(const char* shaderSource, Type shaderType) {
 	if (result == GL_FALSE) {
 		int length;
 		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)_malloca(length * sizeof(char));
+		char* message = (char*)malloc(length * sizeof(char));
 		glGetShaderInfoLog(shaderId, length, &length, message);
 		logError(LOGTAG, fmt::format("Error: failed to compile shader of type: {}", (shaderType ==
 			Type::VERTEX ? "vertex" : "fragment")));
 		fmt::println("{}", message);
 		glDeleteShader(shaderId);
+		free(message);
 		return -1;
 	}
 	return shaderId;

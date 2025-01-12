@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(Trewlib)
 
+enable_language(ASM)
+
 set (Trewlib_VERSION_MAJOR 1)
 set (Trewlib_VERSION_MINOR 0)
 
@@ -72,6 +74,11 @@ file(GLOB_RECURSE SRC_angelscript
 if(WIN32)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-msvc/x64/as_callfunc_x64_msvc_asm.obj"
+	)
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_mixbox} ${SRC_angelscript} ${SRC_angelscript_obj})
+elseif(APPLE)
+	file(GLOB SRC_angelscript_obj
+		"../extlibs/libs-mac/as_callfunc_arm64_xcode.S"
 	)
 	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_mixbox} ${SRC_angelscript} ${SRC_angelscript_obj})
 else()
