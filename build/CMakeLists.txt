@@ -62,10 +62,6 @@ file(GLOB SRC_glad
 	"../extlibs/include/glad/*.h"
 	"../extlibs/include/glad/*.c"
 )
-file(GLOB_RECURSE SRC_mixbox
-	"../extlibs/include/mixbox/*.h"
-	"../extlibs/include/mixbox/*.cpp"
-)
 file(GLOB_RECURSE SRC_angelscript
 	"../extlibs/include/angelscript/*.h"
 	"../extlibs/include/angelscript/*.cpp"
@@ -75,19 +71,18 @@ if(WIN32)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-msvc/x64/as_callfunc_x64_msvc_asm.obj"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_mixbox} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
 elseif(APPLE)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-mac/as_callfunc_arm64_xcode.S"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_mixbox} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
 else()
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_mixbox} ${SRC_angelscript})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript})
 endif()
 
 include_directories(Trewlib "../src")
 source_group("angelscript" FILES ${SRC_angelscript})
-source_group("mixbox" FILES ${SRC_mixbox})
 source_group("imgui" FILES ${SRC_imgui})
 source_group("glad" FILES ${SRC_glad})
 source_group("trew" FILES ${SRC_trew})

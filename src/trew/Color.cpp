@@ -1,5 +1,4 @@
 #include "Color.hpp"
-#include <mixbox/mixbox.h>
 #include <fmt/core.h>
 
 using namespace trew;
@@ -14,10 +13,9 @@ Color Color::operator+(const Color& other) const {
 	float t = 0.5;
 	unsigned char resultR, resultG, resultB;
 
-	mixbox_lerp(r1, g1, b1,  // first color
-		r2, g2, b2,  // second color
-		t,           // mixing ratio
-		&resultR, &resultG, &resultB); // result
+	resultR = static_cast<float>(r1 + r2) / 2;
+	resultG = static_cast<float>(r1 + r2) / 2;
+	resultB = static_cast<float>(r1 + r2) / 2;
 
 	float red = static_cast<float>(resultR) / 255;
 	float green = static_cast<float>(resultG) / 255;
