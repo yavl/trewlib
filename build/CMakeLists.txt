@@ -100,7 +100,7 @@ source_group("game" FILES ${SRC})
 
 include_directories(Trewlib ../extlibs/include ../extlibs/include/angelscript/addons)
 if(WIN32)
-	target_link_libraries(Trewlib opengl32 glfw3 freetype)
+	target_link_libraries(Trewlib opengl32 glfw3 freetype SDL3)
 endif()
 
 if(UNIX)
