@@ -1,7 +1,7 @@
 #include "Camera.hpp"
-#include <trew/app/impl_glfw/GlfwWindow.hpp>
 #include <trew/Logger.hpp>
 #include <trew/input/Input.hpp>
+#include <trew/app/SdlWindow.hpp>
 #include <functional>
 
 using namespace trew;
@@ -15,7 +15,7 @@ Camera::Camera(std::weak_ptr<Window> window) :
 	camSpeed = CAMERA_SPEED;
 	zoomFactor = 0.15f;
 	zoom = 1.f;
-	oldState = GLFW_RELEASE;
+	oldMousePressed = false;
 	updateProjection(window.lock()->getWidth(), window.lock()->getHeight());
 
 	window.lock()->addScrollCallback([this, window](double xoffset, double yoffset) {
@@ -27,25 +27,12 @@ Camera::Camera(std::weak_ptr<Window> window) :
 		}
 	});
 
-	window.lock()->addMouseButtonCallback([=](int button, int action, int mods) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			double x, y;
-			auto winlock = window.lock();
-			auto win = static_cast<GlfwWindow*>(winlock.get());
-			glfwGetCursorPos(win->getRawGlfwWindow(), &x, &y);
-			auto world = screenToSpace(static_cast<float>(x), static_cast<float>(y));
-			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
-		}
-	});
-
-	window.lock()->addResizeCallback([this](int width, int height) {
+	window.lock()->addWindowResizeCallback([this](int width, int height) {
 		updateProjection(width, height);
 	});
 }
 
 void Camera::update(float dt) {
-	// todo cleanup & make it implementation aware (no glfw)
-	auto win = static_cast<GlfwWindow*>(window.lock().get())->getRawGlfwWindow();
 	auto& input = window.lock().get()->getInput();
 
 	if (input.isKeyPressed(Key::W))
@@ -57,17 +44,27 @@ void Camera::update(float dt) {
 	if (input.isKeyPressed(Key::D))
 		pos.x += camSpeed * dt;
 
-	int state = glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE);
-	double xpos, ypos;
-	glfwGetCursorPos(win, &xpos, &ypos);
-	float mouseX = static_cast<float>(xpos);
-	float mouseY = static_cast<float>(ypos);
-	if (state == GLFW_PRESS && oldState == GLFW_RELEASE) {
+	if (input.isMousePressed(Key::LEFT_MOUSE_BUTTON)) {
+		auto pos = window.lock()->getCursorPos();
+		auto world = screenToSpace(pos.x, pos.y);
+		log("camera", fmt::format("World pos: {}, {}", world.x, world.y));
+	}
+
+	bool mousePressed = false;
+	if (input.isMousePressed(Key::MIDDLE_MOUSE_BUTTON)) {
+		mousePressed = true;
+	}
+
+	auto cursorPos = window.lock()->getCursorPos();
+
+	float mouseX = cursorPos.x;
+	float mouseY = cursorPos.y;
+	if (mousePressed && !oldMousePressed) {
 		dragNew = Vector2(mouseX, mouseY);
 		dragNew *= 1.f / zoom;
 		dragOld = dragNew;
 	}
-	if (state == GLFW_PRESS) {
+	if (mousePressed) {
 		dragNew = Vector2(mouseX, mouseY);
 		dragNew *= 1.f / zoom;
 		if (dragNew != dragOld) {
@@ -75,7 +72,7 @@ void Camera::update(float dt) {
 			dragOld = dragNew;
 		}		
 	}
-	oldState = state;
+	oldMousePressed = mousePressed;
 
 	glm::vec3 cameraPos = glm::vec3(pos.x, pos.y, 1.f);
 	glm::vec3 cameraFront = glm::vec3(0.f, 0.f, 1.f);

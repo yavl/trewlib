@@ -2,6 +2,7 @@
 #include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
 #include <trew/Color.hpp>
+#include <SDL3/SDL.h>
 
 using namespace trew;
 
@@ -13,7 +14,7 @@ Shader::Shader(std::string vertShaderSource, std::string fragShaderSource) {
 }
 
 void Shader::compile() {
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
 		logError("Shader", "Failed to initialize GLAD\n");
 	auto vertStr = vertShaderSource.c_str();
 	auto fragStr = fragShaderSource.c_str();

@@ -1,9 +1,10 @@
+#include "HelloSDL3GPU.hpp"
 #include "HelloWorld.hpp"
-#include <trew/trew.hpp>
-#include <trew/app/impl_glfw/GlfwWindow.hpp>
+#include <trew/app/SdlWindow.hpp>
 #include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
 #include <nlohmann/json.hpp>
+#include <SDL3/SDL.h>
 
 using namespace trew;
 using namespace nlohmann;
@@ -18,26 +19,19 @@ int main() {
 	int height = windowProperties["height"].get<int>();
 	std::string title = windowProperties["title"].get<std::string>();
 
-	auto window = std::make_shared<GlfwWindow>();
+	auto window = std::make_shared<SdlWindow>();
 	window->createWindow(title, width, height);
 
 	auto m = std::make_unique<HelloWorld>(window);
+	//auto m = std::make_unique<HelloSDL3GPU>(window);
 	m->create();
-	double lastFrame = 0.0;
-	double currentFrame, dt;
-	int frameCount = 0;
-	double prevTime = glfwGetTime();
+	Uint64 now = SDL_GetPerformanceCounter();
+	Uint64 last = 0;
+	float dt = 0;
 	while (!window->shouldClose()) {
-		currentFrame = glfwGetTime();
-		dt = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-		frameCount++;
-		if (currentFrame - prevTime >= 1.0f) {
-			//fmt::print("{} fps\n", frameCount);
-			frameCount = 0;
-			prevTime = currentFrame;
-		}
-
+		last = now;
+		now = SDL_GetPerformanceCounter();
+		dt = static_cast<float>((now - last) / static_cast<float>(SDL_GetPerformanceFrequency()));
 		m->update(static_cast<float>(dt));
 		m->render();
 	}

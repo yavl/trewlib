@@ -1,4 +1,4 @@
-#include "Texture.hpp"
+#include "GLTexture.hpp"
 #include <trew/Camera.hpp>
 #include <trew/Shader.hpp>
 #include <trew/Logger.hpp>

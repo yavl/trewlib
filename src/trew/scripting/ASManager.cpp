@@ -5,7 +5,7 @@
 #include <fmt/core.h>
 #include <trew/Logger.hpp>
 #include <trew/AssetManager.hpp>
-#include <trew/drawables/impl_glfw/Texture.hpp>
+#include <trew/drawables/impl_opengl/GLTexture.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/Globals.hpp>
 #include <cassert>

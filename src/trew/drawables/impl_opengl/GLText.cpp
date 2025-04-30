@@ -1,4 +1,4 @@
-#include "Text.hpp"
+#include "GLText.hpp"
 #include <trew/Logger.hpp>
 #include <trew/Shader.hpp>
 #include <trew/Camera.hpp>

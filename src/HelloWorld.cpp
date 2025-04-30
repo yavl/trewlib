@@ -1,20 +1,22 @@
 #include "HelloWorld.hpp"
-#include <trew/drawables/impl_glfw/Texture.hpp>
+#include <trew/drawables/impl_opengl/GLTexture.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/Camera.hpp>
 #include <trew/Shader.hpp>
 #include <trew/InputManager.hpp>
-#include <trew/app/impl_glfw/GlfwWindow.hpp>
 #include <trew/AssetManager.hpp>
 #include <trew/Logger.hpp>
 #include <trew/actions/MoveAction.hpp>
-#include <trew/drawables/impl_glfw/Text.hpp>
+#include <trew/drawables/impl_opengl/GLText.hpp>
 #include <trew/scripting/ASManager.hpp>
 #include <rapidcsv.h>
 #include <trew/Color.hpp>
 #include <trew/Globals.hpp>
 #include <chrono>
 #include <random>
+#include <SDL3/SDL.h>
+#include <trew/app/SdlWindow.hpp>
+#include <trew/Hud.hpp>
 
 const char* assetsRootDirectory = "assets";
 
@@ -28,7 +30,7 @@ HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
 HelloWorld::~HelloWorld() {}
 
 void HelloWorld::create() {
-	Globals::assets = std::make_shared<AssetManager>(assetsRootDirectory);;
+	Globals::assets = std::make_shared<AssetManager>(assetsRootDirectory);
 	assets = Globals::assets;
 	assets->load("default", AssetType::SHADER);
 	assets->load("text", AssetType::SHADER);
@@ -48,7 +50,7 @@ void HelloWorld::create() {
 	sprite->setRotation(-45.f);
 	//sprite->addAction(new MoveAction(0.f, 200.f, 2.f));
 
-	window.lock()->addResizeCallback([this](int width, int height) {
+	window.lock()->addWindowResizeCallback([this](int width, int height) {
 		resize(width, height);
 	});
 
@@ -105,27 +107,51 @@ void HelloWorld::create() {
 		}
 	}
 
-	window.lock()->addMouseButtonCallback([=](int button, int action, int mods) {
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-			double x, y;
-			auto winlock = window.lock();
-			auto win = static_cast<GlfwWindow*>(winlock.get());
-			glfwGetCursorPos(win->getRawGlfwWindow(), &x, &y);
-			auto world = cam->screenToSpace(static_cast<float>(x), static_cast<float>(y));
+	window.lock()->addMouseButtonCallback([=](int button) {
+		if (button == SDL_BUTTON_RIGHT) {
+			auto cursorPos = window.lock()->getCursorPos();
+			auto world = cam->screenToSpace(cursorPos.x, cursorPos.y);
 			auto moveAction = new MoveAction(world.x, world.y, 1.f);
 			Globals::sprites[0]->addAction(moveAction);
-			log("glfw", fmt::format("World pos: {}, {}", world.x, world.y));
+			log("mouseClick", fmt::format("World pos: {}, {}", world.x, world.y));
 		}
 	});
+
+	auto sdlWindow = static_cast<SdlWindow*>(window.lock().get());
+	hud = std::make_unique<Hud>(sdlWindow);
 }
 
 void HelloWorld::update(float dt) {
+	SDL_Event event;
+	auto sdlWindow = static_cast<SdlWindow*>(window.lock().get());
+	while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_EVENT_QUIT) {
+			SDL_Quit();
+			exit(0);
+		}
+		if (event.type == SDL_EVENT_MOUSE_WHEEL) {
+			sdlWindow->onScroll(event.wheel.x, event.wheel.y);
+		}
+		if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+			sdlWindow->onMouseButton(event.button.button);
+		}
+		if (event.type == SDL_EVENT_KEY_DOWN) {
+			sdlWindow->onKey(event.button.button);
+		}
+		if (event.type == SDL_EVENT_WINDOW_RESIZED) {
+			int width, height;
+			SDL_GetWindowSize(sdlWindow->getRawSdlWindow(), &width, &height);
+			sdlWindow->onWindowResize(width, height);
+		}
+		hud.get()->update(event);
+	}
 	input->update();
 	cam->update(dt);
 	sprite->act(dt);
 	for (const auto& sprite : Globals::sprites) {
 		sprite.get()->act(dt);
 	}
+	//fmt::println("fps: {}", 1 / dt);
 }
 
 void HelloWorld::render() {
@@ -142,7 +168,8 @@ void HelloWorld::render() {
 		text->draw(textStr, -1000.f, prevY + offset, 1.f, glm::vec3(1.f, 1.f, 1.f));
 		prevY += offset;
 	}
-	window.lock()->swapBuffersPollEvents();
+	hud.get()->render();
+	window.lock()->swapBuffers();
 }
 
 void HelloWorld::resize(int width, int height) {

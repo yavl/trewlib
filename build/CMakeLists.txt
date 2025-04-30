@@ -26,25 +26,17 @@ file(GLOB SRC_trew_app
 	"../src/trew/app/*.hpp"
 	"../src/trew/app/*.cpp"
 )
-file(GLOB SRC_trew_app_impl_glfw
-	"../src/trew/app/impl_glfw/*.hpp"
-	"../src/trew/app/impl_glfw/*.cpp"
-)
 file(GLOB SRC_trew_drawables
 	"../src/trew/drawables/*.hpp"
 	"../src/trew/drawables/*.cpp"
 )
-file(GLOB SRC_trew_drawables_impl_glfw
-	"../src/trew/drawables/impl_glfw/*.hpp"
-	"../src/trew/drawables/impl_glfw/*.cpp"
+file(GLOB SRC_trew_drawables_impl_opengl
+	"../src/trew/drawables/impl_opengl/*.hpp"
+	"../src/trew/drawables/impl_opengl/*.cpp"
 )
 file(GLOB SRC_trew_input
 	"../src/trew/input/*.hpp"
 	"../src/trew/input/*.cpp"
-)
-file(GLOB SRC_trew_input_impl_glfw
-	"../src/trew/input/impl_glfw/*.hpp"
-	"../src/trew/input/impl_glfw/*.cpp"
 )
 file(GLOB SRC_trew_nodes
 	"../src/trew/nodes/*.hpp"
@@ -71,14 +63,14 @@ if(WIN32)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-msvc/x64/as_callfunc_x64_msvc_asm.obj"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_opengl} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
 elseif(APPLE)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-mac/as_callfunc_arm64_xcode.S"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_opengl} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
 else()
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_app_impl_glfw} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_glfw} ${SRC_trew_input} ${SRC_trew_input_impl_glfw} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_opengl} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript})
 endif()
 
 include_directories(Trewlib "../src")
@@ -88,11 +80,9 @@ source_group("glad" FILES ${SRC_glad})
 source_group("trew" FILES ${SRC_trew})
 source_group("trew\\actions" FILES ${SRC_trew_actions})
 source_group("trew\\app" FILES ${SRC_trew_app})
-source_group("trew\\app\\impl_glfw" FILES ${SRC_trew_app_impl_glfw})
 source_group("trew\\drawables" FILES ${SRC_trew_drawables})
-source_group("trew\\drawables\\impl_glfw" FILES ${SRC_trew_drawables_impl_glfw})
+source_group("trew\\drawables\\impl_opengl" FILES ${SRC_trew_drawables_impl_opengl})
 source_group("trew\\input" FILES ${SRC_trew_input})
-source_group("trew\\input\\impl_glfw" FILES ${SRC_trew_input_impl_glfw})
 source_group("trew\\nodes" FILES ${SRC_trew_nodes})
 source_group("trew\\scripting" FILES ${SRC_trew_scripting})
 source_group("game" FILES ${SRC})
@@ -100,7 +90,7 @@ source_group("game" FILES ${SRC})
 
 include_directories(Trewlib ../extlibs/include ../extlibs/include/angelscript/addons)
 if(WIN32)
-	target_link_libraries(Trewlib opengl32 glfw3 freetype SDL3)
+	target_link_libraries(Trewlib opengl32 freetype SDL3)
 endif()
 
 if(UNIX)
@@ -112,5 +102,5 @@ if(UNIX)
 		target_link_libraries(Trewlib dl)
 	endif()
 	
-	target_link_libraries(Trewlib glfw freetype)
+	target_link_libraries(Trewlib freetype)
 endif()

@@ -6,12 +6,15 @@ namespace trew {
 		W,
 		A,
 		S,
-		D
+		D,
+		LEFT_MOUSE_BUTTON,
+		MIDDLE_MOUSE_BUTTON
 	};
 
 	class Input {
 	public:
 		virtual ~Input() = default;
 		virtual bool isKeyPressed(Key key) const = 0;
+		virtual bool isMousePressed(Key key) const = 0;
 	};
 }

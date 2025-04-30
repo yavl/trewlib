@@ -1,18 +1,20 @@
 #include "Hud.hpp"
 #include <trew/Logger.hpp>
+#include <trew/app/SdlWindow.hpp>
 #include <algorithm>
 #include <thread>
+#include <SDL3/SDL_events.h>
 
 using namespace trew;
 
-Hud::Hud(GLFWwindow* window) {
+Hud::Hud(SdlWindow* window) {
 	// IMGUI begin
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.IniFilename = nullptr;
 
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplSDL3_InitForOpenGL(window->getRawSdlWindow(), nullptr);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// Setup style
@@ -26,17 +28,25 @@ Hud::Hud(GLFWwindow* window) {
 	font = io.Fonts->AddFontFromFileTTF("assets/Ubuntu-Regular.ttf", font_size, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 }
 
-Hud::~Hud() {}
+Hud::~Hud() {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
+}
 
-void Hud::display() {
+void Hud::update(SDL_Event event) {
+	ImGui_ImplSDL3_ProcessEvent(&event);
+}
+
+void Hud::render() {
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
 	if (show_window)
 	{
 		ImGui::SetNextWindowSizeConstraints(ImVec2(300, 150), ImVec2(1600, 1200));
-		ImGui::Begin("Connect", &show_window, ImVec2(300, 150),
+		ImGui::Begin("Connect", &show_window,
 			ImGuiWindowFlags_NoResize		|
 			ImGuiWindowFlags_NoScrollbar	|
 			ImGuiWindowFlags_NoSavedSettings

@@ -27,7 +27,7 @@ namespace trew {
 		float zoomFactor;
 		Vector2 pos;
 		Vector2 dragNew, dragOld;
-		int oldState;
+		bool oldMousePressed;
 		float zoom;
 	};
 }
