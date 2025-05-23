@@ -113,3 +113,83 @@ GLuint Shader::compileShader(const char* shaderSource, Type shaderType) {
 	}
 	return shaderId;
 }
+
+SDL_GPUShader* LoadShader(
+	SDL_GPUDevice* device,
+	const char* shaderFilename,
+	Uint32 samplerCount,
+	Uint32 uniformBufferCount,
+	Uint32 storageBufferCount,
+	Uint32 storageTextureCount
+) {
+	// Auto-detect the shader stage from the file name for convenience
+	SDL_GPUShaderStage stage;
+	if (SDL_strstr(shaderFilename, ".vert"))
+	{
+		stage = SDL_GPU_SHADERSTAGE_VERTEX;
+	}
+	else if (SDL_strstr(shaderFilename, ".frag"))
+	{
+		stage = SDL_GPU_SHADERSTAGE_FRAGMENT;
+	}
+	else
+	{
+		SDL_Log("Invalid shader stage!");
+		return NULL;
+	}
+
+	char fullPath[256];
+	SDL_GPUShaderFormat backendFormats = SDL_GetGPUShaderFormats(device);
+	SDL_GPUShaderFormat format = SDL_GPU_SHADERFORMAT_INVALID;
+	const char* entrypoint;
+
+	if (backendFormats & SDL_GPU_SHADERFORMAT_SPIRV) {
+		SDL_snprintf(fullPath, sizeof(fullPath), "assets/%s.spv", shaderFilename);
+		format = SDL_GPU_SHADERFORMAT_SPIRV;
+		entrypoint = "main";
+	}
+	else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL) {
+		SDL_snprintf(fullPath, sizeof(fullPath), "%sContent/Shaders/Compiled/MSL/%s.msl", BasePath, shaderFilename);
+		format = SDL_GPU_SHADERFORMAT_MSL;
+		entrypoint = "main0";
+	}
+	else if (backendFormats & SDL_GPU_SHADERFORMAT_DXIL) {
+		SDL_snprintf(fullPath, sizeof(fullPath), "%sContent/Shaders/Compiled/DXIL/%s.dxil", BasePath, shaderFilename);
+		format = SDL_GPU_SHADERFORMAT_DXIL;
+		entrypoint = "main";
+	}
+	else {
+		SDL_Log("%s", "Unrecognized backend shader format!");
+		return NULL;
+	}
+
+	size_t codeSize;
+	void* code = SDL_LoadFile(fullPath, &codeSize);
+	if (code == NULL)
+	{
+		SDL_Log("Failed to load shader from disk! %s", fullPath);
+		return NULL;
+	}
+
+	SDL_GPUShaderCreateInfo shaderInfo = {
+		codeSize,
+		static_cast<Uint8*>(code),
+		entrypoint,
+		format,
+		stage,
+		samplerCount,
+		uniformBufferCount,
+		storageBufferCount,
+		storageTextureCount
+	};
+	SDL_GPUShader* shader = SDL_CreateGPUShader(device, &shaderInfo);
+	if (shader == NULL)
+	{
+		SDL_Log("Failed to create shader!");
+		SDL_free(code);
+		return NULL;
+	}
+
+	SDL_free(code);
+	return shader;
+}

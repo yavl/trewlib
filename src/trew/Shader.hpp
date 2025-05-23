@@ -3,6 +3,7 @@
 #include <trew/trew.hpp>
 #include <trew/Asset.hpp>
 #include <string>
+#include <SDL3/SDL.h>
 
 namespace trew {
 	class Color;
@@ -30,3 +31,14 @@ namespace trew {
 		virtual GLuint compileShader(const char* shaderSource, Type shaderType);
 	};
 }
+
+static const char* BasePath = SDL_GetBasePath();
+
+SDL_GPUShader* LoadShader(
+	SDL_GPUDevice* device,
+	const char* shaderFilename,
+	Uint32 samplerCount,
+	Uint32 uniformBufferCount,
+	Uint32 storageBufferCount,
+	Uint32 storageTextureCount
+);

@@ -22,8 +22,8 @@ int main() {
 	auto window = std::make_shared<SdlWindow>();
 	window->createWindow(title, width, height);
 
-	auto m = std::make_unique<HelloWorld>(window);
-	//auto m = std::make_unique<HelloSDL3GPU>(window);
+	//auto m = std::make_unique<HelloWorld>(window);
+	auto m = std::make_unique<HelloSDL3GPU>(window);
 	m->create();
 	Uint64 now = SDL_GetPerformanceCounter();
 	Uint64 last = 0;

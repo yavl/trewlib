@@ -7,7 +7,7 @@
 
 using namespace trew;
 
-#define TREW_USE_OPENGL
+//#define TREW_USE_OPENGL
 
 SdlWindow::SdlWindow() {
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -55,7 +55,9 @@ void SdlWindow::createWindow(const std::string& title, int width, int height) {
 }
 
 void SdlWindow::swapBuffers() {
+#ifdef TREW_USE_OPENGL
 	SDL_GL_SwapWindow(getRawSdlWindow());
+#endif
 }
 
 int SdlWindow::getWidth() const {
