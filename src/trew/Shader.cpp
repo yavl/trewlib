@@ -114,7 +114,7 @@ GLuint Shader::compileShader(const char* shaderSource, Type shaderType) {
 	return shaderId;
 }
 
-SDL_GPUShader* LoadShader(
+SDL_GPUShader* trew::loadShader(
 	SDL_GPUDevice* device,
     const char* assetsDirectory,
 	const char* shaderFilename,
@@ -125,16 +125,11 @@ SDL_GPUShader* LoadShader(
 ) {
 	// Auto-detect the shader stage from the file name for convenience
 	SDL_GPUShaderStage stage;
-	if (SDL_strstr(shaderFilename, ".vert"))
-	{
+	if (SDL_strstr(shaderFilename, ".vert")) {
 		stage = SDL_GPU_SHADERSTAGE_VERTEX;
-	}
-	else if (SDL_strstr(shaderFilename, ".frag"))
-	{
+	} else if (SDL_strstr(shaderFilename, ".frag")) {
 		stage = SDL_GPU_SHADERSTAGE_FRAGMENT;
-	}
-	else
-	{
+	} else {
 		SDL_Log("Invalid shader stage!");
 		return NULL;
 	}
@@ -148,26 +143,18 @@ SDL_GPUShader* LoadShader(
 		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.spv", assetsDirectory, shaderFilename);
 		format = SDL_GPU_SHADERFORMAT_SPIRV;
 		entrypoint = "main";
-	}
-	else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL) {
+	} else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL) {
 		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.msl", assetsDirectory, shaderFilename);
 		format = SDL_GPU_SHADERFORMAT_MSL;
 		entrypoint = "main_0";
-	}
-	else if (backendFormats & SDL_GPU_SHADERFORMAT_DXIL) {
-		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.dxil", assetsDirectory, shaderFilename);
-		format = SDL_GPU_SHADERFORMAT_DXIL;
-		entrypoint = "main";
-	}
-	else {
+	} else {
 		SDL_Log("%s", "Unrecognized backend shader format!");
 		return NULL;
 	}
 
 	size_t codeSize;
 	void* code = SDL_LoadFile(fullPath, &codeSize);
-	if (code == NULL)
-	{
+	if (code == nullptr) {
 		SDL_Log("Failed to load shader from disk! %s", fullPath);
 		return NULL;
 	}

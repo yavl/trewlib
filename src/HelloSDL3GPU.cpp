@@ -38,13 +38,13 @@ void HelloSDL3GPU::create() {
 	auto sdlWindow = static_cast<SdlWindow*>(window.lock().get());
 	auto device = sdlWindow->getSdlGpuDevice();
 
-	SDL_GPUShader* vertexShader = LoadShader(device, assetsDirectory, "RawTriangle.vert", 0, 0, 0, 0);
+	SDL_GPUShader* vertexShader = loadShader(device, assetsDirectory, "RawTriangle.vert", 0, 0, 0, 0);
 	if (vertexShader == NULL)
 	{
 		SDL_Log("Failed to create vertex shader!");
 	}
 
-	SDL_GPUShader* fragmentShader = LoadShader(device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
+	SDL_GPUShader* fragmentShader = loadShader(device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
 	if (fragmentShader == NULL)
 	{
 		SDL_Log("Failed to create fragment shader!");
