@@ -152,7 +152,7 @@ SDL_GPUShader* LoadShader(
 	else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL) {
 		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.msl", assetsDirectory, shaderFilename);
 		format = SDL_GPU_SHADERFORMAT_MSL;
-		entrypoint = "main0";
+		entrypoint = "main_0";
 	}
 	else if (backendFormats & SDL_GPU_SHADERFORMAT_DXIL) {
 		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.dxil", assetsDirectory, shaderFilename);
