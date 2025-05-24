@@ -11,6 +11,7 @@
 
 static SDL_GPUGraphicsPipeline* Pipeline;
 static Sint32 ResolutionIndex;
+const char* assetsDirectory = "assets";
 
 HelloSDL3GPU::HelloSDL3GPU(std::weak_ptr<Window> window) {
 	this->window = window;
@@ -25,7 +26,7 @@ HelloSDL3GPU::~HelloSDL3GPU() {
 }
 
 void HelloSDL3GPU::create() {
-	Globals::assets = std::make_shared<AssetManager>("assets");;
+	Globals::assets = std::make_shared<AssetManager>(assetsDirectory);;
 	assets = Globals::assets;
 
 	ASManager as(assets);
@@ -37,13 +38,13 @@ void HelloSDL3GPU::create() {
 	auto sdlWindow = static_cast<SdlWindow*>(window.lock().get());
 	auto device = sdlWindow->getSdlGpuDevice();
 
-	SDL_GPUShader* vertexShader = LoadShader(device, "RawTriangle.vert", 0, 0, 0, 0);
+	SDL_GPUShader* vertexShader = LoadShader(device, assetsDirectory, "RawTriangle.vert", 0, 0, 0, 0);
 	if (vertexShader == NULL)
 	{
 		SDL_Log("Failed to create vertex shader!");
 	}
 
-	SDL_GPUShader* fragmentShader = LoadShader(device, "SolidColor.frag", 0, 0, 0, 0);
+	SDL_GPUShader* fragmentShader = LoadShader(device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
 	if (fragmentShader == NULL)
 	{
 		SDL_Log("Failed to create fragment shader!");

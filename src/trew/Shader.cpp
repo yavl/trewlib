@@ -116,6 +116,7 @@ GLuint Shader::compileShader(const char* shaderSource, Type shaderType) {
 
 SDL_GPUShader* LoadShader(
 	SDL_GPUDevice* device,
+    const char* assetsDirectory,
 	const char* shaderFilename,
 	Uint32 samplerCount,
 	Uint32 uniformBufferCount,
@@ -144,17 +145,17 @@ SDL_GPUShader* LoadShader(
 	const char* entrypoint;
 
 	if (backendFormats & SDL_GPU_SHADERFORMAT_SPIRV) {
-		SDL_snprintf(fullPath, sizeof(fullPath), "assets/%s.spv", shaderFilename);
+		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.spv", assetsDirectory, shaderFilename);
 		format = SDL_GPU_SHADERFORMAT_SPIRV;
 		entrypoint = "main";
 	}
 	else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL) {
-		SDL_snprintf(fullPath, sizeof(fullPath), "%sContent/Shaders/Compiled/MSL/%s.msl", BasePath, shaderFilename);
+		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.msl", assetsDirectory, shaderFilename);
 		format = SDL_GPU_SHADERFORMAT_MSL;
 		entrypoint = "main0";
 	}
 	else if (backendFormats & SDL_GPU_SHADERFORMAT_DXIL) {
-		SDL_snprintf(fullPath, sizeof(fullPath), "%sContent/Shaders/Compiled/DXIL/%s.dxil", BasePath, shaderFilename);
+		SDL_snprintf(fullPath, sizeof(fullPath), "%s/shaders/compiled/%s.dxil", assetsDirectory, shaderFilename);
 		format = SDL_GPU_SHADERFORMAT_DXIL;
 		entrypoint = "main";
 	}

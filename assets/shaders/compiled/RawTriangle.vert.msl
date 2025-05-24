@@ -1,0 +1,70 @@
+#include <metal_stdlib>
+#include <metal_math>
+#include <metal_texture>
+using namespace metal;
+
+#line 6 "RawTriangle.vert.slang"
+struct Output_0
+{
+    float4 Color_0 [[user(TEXCOORD)]];
+    float4 Position_0 [[position]];
+};
+
+
+[[vertex]] Output_0 main_0(uint VertexIndex_0 [[vertex_id]])
+{
+    thread Output_0 output_0;
+
+#line 15
+    float2 pos_0;
+
+    if(VertexIndex_0 == 0U)
+    {
+        float2 _S1 = float2(-1.0) ;
+        (&output_0)->Color_0 = float4(1.0, 0.0, 0.0, 1.0);
+
+#line 20
+        pos_0 = _S1;
+
+#line 17
+    }
+    else
+    {
+
+#line 24
+        if(VertexIndex_0 == 1U)
+        {
+            float2 _S2 = float2(1.0, -1.0);
+            (&output_0)->Color_0 = float4(0.0, 1.0, 0.0, 1.0);
+
+#line 27
+            pos_0 = _S2;
+
+#line 24
+        }
+        else
+        {
+
+#line 31
+            if(VertexIndex_0 == 2U)
+            {
+                float2 _S3 = float2(0.0, 1.0);
+                (&output_0)->Color_0 = float4(0.0, 0.0, 1.0, 1.0);
+
+#line 34
+                pos_0 = _S3;
+
+#line 31
+            }
+
+#line 24
+        }
+
+#line 17
+    }
+
+#line 38
+    (&output_0)->Position_0 = float4(pos_0, 0.0, 1.0);
+    return output_0;
+}
+
