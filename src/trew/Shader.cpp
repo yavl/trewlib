@@ -119,9 +119,9 @@ SDL_GPUShader* trew::loadShader(
     const char* assetsDirectory,
 	const char* shaderFilename,
 	Uint32 samplerCount,
-	Uint32 uniformBufferCount,
+	Uint32 storageTextureCount,
 	Uint32 storageBufferCount,
-	Uint32 storageTextureCount
+	Uint32 uniformBufferCount
 ) {
 	// Auto-detect the shader stage from the file name for convenience
 	SDL_GPUShaderStage stage;
@@ -166,9 +166,9 @@ SDL_GPUShader* trew::loadShader(
 		format,
 		stage,
 		samplerCount,
-		uniformBufferCount,
+		storageTextureCount,
 		storageBufferCount,
-		storageTextureCount
+		uniformBufferCount,
 	};
 	SDL_GPUShader* shader = SDL_CreateGPUShader(device, &shaderInfo);
 	if (shader == NULL)

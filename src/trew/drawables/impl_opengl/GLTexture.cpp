@@ -3,7 +3,6 @@
 #include <trew/Shader.hpp>
 #include <trew/Logger.hpp>
 #include <trew/Color.hpp>
-#include <trew/drawables/SpriteBatch.hpp>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -99,9 +98,6 @@ void Texture::draw(float x, float y, float width, float height, float rotation, 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-}
-
-void Texture::draw(float x, float y, float width, float height, Color color, SpriteBatch batch) {
 }
 
 int Texture::getImageWidth() const {

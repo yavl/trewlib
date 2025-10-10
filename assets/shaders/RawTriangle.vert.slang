@@ -9,6 +9,13 @@ struct Output
     float4 Position : SV_Position;
 };
 
+struct UniformData {
+    float4x4 modelViewProjection;
+};
+
+[[vk::binding(0, 1)]]
+ConstantBuffer<UniformData> ubo;
+
 [shader("vertex")]
 Output main(Input input)
 {
@@ -35,6 +42,6 @@ Output main(Input input)
             }
         }
     }
-    output.Position = float4(pos, 0.0f, 1.0f);
+    output.Position = mul(ubo.modelViewProjection, float4(pos, 0.0f, 1.0f));
     return output;
 }

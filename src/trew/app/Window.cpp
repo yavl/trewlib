@@ -1,4 +1,4 @@
-#include "SdlWindow.hpp"
+#include "Window.hpp"
 #include <trew/Logger.hpp>
 #include <trew/input/SdlInput.hpp>
 #include <trew/Vector2.hpp>
@@ -9,19 +9,19 @@ using namespace trew;
 
 //#define TREW_USE_OPENGL
 
-SdlWindow::SdlWindow() {
+Window::Window() {
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
 		SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
 	}
 }
 
-SdlWindow::~SdlWindow() {
+Window::~Window() {
 	SDL_ReleaseWindowFromGPUDevice(device, window);
 	SDL_DestroyWindow(window);
 	SDL_DestroyGPUDevice(device);
 }
 
-void SdlWindow::createWindow(const std::string& title, int width, int height) {
+void Window::createWindow(const std::string& title, int width, int height) {
 	assert(window == nullptr);
 
 	device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
@@ -54,21 +54,21 @@ void SdlWindow::createWindow(const std::string& title, int width, int height) {
 	input = std::make_unique<SdlInput>(window);
 }
 
-void SdlWindow::swapBuffers() {
+void Window::swapBuffers() {
 #ifdef TREW_USE_OPENGL
 	SDL_GL_SwapWindow(getRawSdlWindow());
 #endif
 }
 
-int SdlWindow::getWidth() const {
+int Window::getWidth() const {
 	return getSize().first;
 }
 
-int SdlWindow::getHeight() const {
+int Window::getHeight() const {
 	return getSize().second;
 }
 
-Vector2 SdlWindow::getCursorPos() const {
+Vector2 Window::getCursorPos() const {
 	SDL_PumpEvents();
 
 	float x, y;
@@ -76,73 +76,73 @@ Vector2 SdlWindow::getCursorPos() const {
 	return Vector2(x, y);
 }
 
-std::pair<int, int> SdlWindow::getSize() const {
+std::pair<int, int> Window::getSize() const {
 	int width;
 	int height;
 	SDL_GetWindowSize(window, &width, &height);
 	return std::make_pair(width, height);
 }
 
-bool SdlWindow::shouldClose() const {
+bool Window::shouldClose() const {
 	return false;
 }
 
-void SdlWindow::close() {
+void Window::close() {
 	SDL_DestroyWindow(window);
 }
 
-SDL_Window* SdlWindow::getRawSdlWindow() const {
+SDL_Window* Window::getRawSdlWindow() const {
 	return window;
 }
 
-SDL_GPUDevice* SdlWindow::getSdlGpuDevice() const {
+SDL_GPUDevice* Window::getSdlGpuDevice() const {
 	return device;
 }
 
-SDL_GLContext SdlWindow::getSdlContext() const {
+SDL_GLContext Window::getSdlContext() const {
 	return context;
 }
 
-Input& SdlWindow::getInput() const {
+Input& Window::getInput() const {
 	return *input;
 }
 
-void SdlWindow::onWindowResize(int width, int height) {
+void Window::onWindowResize(int width, int height) {
 	for (auto f : windowResizeCallbacks) {
 		f(width, height);
 	}
 }
 
-void SdlWindow::onScroll(double xoffset, double yoffset) {
+void Window::onScroll(double xoffset, double yoffset) {
 	for (auto f : scrollCallbacks) {
 		f(xoffset, yoffset);
 	}
 }
 
-void SdlWindow::onMouseButton(int button) {
+void Window::onMouseButton(int button) {
 	for (auto f : mouseButtonCallbacks) {
 		f(button);
 	}
 }
 
-void SdlWindow::onKey(int key) {
+void Window::onKey(int key) {
 	for (auto f : keyCallbacks) {
 		f(key);
 	}
 }
 
-void SdlWindow::addWindowResizeCallback(ResizeCallback&& callback) {
+void Window::addWindowResizeCallback(ResizeCallback&& callback) {
 	windowResizeCallbacks.emplace_back(callback);
 }
 
-void SdlWindow::addScrollCallback(ScrollCallback&& callback) {
+void Window::addScrollCallback(ScrollCallback&& callback) {
 	scrollCallbacks.emplace_back(callback);
 }
 
-void SdlWindow::addMouseButtonCallback(MouseButtonCallback&& callback) {
+void Window::addMouseButtonCallback(MouseButtonCallback&& callback) {
 	mouseButtonCallbacks.emplace_back(callback);
 }
 
-void SdlWindow::addKeyCallback(KeyCallback&& callback) {
+void Window::addKeyCallback(KeyCallback&& callback) {
 	keyCallbacks.emplace_back(callback);
 }

@@ -1,13 +1,15 @@
 #include "InputManager.hpp"
-#include <trew/app/Window.hpp>
 #include <trew/input/Input.hpp>
+#include <trew/app/Window.hpp>
 #include <SDL3/SDL.h>
 #include <fmt/core.h>
 
 using namespace trew;
 
-InputManager::InputManager(std::weak_ptr<Window> window) : input(window.lock()->getInput()) {
-	this->window = window;
+InputManager::InputManager(Window* window) :
+	input(window->getInput()),
+	window(window)
+{
 }
 
 void InputManager::update() {

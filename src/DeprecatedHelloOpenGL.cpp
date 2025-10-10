@@ -1,4 +1,4 @@
-#include "HelloWorld.hpp"
+#include "DeprecatedHelloOpenGL.hpp"
 #include <trew/drawables/impl_opengl/GLTexture.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/Camera.hpp>
@@ -15,46 +15,43 @@
 #include <chrono>
 #include <random>
 #include <SDL3/SDL.h>
-#include <trew/app/SdlWindow.hpp>
+#include <trew/app/Window.hpp>
 #include <trew/Hud.hpp>
 
 const char* assetsRootDirectory = "assets";
 
-HelloWorld::HelloWorld(std::weak_ptr<Window> window) {
+DeprecatedHelloOpenGL::DeprecatedHelloOpenGL(Window* window) {
 	this->window = window;
-	Globals::camera = std::make_shared<Camera>(window);
-	cam = Globals::camera;
+	cam = std::make_shared<Camera>(window);
 	input = std::make_unique<InputManager>(window);
 }
 
-HelloWorld::~HelloWorld() {}
+DeprecatedHelloOpenGL::~DeprecatedHelloOpenGL() {}
 
-void HelloWorld::create() {
-	Globals::assets = std::make_shared<AssetManager>(assetsRootDirectory);
-	assets = Globals::assets;
+void DeprecatedHelloOpenGL::create() {
+	assets = std::make_shared<AssetManager>(assetsRootDirectory);
 	assets->load("default", AssetType::SHADER);
 	assets->load("text", AssetType::SHADER);
 
-	ASManager as(assets);
+	/*ASManager as(assets);
 	as.registerScript("assets/scripts/main.as");
-	as.runScript("assets/scripts/main.as");
+	as.runScript("assets/scripts/main.as");*/
 
-	auto sh = assets->getShader("default").value();
-	auto tex = assets->getTexture("tex.png").value();
+	auto tex = assets->getTexture("tex.png");
 	sprite = std::make_unique<Sprite>(tex);
 
-	auto tex2 = assets->getTexture("tex2.png").value();
+	auto tex2 = assets->getTexture("tex2.png");
 	auto sprite2 = new Sprite(tex2);
 	sprite2->setXY(400, 300);
 	sprite->addChild(sprite2);
 	sprite->setRotation(-45.f);
 	//sprite->addAction(new MoveAction(0.f, 200.f, 2.f));
 
-	window.lock()->addWindowResizeCallback([this](int width, int height) {
+	window->addWindowResizeCallback([this](int width, int height) {
 		resize(width, height);
 	});
 
-	auto textSh = assets->getShader("text").value();
+	auto textSh = assets->getShader("text");
 	text = std::make_unique<Text>(textSh, cam.get());
 	
 	rapidcsv::Document doc("assets/colhdr.csv");
@@ -64,27 +61,27 @@ void HelloWorld::create() {
 		texts.push_back(std::to_string(each));
 	}
 
-	auto circleTex = assets->getTexture("circle.png").value();
+	auto circleTex = assets->getTexture("circle.png");
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-1000, 0);
 		circleSprite->setColor(Color(0, 0, 1, 1));
-		Globals::sprites.push_back(std::move(circleSprite));
+		//Globals::sprites.push_back(std::move(circleSprite));
 	}
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-800, 0);
 		circleSprite->setColor(Color(1, 1, 0, 1));
-		Globals::sprites.push_back(std::move(circleSprite));
+		//Globals::sprites.push_back(std::move(circleSprite));
 	}
 
 	{
 		auto circleSprite = std::make_unique<Sprite>(circleTex);
 		circleSprite->setXY(-600, 0);
-		circleSprite->setColor(Globals::sprites[0].get() ->getColor() + Globals::sprites[1].get()->getColor());
-		Globals::sprites.push_back(std::move(circleSprite));
+		//circleSprite->setColor(Globals::sprites[0].get() ->getColor() + Globals::sprites[1].get()->getColor());
+		//Globals::sprites.push_back(std::move(circleSprite));
 	}
 
 	{
@@ -103,64 +100,62 @@ void HelloWorld::create() {
 			float g = unif(rng);
 			float b = unif(rng);
 			circleSprite->setColor(Color(r, g, b, 1));
-			Globals::sprites.push_back(std::move(circleSprite));
+			//Globals::sprites.push_back(std::move(circleSprite));
 		}
 	}
 
-	window.lock()->addMouseButtonCallback([=](int button) {
+	window->addMouseButtonCallback([=](int button) {
 		if (button == SDL_BUTTON_RIGHT) {
-			auto cursorPos = window.lock()->getCursorPos();
+			auto cursorPos = window->getCursorPos();
 			auto world = cam->screenToSpace(cursorPos.x, cursorPos.y);
 			auto moveAction = new MoveAction(world.x, world.y, 1.f);
-			Globals::sprites[0]->addAction(moveAction);
+			//Globals::sprites[0]->addAction(moveAction);
 			log("mouseClick", fmt::format("World pos: {}, {}", world.x, world.y));
 		}
 	});
 
-	auto sdlWindow = static_cast<SdlWindow*>(window.lock().get());
-	hud = std::make_unique<Hud>(sdlWindow);
+	hud = std::make_unique<Hud>(window);
 }
 
-void HelloWorld::update(float dt) {
+void DeprecatedHelloOpenGL::update(float dt) {
 	SDL_Event event;
-	auto sdlWindow = static_cast<SdlWindow*>(window.lock().get());
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_EVENT_QUIT) {
 			SDL_Quit();
 			exit(0);
 		}
 		if (event.type == SDL_EVENT_MOUSE_WHEEL) {
-			sdlWindow->onScroll(event.wheel.x, event.wheel.y);
+			window->onScroll(event.wheel.x, event.wheel.y);
 		}
 		if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-			sdlWindow->onMouseButton(event.button.button);
+			window->onMouseButton(event.button.button);
 		}
 		if (event.type == SDL_EVENT_KEY_DOWN) {
-			sdlWindow->onKey(event.button.button);
+			window->onKey(event.button.button);
 		}
 		if (event.type == SDL_EVENT_WINDOW_RESIZED) {
 			int width, height;
-			SDL_GetWindowSize(sdlWindow->getRawSdlWindow(), &width, &height);
-			sdlWindow->onWindowResize(width, height);
+			SDL_GetWindowSize(window->getRawSdlWindow(), &width, &height);
+			window->onWindowResize(width, height);
 		}
 		hud.get()->update(event);
 	}
 	input->update();
 	cam->update(dt);
 	sprite->act(dt);
-	for (const auto& sprite : Globals::sprites) {
-		sprite.get()->act(dt);
-	}
+	//for (const auto& sprite : Globals::sprites) {
+	//	sprite.get()->act(dt);
+	//}
 	//fmt::println("fps: {}", 1 / dt);
 }
 
-void HelloWorld::render() {
+void DeprecatedHelloOpenGL::render() {
 	glClearColor(0.f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	sprite->draw();
-	for (const auto& sprite : Globals::sprites) {
-		sprite.get()->draw();
-	}
+	//for (const auto& sprite : Globals::sprites) {
+	//	sprite.get()->draw();
+	//}
 
 	float offset = 100.f;
 	float prevY = 200.f;
@@ -168,11 +163,11 @@ void HelloWorld::render() {
 		text->draw(textStr, -1000.f, prevY + offset, 1.f, glm::vec3(1.f, 1.f, 1.f));
 		prevY += offset;
 	}
-	hud.get()->render();
-	window.lock()->swapBuffers();
+	//hud.get()->render();
+	window->swapBuffers();
 }
 
-void HelloWorld::resize(int width, int height) {
+void DeprecatedHelloOpenGL::resize(int width, int height) {
 	glViewport(0, 0, width, height);
 	render();
 }

@@ -7,6 +7,7 @@
 #include <memory>
 
 namespace trew {
+	class Renderer;
 	class Node : public Actor {
 	public:
 		Node();
@@ -14,6 +15,7 @@ namespace trew {
 		virtual ~Node();
 		virtual Node* getParent() const;
 		virtual void draw() const;
+		virtual void draw(Renderer* renderer) const;
 		virtual void addChild(Node* node);
 		virtual std::string getName() const;
 
@@ -32,12 +34,12 @@ namespace trew {
 
 		void act(float dt) override;
 		void addAction(Action* action) override;
+		std::vector<std::unique_ptr<Node>> children;
 	private:
 		Vector2 pos;
 		Vector2 size;
 		float rotation = 0.f;
 		Node* parent = nullptr;
-		std::vector<std::unique_ptr<Node>> children;
 		std::vector<std::unique_ptr<Action>> actions;
 		std::string name;
 	};

@@ -78,6 +78,12 @@ void Node::draw() const {
 	}
 }
 
+void Node::draw(Renderer* renderer) const {
+	for (const auto& child : children) {
+		child->draw(renderer);
+	}
+}
+
 void Node::addChild(Node* node) {
 	std::unique_ptr<Node> nodePtr(node);
 	nodePtr->parent = this;

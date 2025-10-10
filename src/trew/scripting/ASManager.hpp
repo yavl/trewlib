@@ -1,18 +1,18 @@
 #pragma once
 
-#include <memory>
-
 class asIScriptEngine;
 
 namespace trew {
 	class AssetManager;
+	class Camera;
 	class ASManager {
 	public:
-		ASManager(std::shared_ptr<AssetManager> assets);
+		ASManager(AssetManager* assets, Camera* cam);
 		void registerScript(const char* path);
 		void runScript(const char* path);
 	private:
 		asIScriptEngine* engine;
-		std::weak_ptr<AssetManager> assets;
+		AssetManager* assets;
+		Camera* cam;
 	};
 }

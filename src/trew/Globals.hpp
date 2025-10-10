@@ -7,9 +7,12 @@ namespace trew {
 	class AssetManager;
 	class Camera;
 	class Sprite;
+	/// <summary>
+	/// Globals are needed for AngelScript global functions
+	/// </summary>
 	namespace Globals {
-		extern std::shared_ptr<trew::AssetManager> assets;
-		extern std::shared_ptr<trew::Camera> camera;
+		extern AssetManager* assets;
+		extern Camera* camera;
 		extern std::vector<std::unique_ptr<Sprite>> sprites;
 	}
 }

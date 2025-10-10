@@ -8,6 +8,7 @@
 #include <trew/drawables/impl_opengl/GLTexture.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/Globals.hpp>
+#include <trew/Camera.hpp>
 #include <cassert>
 #include <memory>
 
@@ -16,24 +17,24 @@ using namespace trew;
 #define LOGTAG "AngelScript"
 
 namespace ASFunction {
-    void print(const std::string& msg) {
-        fmt::print("{}\n", msg.c_str());
+    void print(const char* msg) {
+        fmt::print("{}\n", msg);
     }
 
-    void loadTexture(const std::string& path) {
-        auto assets = Globals::assets.get();
+    void loadTexture(const char* path) {
+        auto assets = Globals::assets;
         assets->load(path, AssetType::TEXTURE);
-        if (auto texture = assets->getTexture(path); auto tex = texture.value()) {
-            if (auto shader = assets->getShader("default"); auto sh = shader.value()) {
+        if (auto texture = assets->getTexture(path); auto tex = texture) {
+            if (auto shader = assets->getShader("default"); auto sh = shader) {
                 tex->setShader(sh);
             }
-            auto cam = Globals::camera.get();
+            auto cam = Globals::camera;
             tex->setCamera(cam);
         }
     }
     
-    void createSprite(const std::string& texturePath) {
-        auto tex = Globals::assets->getTexture(texturePath).value();
+    void createSprite(const char* texturePath) {
+        auto tex = Globals::assets->getTexture(texturePath);
         auto circleSprite = std::make_unique<Sprite>(tex);
         circleSprite->setXY(1100, 0);
         circleSprite->setColor(Color(1, 1, 1, 1));
@@ -53,7 +54,10 @@ static void MessageCallback(const asSMessageInfo* msg, void* param) {
     logError(LOGTAG, fmt::format("{} ({}, {}) : {} : {}", msg->section, msg->row, msg->col, type, msg->message));
 }
 
-ASManager::ASManager(std::shared_ptr<AssetManager> assets): assets(assets) {
+ASManager::ASManager(AssetManager* assets, Camera* cam) :
+    assets(assets),
+    cam(cam)
+{
 	engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
     int r = engine->SetMessageCallback(asFUNCTION(MessageCallback), 0, asCALL_CDECL);
     RegisterStdString(engine);

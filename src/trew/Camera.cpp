@@ -1,24 +1,24 @@
 #include "Camera.hpp"
 #include <trew/Logger.hpp>
 #include <trew/input/Input.hpp>
-#include <trew/app/SdlWindow.hpp>
+#include <trew/app/Window.hpp>
 #include <functional>
 
 using namespace trew;
 
 const float CAMERA_SPEED = 500.f;
 
-Camera::Camera(std::weak_ptr<Window> window) :
-	view(1.f)
+Camera::Camera(Window* window) :
+	view(1.f),
+	window(window)
 {
-	this->window = window;
 	camSpeed = CAMERA_SPEED;
 	zoomFactor = 0.15f;
 	zoom = 1.f;
 	oldMousePressed = false;
-	updateProjection(window.lock()->getWidth(), window.lock()->getHeight());
+	updateProjection(window->getWidth(), window->getHeight());
 
-	window.lock()->addScrollCallback([this, window](double xoffset, double yoffset) {
+	window->addScrollCallback([this, window](double xoffset, double yoffset) {
 		if (yoffset > 0) {
 			zoom += zoomFactor * zoom;
 		}
@@ -27,13 +27,13 @@ Camera::Camera(std::weak_ptr<Window> window) :
 		}
 	});
 
-	window.lock()->addWindowResizeCallback([this](int width, int height) {
+	window->addWindowResizeCallback([this](int width, int height) {
 		updateProjection(width, height);
 	});
 }
 
 void Camera::update(float dt) {
-	auto& input = window.lock().get()->getInput();
+	auto& input = window->getInput();
 
 	if (input.isKeyPressed(Key::W))
 		pos.y += camSpeed * dt;
@@ -45,7 +45,7 @@ void Camera::update(float dt) {
 		pos.x += camSpeed * dt;
 
 	if (input.isMousePressed(Key::LEFT_MOUSE_BUTTON)) {
-		auto pos = window.lock()->getCursorPos();
+		auto pos = window->getCursorPos();
 		auto world = screenToSpace(pos.x, pos.y);
 		log("camera", fmt::format("World pos: {}, {}", world.x, world.y));
 	}
@@ -55,7 +55,7 @@ void Camera::update(float dt) {
 		mousePressed = true;
 	}
 
-	auto cursorPos = window.lock()->getCursorPos();
+	auto cursorPos = window->getCursorPos();
 
 	float mouseX = cursorPos.x;
 	float mouseY = cursorPos.y;
@@ -83,7 +83,7 @@ void Camera::update(float dt) {
 		cameraPos + cameraFront,
 		cameraUp);
 
-	auto asd = screenToSpace(window.lock()->getWidth() / 2.f, window.lock()->getHeight() / 2.f);
+	auto asd = screenToSpace(window->getWidth() / 2.f, window->getHeight() / 2.f);
 	glm::vec3 center(asd.x, asd.y, 0.f);
 	view = glm::translate(view, glm::vec3(center.x, center.y, 0.f));
 	view = glm::scale(view, glm::vec3(zoom, zoom, 1.f));
@@ -110,8 +110,8 @@ float trew::Camera::getY() const {
 }
 
 Vector2 Camera::screenToSpace(float x, float y) {
-	int width = window.lock()->getWidth();
-	int height = window.lock()->getHeight();
+	int width = window->getWidth();
+	int height = window->getHeight();
 	auto screenPos = glm::vec2(x, height - y);
 	auto world = glm::unProject(glm::vec3(screenPos, 0), view, projection, glm::vec4(0, 0, width, height));
 	return Vector2(world.x, world.y);
