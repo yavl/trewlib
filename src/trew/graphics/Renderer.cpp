@@ -168,7 +168,7 @@ void Renderer::render() {
 		Vector2 end = Globals::selectionQuad[1];
 		auto vec1 = begin;
 		auto vec2 = end;
-		fmt::print("wpos: {}, {}; {}, {}\n", vec1.x, vec1.y, vec2.x, vec2.y);
+		//fmt::print("wpos: {}, {}; {}, {}\n", vec1.x, vec1.y, vec2.x, vec2.y);
 
 		auto width = abs(vec2.x - vec1.x);
 		auto height = abs(vec2.y - vec1.y);
