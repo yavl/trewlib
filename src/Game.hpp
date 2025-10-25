@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <flecs.h>
+#include <ecs/Components.hpp>
 
 namespace trew {
 	class Camera;
@@ -26,12 +28,13 @@ public:
 	void render() override;
 	void resize(int width, int height) override;
 private:
+	flecs::world world;
+	flecs::query<Position, Image> query;
+
 	Window* window;
 	std::unique_ptr<AssetManager> assets;
 	std::unique_ptr<Camera> cam;
 	std::unique_ptr<InputManager> input;
     std::unique_ptr<Hud> hud;
 	std::unique_ptr<Renderer> renderer;
-	std::unique_ptr<Sprite> sprite;
-	Sprite* sprite2;
 };

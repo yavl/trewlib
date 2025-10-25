@@ -14,6 +14,10 @@ file(GLOB SRC
 	"../src/*.hpp"
 	"../src/*.cpp"
 )
+file(GLOB SRC_ecs
+	"../src/ecs/*.hpp"
+	"../src/ecs/*.cpp"
+)
 file(GLOB SRC_trew
 	"../src/trew/*.hpp"
 	"../src/trew/*.cpp"
@@ -30,9 +34,9 @@ file(GLOB SRC_trew_drawables
 	"../src/trew/drawables/*.hpp"
 	"../src/trew/drawables/*.cpp"
 )
-file(GLOB SRC_trew_drawables_impl_opengl
-	"../src/trew/drawables/impl_opengl/*.hpp"
-	"../src/trew/drawables/impl_opengl/*.cpp"
+file(GLOB SRC_trew_graphics
+	"../src/trew/graphics/*.hpp"
+	"../src/trew/graphics/*.cpp"
 )
 file(GLOB SRC_trew_graphics
 	"../src/trew/graphics/*.hpp"
@@ -54,10 +58,6 @@ file(GLOB SRC_imgui
 	"../extlibs/include/imgui/*.hpp"
 	"../extlibs/include/imgui/*.cpp"
 )
-file(GLOB SRC_glad
-	"../extlibs/include/glad/*.h"
-	"../extlibs/include/glad/*.c"
-)
 file(GLOB_RECURSE SRC_angelscript
 	"../extlibs/include/angelscript/*.h"
 	"../extlibs/include/angelscript/*.cpp"
@@ -67,45 +67,44 @@ if(WIN32)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-msvc/x64/as_callfunc_x64_msvc_asm.obj"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_opengl} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript} ${SRC_angelscript_obj})
 elseif(APPLE)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-mac/as_callfunc_arm64_xcode.S"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_opengl} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript} ${SRC_angelscript_obj})
 else()
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_drawables_impl_opengl} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_glad} ${SRC_angelscript})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript})
 endif()
 
 include_directories(Trewlib "../src")
 source_group("angelscript" FILES ${SRC_angelscript})
 source_group("imgui" FILES ${SRC_imgui})
-source_group("glad" FILES ${SRC_glad})
 source_group("trew" FILES ${SRC_trew})
 source_group("trew\\actions" FILES ${SRC_trew_actions})
 source_group("trew\\app" FILES ${SRC_trew_app})
 source_group("trew\\drawables" FILES ${SRC_trew_drawables})
-source_group("trew\\drawables\\impl_opengl" FILES ${SRC_trew_drawables_impl_opengl})
 source_group("trew\\graphics" FILES ${SRC_trew_graphics})
 source_group("trew\\input" FILES ${SRC_trew_input})
 source_group("trew\\nodes" FILES ${SRC_trew_nodes})
 source_group("trew\\scripting" FILES ${SRC_trew_scripting})
 source_group("game" FILES ${SRC})
+source_group("game\\ecs" FILES ${SRC_ecs})
 
 
 include_directories(Trewlib ../extlibs/include ../extlibs/include/angelscript/addons)
 if(WIN32)
-	target_link_libraries(Trewlib opengl32 freetype SDL3 SDL3_image enet ws2_32 winmm)
+	target_link_libraries(Trewlib freetype SDL3 SDL3_image SDL3_ttf enet flecs ws2_32 winmm)
 endif()
 
 if(UNIX)
 	if(APPLE)
 		include_directories(Trewlib /opt/homebrew/include)
 		include_directories(Trewlib /opt/homebrew/include/freetype2)
-		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa -framework OpenGL -framework IOKit -L/opt/homebrew/lib")
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L/opt/homebrew/lib -L../extlibs/libs-mac")
 	else() # Linux
 		target_link_libraries(Trewlib dl)
 	endif()
 	
-	target_link_libraries(Trewlib freetype SDL3 SDL3_image enet)
+	target_link_libraries(Trewlib freetype SDL3 SDL3_image SDL3_ttf enet flecs)
 endif()

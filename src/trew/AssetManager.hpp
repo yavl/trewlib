@@ -1,21 +1,20 @@
 #pragma once
 
-#include <stb_image.h>
 #include <string>
 #include <unordered_map>
 #include <optional>
 #include <memory>
+#include <trew/drawables/ImageSurface.hpp>
+
+struct SDL_Surface;
 
 struct SDL_Surface;
 
 namespace trew {
-	class Texture;
 	class Shader;
 	class Asset;
 	class ImageSurface;
 	enum class AssetType {
-		SHADER,
-		TEXTURE,
 		IMAGE
 	};
 
@@ -24,8 +23,6 @@ namespace trew {
 		AssetManager(std::string rootPath);
 		~AssetManager();
 		void load(std::string path, AssetType type);
-		Shader* getShader(const char* path);
-		Texture* getTexture(const char* path);
 		ImageSurface* getImage(const char* path);
 	private:
 		Asset* getAsset(const char* path);

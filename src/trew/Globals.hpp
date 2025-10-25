@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <vector>
+#include <trew/Vector2.hpp>
+#include <optional>
 
 namespace trew {
 	class AssetManager;
@@ -14,5 +16,7 @@ namespace trew {
 		extern AssetManager* assets;
 		extern Camera* camera;
 		extern std::vector<std::unique_ptr<Sprite>> sprites;
+		extern Vector2 selectionQuad[2];
+		extern bool hasSelectionQuad;
 	}
 }

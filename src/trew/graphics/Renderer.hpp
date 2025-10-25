@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <trew/trew.hpp>
 #include <optional>
+#include <unordered_map>
+#include <trew/Color.hpp>
 
 struct SDL_GPUDevice;
 struct SDL_Window;
@@ -41,12 +41,14 @@ public:
     void clearScreen();
     void drawTriangle(float x, float y, float width, float height);
     void drawRectangle(float x, float y, float width, float height);
-    void drawTexture(float x, float y, ImageSurface* surface, float rotation, std::optional<glm::mat4> parentModelMatrix = std::nullopt);
+    void drawTexture(float x, float y, float width, float height, SDL_GPUTexture* texture, float rotation, std::optional<Color> color = std::nullopt, std::optional<glm::mat4> parentModelMatrix = std::nullopt);
     void submit();
+    SDL_GPUTexture* getTexture(ImageSurface* image);
 private:
     SDL_GPUGraphicsPipeline* createTrianglePipeline();
     SDL_GPUGraphicsPipeline* createRectanglePipeline();
     SDL_GPUGraphicsPipeline* createTexturePipeline();
+    SDL_GPUTexture* createTexture(ImageSurface* image);
     Context context;
     SDL_GPUDevice* device;
     SDL_Window* window;
@@ -59,13 +61,12 @@ private:
     SDL_GPUTexture* swapchainTexture = nullptr;
     Camera* cam;
     AssetManager* assets;
+    std::unordered_map<ImageSurface*, SDL_GPUTexture*> textures;
 
     // Texture pipeline
 
+    SDL_GPUBuffer* vertexBuffer = nullptr;
+    SDL_GPUBuffer* indexBuffer = nullptr;
+    SDL_GPUSampler* sampler = nullptr;
 };
 }
-
-static SDL_GPUBuffer* vertexBuffer = nullptr;
-static SDL_GPUBuffer* indexBuffer = nullptr;
-static SDL_GPUTexture* texture = nullptr;
-static SDL_GPUSampler* sampler = nullptr;

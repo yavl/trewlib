@@ -23,7 +23,6 @@ namespace trew {
 		Window();
 		virtual ~Window();
 		void createWindow(const std::string& title, int width, int height);
-		void swapBuffers();
 		int getWidth() const;
 		int getHeight() const;
 		Vector2 getCursorPos() const;

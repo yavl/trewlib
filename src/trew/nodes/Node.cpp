@@ -4,7 +4,7 @@
 
 using namespace trew;
 
-#define LOGTAG "Node"
+constexpr auto LOGTAG = "Node";
 
 Node::Node() {
 	logDebug(LOGTAG, fmt::format("{} constructed", name));

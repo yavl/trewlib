@@ -1,0 +1,57 @@
+#include <metal_stdlib>
+#include <metal_math>
+#include <metal_texture>
+using namespace metal;
+
+#line 1867 "hlsl.meta.slang"
+struct pixelOutput_0
+{
+    float4 output_0 [[color(0)]];
+};
+
+
+#line 1867
+struct pixelInput_0
+{
+    float2 texCoord_0 [[user(TEXCOORD)]];
+};
+
+
+#line 1 "TexturedQuad.frag.slang"
+struct UniformData_0
+{
+    float4 multiplyColor_0;
+};
+
+
+#line 4266 "core.meta.slang"
+struct KernelContext_0
+{
+    UniformData_0 constant* ubo_0;
+    texture2d<float, access::sample> texture_0;
+    sampler sampler_0;
+};
+
+
+#line 14 "TexturedQuad.frag.slang"
+[[fragment]] pixelOutput_0 main_0(pixelInput_0 _S1 [[stage_in]], UniformData_0 constant* ubo_1 [[buffer(0)]], texture2d<float, access::sample> texture_1 [[texture(0)]], sampler sampler_1 [[sampler(0)]])
+{
+
+#line 14
+    KernelContext_0 kernelContext_0;
+
+#line 14
+    (&kernelContext_0)->ubo_0 = ubo_1;
+
+#line 14
+    (&kernelContext_0)->texture_0 = texture_1;
+
+#line 14
+    (&kernelContext_0)->sampler_0 = sampler_1;
+
+#line 14
+    pixelOutput_0 _S2 = { (&kernelContext_0)->ubo_0->multiplyColor_0 * (((&kernelContext_0)->texture_0).sample((sampler_1), (_S1.texCoord_0))) };
+
+    return _S2;
+}
+

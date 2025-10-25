@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "DeprecatedHelloOpenGL.hpp"
 #include <trew/app/Window.hpp>
 #include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
@@ -22,7 +21,6 @@ int main() {
 	auto window = std::make_unique<Window>();
 	window->createWindow(title, width, height);
 
-	//auto m = std::make_unique<DeprecatedHelloOpenGL>(window);
 	auto m = std::make_unique<Game>(window.get());
 	m->create();
 	Uint64 now = SDL_GetPerformanceCounter();

@@ -1,17 +1,15 @@
 #include "AssetManager.hpp"
 #include <trew/FileHandle.hpp>
 #include <trew/Shader.hpp>
-#include <trew/drawables/impl_opengl/GLTexture.hpp>
 #include <trew/Logger.hpp>
 #include <cassert>
 #include <fmt/core.h>
 #include <nlohmann/json.hpp>
 #include <SDL3_image/SDL_image.h>
-#include <trew/drawables/ImageSurface.hpp>
 
 using namespace trew;
 
-#define LOGTAG "AssetManager"
+constexpr auto LOGTAG = "AssetManager";
 
 AssetManager::AssetManager(std::string rootPath) : rootPath(rootPath) {}
 
@@ -60,28 +58,6 @@ void AssetManager::load(std::string path, AssetType type) {
 		return;
 	}
 	switch (type) {
-	case AssetType::SHADER: {
-		auto vertPathStr = fmt::format("{}.vert", path);
-		auto fragPathStr = fmt::format("{}.frag", path);
-		const char* vertPath = vertPathStr.c_str();
-		const char* fragPath = fragPathStr.c_str();
-		FileHandle vert(vertPath);
-		FileHandle frag(fragPath);
-		auto ownerVert = vert.asString();
-		auto ownerFrag = frag.asString();
-		auto vertStr = ownerVert.c_str();
-		auto fragStr = ownerFrag.c_str();
-		auto shader = std::make_unique<Shader>(vertStr, fragStr);
-		shader->setPathInfos(vertPathStr, fragPathStr);
-		shader->compile();
-		assets[path] = std::move(shader);
-		break;
-	}
-	case AssetType::TEXTURE: {
-		auto texture = std::make_unique<Texture>(path);
-		assets[path] = std::move(texture);
-		break;
-	}
 	case AssetType::IMAGE: {
 		int width = 0;
 		int height = 0;
@@ -93,22 +69,6 @@ void AssetManager::load(std::string path, AssetType type) {
 	default:
 		break;
 	}
-}
-
-Shader* AssetManager::getShader(const char* path) {
-	if (auto asset = getAsset(path); asset) {
-		auto shader = static_cast<Shader*>(asset);
-		return shader;
-	}
-	return nullptr;
-}
-
-Texture* AssetManager::getTexture(const char* path) {
-	if (auto asset = getAsset(path); asset) {
-		auto texture = static_cast<Texture*>(asset);
-		return texture;
-	}
-	return nullptr;
 }
 
 ImageSurface* AssetManager::getImage(const char* path) {

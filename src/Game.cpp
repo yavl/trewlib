@@ -6,20 +6,20 @@
 #include <trew/AssetManager.hpp>
 #include <trew/app/Window.hpp>
 #include <SDL3/SDL.h>
-#include <fmt/core.h>
 #include <trew/Shader.hpp>
 #include <trew/Hud.hpp>
 #include <trew/graphics/Renderer.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/drawables/ImageSurface.hpp>
-
-static Sint32 ResolutionIndex;
+#include <iostream>
+#include <fmt/core.h>
 
 Game::Game(Window* window) :
 	window(window)
 {
 	cam = std::make_unique<Camera>(window);
 	input = std::make_unique<InputManager>(window);
+	Globals::camera = cam.get();
 }
 
 Game::~Game() {
@@ -29,36 +29,44 @@ Game::~Game() {
 void Game::create() {
 	assets = std::make_unique<AssetManager>("assets");
 	assets->load("tex.png", AssetType::IMAGE);
-
-	auto surface = assets->getImage("tex.png");
-	sprite = std::make_unique<Sprite>(surface);
-	sprite->setXY(-1010, 0);
-	
-	auto sprite2 = new Sprite(surface);
-	sprite2->setXY(400, 300);
-	sprite->addChild(sprite2);
+	assets->load("tex2.png", AssetType::IMAGE);
+	assets->load("circle.png", AssetType::IMAGE);
 
 	ASManager as(assets.get(), cam.get());
 	//as.registerScript("assets/scripts/main.as");
 	//as.runScript("assets/scripts/main.as");
 
-	ResolutionIndex = 0;
-
-	auto sdlWindow = static_cast<Window*>(window);
-	auto device = sdlWindow->getSdlGpuDevice();
+	auto device = window->getSdlGpuDevice();
     
-    hud = std::make_unique<Hud>(sdlWindow);
-	renderer = std::make_unique<Renderer>(device, sdlWindow->getRawSdlWindow(), cam.get(), assets.get());
+    hud = std::make_unique<Hud>(window);
+	renderer = std::make_unique<Renderer>(device, window->getRawSdlWindow(), cam.get(), assets.get());
 	renderer->init();
+
+	// Register system
+	auto sys = world.system<Position, Velocity>()
+		.each([](flecs::iter& it, size_t, Position& p, Velocity& v) {
+			p.x += v.x * it.delta_time();
+			p.y += v.y * it.delta_time();
+		});
+
+	// Create an entity with name Bob, add Position and food preference
+	world.entity("Bob")
+		.set(Position{ 0, 0 })
+		.set(Velocity{ 50.f, 50.f })
+		.set(Image{ assets->getImage("circle.png")})
+		.add<Eats, Apples>();
+
+	query = world.query<Position, Image>();
 }
 
 void Game::update(float dt) {
-	input->update();
 	cam->update(dt);
+	world.progress(dt);
 
 	SDL_Event event;
-	//fmt::println("fps: {}", 1 / dt);
+	//fmt::print("fps: {}\n", 1 / dt);
 	while (SDL_PollEvent(&event)) {
+		input->update(event);
 		if (event.type == SDL_EVENT_QUIT) {
 			SDL_Quit();
 			exit(0);
@@ -83,8 +91,10 @@ void Game::update(float dt) {
 
 void Game::render() {
 	renderer->render();
-	sprite->draw(renderer.get());
 	renderer->render(hud.get());
+	query.each([this](flecs::entity e, Position& pos, Image& p) {
+		renderer->drawTexture(pos.x, pos.y, p.image->getImageWidth(), p.image->getImageHeight(), renderer->getTexture(p.image), 0.f);
+		});
 	renderer->submit();
 }
 

@@ -5,7 +5,6 @@
 #include <fmt/core.h>
 #include <trew/Logger.hpp>
 #include <trew/AssetManager.hpp>
-#include <trew/drawables/impl_opengl/GLTexture.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/Globals.hpp>
 #include <trew/Camera.hpp>
@@ -14,7 +13,7 @@
 
 using namespace trew;
 
-#define LOGTAG "AngelScript"
+constexpr auto LOGTAG = "AngelScript";
 
 namespace ASFunction {
     void print(const char* msg) {
@@ -23,18 +22,11 @@ namespace ASFunction {
 
     void loadTexture(const char* path) {
         auto assets = Globals::assets;
-        assets->load(path, AssetType::TEXTURE);
-        if (auto texture = assets->getTexture(path); auto tex = texture) {
-            if (auto shader = assets->getShader("default"); auto sh = shader) {
-                tex->setShader(sh);
-            }
-            auto cam = Globals::camera;
-            tex->setCamera(cam);
-        }
+        assets->load(path, AssetType::IMAGE);
     }
     
     void createSprite(const char* texturePath) {
-        auto tex = Globals::assets->getTexture(texturePath);
+        auto tex = Globals::assets->getImage(texturePath);
         auto circleSprite = std::make_unique<Sprite>(tex);
         circleSprite->setXY(1100, 0);
         circleSprite->setColor(Color(1, 1, 1, 1));

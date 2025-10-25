@@ -17,6 +17,7 @@
 #include <trew/Camera.hpp>
 #include <trew/AssetManager.hpp>
 #include <trew/drawables/ImageSurface.hpp>
+#include <trew/Globals.hpp>
 
 using namespace trew;
 
@@ -49,7 +50,7 @@ Renderer::~Renderer() {
 	SDL_ReleaseGPUGraphicsPipeline(device, trianglePipeline);
 	SDL_ReleaseGPUBuffer(device, vertexBuffer);
 	SDL_ReleaseGPUBuffer(device, indexBuffer);
-	SDL_ReleaseGPUTexture(device, texture);
+	//SDL_ReleaseGPUTexture(device, texture);
 	SDL_ReleaseGPUSampler(device, sampler);
 }
 
@@ -57,6 +58,92 @@ void Renderer::init() {
 	trianglePipeline = createTrianglePipeline();
 	rectanglePipeline = createRectanglePipeline();
 	texturePipeline = createTexturePipeline();
+
+	// Create a single, static quad for all textured rendering
+	auto vertexBufferCreateInfo = SDL_GPUBufferCreateInfo{
+		.usage = SDL_GPU_BUFFERUSAGE_VERTEX,
+		.size = sizeof(PositionTextureVertex) * 4
+	};
+	vertexBuffer = SDL_CreateGPUBuffer(device, &vertexBufferCreateInfo);
+
+	auto indexBufferCreateInfo = SDL_GPUBufferCreateInfo{
+		.usage = SDL_GPU_BUFFERUSAGE_INDEX,
+		.size = sizeof(Uint16) * 6
+	};
+	indexBuffer = SDL_CreateGPUBuffer(device, &indexBufferCreateInfo);
+
+	// Create a temporary transfer buffer for one-time quad setup
+	auto bufferTransferBufferCreateInfo = SDL_GPUTransferBufferCreateInfo{
+		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+		.size = (sizeof(PositionTextureVertex) * 4) + (sizeof(Uint16) * 6)
+	};
+	SDL_GPUTransferBuffer* bufferTransferBuffer = SDL_CreateGPUTransferBuffer(device, &bufferTransferBufferCreateInfo);
+
+	PositionTextureVertex* transferData = static_cast<PositionTextureVertex*>(SDL_MapGPUTransferBuffer(device, bufferTransferBuffer, false));
+	transferData[0] = PositionTextureVertex{ -1.0f, -1.0f, 0.0f, 0.0f, 0.0f };
+	transferData[1] = PositionTextureVertex{ 1.0f, -1.0f, 0.0f, 1.0f, 0.0f };
+	transferData[2] = PositionTextureVertex{ 1.0f,  1.0f, 0.0f, 1.0f, 1.0f };
+	transferData[3] = PositionTextureVertex{ -1.0f,  1.0f, 0.0f, 0.0f, 1.0f };
+
+	Uint16* indexData = (Uint16*)&transferData[4];
+	indexData[0] = 0;
+	indexData[1] = 1;
+	indexData[2] = 2;
+	indexData[3] = 0;
+	indexData[4] = 2;
+	indexData[5] = 3;
+
+	SDL_UnmapGPUTransferBuffer(device, bufferTransferBuffer);
+
+	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(device);
+	SDL_GPUCopyPass* copyPass = SDL_BeginGPUCopyPass(uploadCmdBuf);
+
+	auto transferBufferLocationOne = SDL_GPUTransferBufferLocation{
+		.transfer_buffer = bufferTransferBuffer,
+		.offset = 0
+	};
+	auto bufferRegionOne = SDL_GPUBufferRegion{
+		.buffer = vertexBuffer,
+		.offset = 0,
+		.size = sizeof(PositionTextureVertex) * 4
+	};
+	SDL_UploadToGPUBuffer(copyPass, &transferBufferLocationOne, &bufferRegionOne, false);
+
+	auto transferBufferLocationTwo = SDL_GPUTransferBufferLocation{
+		.transfer_buffer = bufferTransferBuffer,
+		.offset = sizeof(PositionTextureVertex) * 4
+	};
+	auto bufferRegionTwo = SDL_GPUBufferRegion{
+		.buffer = indexBuffer,
+		.offset = 0,
+		.size = sizeof(Uint16) * 6
+	};
+	SDL_UploadToGPUBuffer(copyPass, &transferBufferLocationTwo, &bufferRegionTwo, false);
+
+	SDL_EndGPUCopyPass(copyPass);
+	SDL_SubmitGPUCommandBuffer(uploadCmdBuf);
+	SDL_ReleaseGPUTransferBuffer(device, bufferTransferBuffer);
+
+	// Create the GPU resources
+	auto samplerCreateInfo = SDL_GPUSamplerCreateInfo{
+		.min_filter = SDL_GPU_FILTER_NEAREST,
+		.mag_filter = SDL_GPU_FILTER_NEAREST,
+		.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST,
+		.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+		.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+		.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+	};
+	sampler = SDL_CreateGPUSampler(device, &samplerCreateInfo);
+
+	if (auto image = assets->getImage("tex.png")) {
+		textures[image] = createTexture(image);
+	}
+	if (auto image = assets->getImage("tex2.png")) {
+		textures[image] = createTexture(image);
+	}
+	if (auto image = assets->getImage("circle.png")) {
+		textures[image] = createTexture(image);
+	}
 }
 
 void Renderer::render() {
@@ -74,11 +161,19 @@ void Renderer::render() {
 
 	clearScreen();
 
-	//auto asd = assets->getImage("tex.png");
-	//drawTexture(0, 0, asd);
+	drawTriangle(0, 0, 100, 100);
 
-	//drawRectangle(800, 0, 800, 600);
-	//drawTriangle(1600, 0, 800, 600);
+	{
+		Vector2 begin = Globals::selectionQuad[0];
+		Vector2 end = Globals::selectionQuad[1];
+		auto vec1 = begin;
+		auto vec2 = end;
+		fmt::print("wpos: {}, {}; {}, {}\n", vec1.x, vec1.y, vec2.x, vec2.y);
+
+		auto width = abs(vec2.x - vec1.x);
+		auto height = abs(vec2.y - vec1.y);
+		drawRectangle(vec1.x + width / 2, vec1.y + height / 2, width, height);
+	}
 }
 
 void Renderer::submit() {
@@ -170,12 +265,6 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 		SDL_Log("Failed to create fragment shader!");
 	}
 
-	auto asd = assets->getImage("tex.png");
-	SDL_Surface* imageData = asd->getSdlSurface();
-	if (imageData == nullptr) {
-		SDL_Log("Could not load image data!");
-	}
-
 	auto vertexBufferDescription = SDL_GPUVertexBufferDescription{
 		.slot = 0,
 		.pitch = sizeof(PositionTextureVertex),
@@ -238,27 +327,33 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 	SDL_ReleaseGPUShader(device, vertexShader);
 	SDL_ReleaseGPUShader(device, fragmentShader);
 
-	// Create the GPU resources
+	return pipeline;
+}
 
-	auto vertexBufferCreateInfo = SDL_GPUBufferCreateInfo{
-		.usage = SDL_GPU_BUFFERUSAGE_VERTEX,
-		.size = sizeof(PositionTextureVertex) * 4
-	};
-	vertexBuffer = SDL_CreateGPUBuffer(device, &vertexBufferCreateInfo);
-
-	auto indexBufferCreateInfo = SDL_GPUBufferCreateInfo{
-		.usage = SDL_GPU_BUFFERUSAGE_INDEX,
-		.size = sizeof(Uint16) * 6
-	};
-	indexBuffer = SDL_CreateGPUBuffer(device, &indexBufferCreateInfo);
+SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 	unsigned int w;
 	unsigned int h;
 	void* pixels = nullptr;
+	auto imageData = image->getSdlSurface();
 	if (imageData) {
 		w = static_cast<unsigned int>(imageData->w);
 		h = static_cast<unsigned int>(imageData->h);
 		pixels = imageData->pixels;
 	}
+	auto textureTransferBufferCreateInfo = SDL_GPUTransferBufferCreateInfo{
+		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+		.size = static_cast<unsigned int>(w * h * 4)
+	};
+	SDL_GPUTransferBuffer* textureTransferBuffer = SDL_CreateGPUTransferBuffer(device, &textureTransferBufferCreateInfo);
+
+	Uint8* textureTransferPtr = static_cast<Uint8*>(SDL_MapGPUTransferBuffer(device, textureTransferBuffer, false));
+	if (textureTransferPtr && pixels) {
+		SDL_memcpy(textureTransferPtr, pixels, w * h * 4);
+	}
+	else if (textureTransferPtr == nullptr) {
+		SDL_Log("Failed to map transfer buffer!");
+	}
+	SDL_UnmapGPUTransferBuffer(device, textureTransferBuffer);
 	auto textureCreateInfo = SDL_GPUTextureCreateInfo{
 		.type = SDL_GPU_TEXTURETYPE_2D,
 		.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
@@ -268,80 +363,7 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 		.layer_count_or_depth = 1,
 		.num_levels = 1
 	};
-	texture = SDL_CreateGPUTexture(device, &textureCreateInfo);
-
-	auto samplerCreateInfo = SDL_GPUSamplerCreateInfo{
-		.min_filter = SDL_GPU_FILTER_NEAREST,
-		.mag_filter = SDL_GPU_FILTER_NEAREST,
-		.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST,
-		.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-		.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-		.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-	};
-	sampler = SDL_CreateGPUSampler(device, &samplerCreateInfo);
-
-	auto bufferTransferBufferCreateInfo = SDL_GPUTransferBufferCreateInfo{
-		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-		.size = (sizeof(PositionTextureVertex) * 4) + (sizeof(Uint16) * 6)
-	};
-	SDL_GPUTransferBuffer* bufferTransferBuffer = SDL_CreateGPUTransferBuffer(device, &bufferTransferBufferCreateInfo);
-
-	PositionTextureVertex* transferData = static_cast<PositionTextureVertex*>(SDL_MapGPUTransferBuffer(device, bufferTransferBuffer, false));
-
-	float widthf = static_cast<float>(w);
-	float heightf = static_cast<float>(h);
-	transferData[0] = PositionTextureVertex { -widthf, -heightf, 0, 0, 0 };
-	transferData[1] = PositionTextureVertex { widthf, -heightf, 0, 1, 0 };
-	transferData[2] = PositionTextureVertex { widthf,  heightf, 0, 1, 1 };
-	transferData[3] = PositionTextureVertex { -widthf,  heightf, 0, 0, 1 };
-
-	Uint16* indexData = (Uint16*)&transferData[4];
-	indexData[0] = 0;
-	indexData[1] = 1;
-	indexData[2] = 2;
-	indexData[3] = 0;
-	indexData[4] = 2;
-	indexData[5] = 3;
-
-	SDL_UnmapGPUTransferBuffer(device, bufferTransferBuffer);
-
-	auto textureTransferBufferCreateInfo = SDL_GPUTransferBufferCreateInfo{
-		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-		.size = static_cast<unsigned int>(w * h * 4)
-	};
-	SDL_GPUTransferBuffer* textureTransferBuffer = SDL_CreateGPUTransferBuffer(device, &textureTransferBufferCreateInfo);
-
-	Uint8* textureTransferPtr = static_cast<Uint8*>(SDL_MapGPUTransferBuffer(device, textureTransferBuffer, false));
-	SDL_memcpy(textureTransferPtr, pixels, w * h * 4);
-	SDL_UnmapGPUTransferBuffer(device, textureTransferBuffer);
-
-	// Upload the transfer data to the GPU resources
-	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(device);
-	SDL_GPUCopyPass* copyPass = SDL_BeginGPUCopyPass(uploadCmdBuf);
-
-	auto transferBufferLocationOne = SDL_GPUTransferBufferLocation{
-		.transfer_buffer = bufferTransferBuffer,
-		.offset = 0
-	};
-	auto bufferRegionOne = SDL_GPUBufferRegion{
-		.buffer = vertexBuffer,
-		.offset = 0,
-		.size = sizeof(PositionTextureVertex) * 4
-	};
-	SDL_UploadToGPUBuffer(copyPass, &transferBufferLocationOne, &bufferRegionOne, false);
-
-
-	auto transferBufferLocationTwo = SDL_GPUTransferBufferLocation{
-		.transfer_buffer = bufferTransferBuffer,
-		.offset = sizeof(PositionTextureVertex) * 4
-	};
-	auto bufferRegionTwo = SDL_GPUBufferRegion{
-		.buffer = indexBuffer,
-		.offset = 0,
-		.size = sizeof(Uint16) * 6
-	};
-	SDL_UploadToGPUBuffer(copyPass, &transferBufferLocationTwo, &bufferRegionTwo, false);
-
+	auto texture = SDL_CreateGPUTexture(device, &textureCreateInfo);
 	auto textureTransferInfo = SDL_GPUTextureTransferInfo{
 		.transfer_buffer = textureTransferBuffer,
 		.offset = 0 /* Zeroes out the rest */
@@ -352,14 +374,22 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 		.h = h,
 		.d = 1
 	};
+	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(device);
+	SDL_GPUCopyPass* copyPass = SDL_BeginGPUCopyPass(uploadCmdBuf);
 	SDL_UploadToGPUTexture(copyPass, &textureTransferInfo, &textureRegion, false);
-	SDL_DestroySurface(imageData);
+
 	SDL_EndGPUCopyPass(copyPass);
 	SDL_SubmitGPUCommandBuffer(uploadCmdBuf);
-	SDL_ReleaseGPUTransferBuffer(device, bufferTransferBuffer);
-	SDL_ReleaseGPUTransferBuffer(device, textureTransferBuffer);
 
-	return pipeline;
+	SDL_ReleaseGPUTransferBuffer(device, textureTransferBuffer);
+	return texture;
+}
+
+SDL_GPUTexture* Renderer::getTexture(ImageSurface* image) {
+	if (textures.count(image) == 0) {
+		fmt::print("No such texture\n");
+	}
+	return textures[image];
 }
 
 void Renderer::render(Hud* hud) {
@@ -471,11 +501,10 @@ void Renderer::drawRectangle(float x, float y, float width, float height) {
 	}
 }
 
-void Renderer::drawTexture(float x, float y, ImageSurface* surface, float rotation, std::optional<glm::mat4> parentModelMatrix) {
+void Renderer::drawTexture(float x, float y, float width, float height, SDL_GPUTexture* texture, float rotation, std::optional<Color> color, std::optional<glm::mat4> parentModelMatrix) {
 	if (swapchainTexture) {
 		SDL_GPUColorTargetInfo colorTargetInfo = { 0 };
 		colorTargetInfo.texture = swapchainTexture;
-		std::optional<int> a;
 
 		SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(commandBuffer, &colorTargetInfo, 1, nullptr);
 		SDL_BindGPUGraphicsPipeline(renderPass, texturePipeline);
@@ -496,24 +525,24 @@ void Renderer::drawTexture(float x, float y, ImageSurface* surface, float rotati
 		};
 		SDL_BindGPUFragmentSamplers(renderPass, 0, &textureSamplerBinding, 1);
 
-		auto texWidth = surface->getImageWidth();
-		auto texHeight = surface->getImageHeight();
-		int width = texWidth;
-		int height = texHeight;
 		auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 0));
-		matrix = glm::scale(matrix, glm::vec3(1.f / texWidth, 1.f / texHeight, 1.f));
-		matrix = glm::scale(matrix, glm::vec3(width, height, 1.f));
-		matrix = glm::scale(matrix, glm::vec3(0.5f));
 		matrix = glm::rotate(matrix, glm::radians(rotation), glm::vec3(0.f, 0.f, -1.f));
+		matrix = glm::scale(matrix, glm::vec3(width / 2.0f, height / 2.0f, 1.f));
 		if (auto resultOpt = parentModelMatrix) {
 			glm::mat4 parentMatrix = *resultOpt;
 			matrix = parentMatrix * matrix;
 		}
 		glm::mat4 multiplied = cam->projection * cam->view * matrix;
 		SDL_PushGPUVertexUniformData(commandBuffer, 0, glm::value_ptr(multiplied), sizeof(multiplied));
-		auto t = 1.f;
-		auto fragmentMultiplyUniform = FragMultiplyUniform{ 1.f, 1.f, 1.f, 1.f };
-		SDL_PushGPUFragmentUniformData(commandBuffer, 0, &fragmentMultiplyUniform, sizeof(fragmentMultiplyUniform));
+
+		FragMultiplyUniform multiplyUniform;
+		if (auto resultOpt = color) {
+			auto value = *color;
+			multiplyUniform = FragMultiplyUniform{ value.r, value.g, value.b, value.a };
+		} else {
+			multiplyUniform = FragMultiplyUniform{ 1.f, 1.f, 1.f, 1.f };
+		}
+		SDL_PushGPUFragmentUniformData(commandBuffer, 0, &multiplyUniform, sizeof(multiplyUniform));
 		SDL_DrawGPUIndexedPrimitives(renderPass, 6, 1, 0, 0, 0);
 		SDL_EndGPURenderPass(renderPass);
 	}

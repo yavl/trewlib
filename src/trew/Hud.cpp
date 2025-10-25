@@ -23,8 +23,6 @@ Hud::Hud(Window* window) {
     init_info.ColorTargetFormat = SDL_GetGPUSwapchainTextureFormat(device, window->getRawSdlWindow());
     init_info.MSAASamples = SDL_GPU_SAMPLECOUNT_1;
     ImGui_ImplSDLGPU3_Init(&init_info);
-    //ImGui_ImplSDL3_InitForOpenGL(window->getRawSdlWindow(), nullptr);
-	//ImGui_ImplOpenGL3_Init("#version 330");
 
 	// Setup style
 	ImGui::StyleColorsClassic();

@@ -7,8 +7,6 @@
 
 using namespace trew;
 
-//#define TREW_USE_OPENGL
-
 Window::Window() {
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
 		SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
@@ -29,22 +27,11 @@ void Window::createWindow(const std::string& title, int width, int height) {
 		SDL_Log("SDL_CreateGPUDevice failed: %s", SDL_GetError());
 		SDL_Quit();
 	}
-#ifdef TREW_USE_OPENGL
-	window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-	if (!window) {
-		SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
-		SDL_Quit();
-	}
-	context = SDL_GL_CreateContext(window);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-#else
 	window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE);
 	if (!window) {
 		SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
 		SDL_Quit();
 	}
-#endif
 
 	if (!SDL_ClaimWindowForGPUDevice(device, window)) {
 		SDL_Log("SDL_ClaimWindowForGPUDevice failed %s", SDL_GetError());
@@ -52,12 +39,6 @@ void Window::createWindow(const std::string& title, int width, int height) {
 	}
 
 	input = std::make_unique<SdlInput>(window);
-}
-
-void Window::swapBuffers() {
-#ifdef TREW_USE_OPENGL
-	SDL_GL_SwapWindow(getRawSdlWindow());
-#endif
 }
 
 int Window::getWidth() const {

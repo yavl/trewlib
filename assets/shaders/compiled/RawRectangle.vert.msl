@@ -1,0 +1,147 @@
+#include <metal_stdlib>
+#include <metal_math>
+#include <metal_texture>
+using namespace metal;
+
+#line 6 "RawRectangle.vert.slang"
+struct Output_0
+{
+    float4 Color_0 [[user(TEXCOORD)]];
+    float4 Position_0 [[position]];
+};
+
+
+#line 6
+struct _MatrixStorage_float4x4_ColMajornatural_0
+{
+    array<float4, int(4)> data_0;
+};
+
+
+#line 6
+struct UniformData_natural_0
+{
+    _MatrixStorage_float4x4_ColMajornatural_0 modelViewProjection_0;
+};
+
+
+#line 4266 "core.meta.slang"
+struct KernelContext_0
+{
+    UniformData_natural_0 constant* ubo_0;
+};
+
+
+#line 20 "RawRectangle.vert.slang"
+[[vertex]] Output_0 main_0(uint VertexIndex_0 [[vertex_id]], UniformData_natural_0 constant* ubo_1 [[buffer(0)]])
+{
+
+#line 20
+    KernelContext_0 kernelContext_0;
+
+#line 20
+    (&kernelContext_0)->ubo_0 = ubo_1;
+
+    thread Output_0 output_0;
+
+#line 22
+    float2 pos_0;
+
+
+
+    if(VertexIndex_0 == 0U)
+    {
+        float2 _S1 = float2(-1.0, -1.0);
+        (&output_0)->Color_0 = float4(1.0, 0.0, 0.0, 1.0);
+
+#line 29
+        pos_0 = _S1;
+
+#line 26
+    }
+    else
+    {
+
+
+        if(VertexIndex_0 == 1U)
+        {
+            float2 _S2 = float2(1.0, -1.0);
+            (&output_0)->Color_0 = float4(0.0, 1.0, 0.0, 1.0);
+
+#line 34
+            pos_0 = _S2;
+
+#line 31
+        }
+        else
+        {
+
+
+            if(VertexIndex_0 == 2U)
+            {
+                float2 _S3 = float2(-1.0, 1.0);
+                (&output_0)->Color_0 = float4(0.0, 0.0, 1.0, 1.0);
+
+#line 39
+                pos_0 = _S3;
+
+#line 36
+            }
+            else
+            {
+
+
+                if(VertexIndex_0 == 3U)
+                {
+                    float2 _S4 = float2(-1.0, 1.0);
+                    (&output_0)->Color_0 = float4(0.0, 0.0, 1.0, 1.0);
+
+#line 44
+                    pos_0 = _S4;
+
+#line 41
+                }
+                else
+                {
+
+
+                    if(VertexIndex_0 == 4U)
+                    {
+                        float2 _S5 = float2(1.0, -1.0);
+                        (&output_0)->Color_0 = float4(0.0, 1.0, 0.0, 1.0);
+
+#line 49
+                        pos_0 = _S5;
+
+#line 46
+                    }
+                    else
+                    {
+
+#line 53
+                        float2 _S6 = float2(1.0, 1.0);
+                        (&output_0)->Color_0 = float4(1.0, 1.0, 0.0, 1.0);
+
+#line 54
+                        pos_0 = _S6;
+
+#line 46
+                    }
+
+#line 41
+                }
+
+#line 36
+            }
+
+#line 31
+        }
+
+#line 26
+    }
+
+#line 57
+    (&output_0)->Position_0 = (((float4(pos_0, 0.0, 1.0)) * (matrix<float,int(4),int(4)> ((&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(0)][int(0)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(1)][int(0)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(2)][int(0)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(3)][int(0)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(0)][int(1)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(1)][int(1)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(2)][int(1)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(3)][int(1)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(0)][int(2)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(1)][int(2)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(2)][int(2)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(3)][int(2)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(0)][int(3)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(1)][int(3)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(2)][int(3)], (&kernelContext_0)->ubo_0->modelViewProjection_0.data_0[int(3)][int(3)]))));
+    return output_0;
+}
+
