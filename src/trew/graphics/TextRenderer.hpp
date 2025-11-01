@@ -15,7 +15,7 @@ namespace trew {
         VertexShader,
         PixelShader,
         PixelShader_SDF,
-    } Shader;
+    } TextShader;
 
     typedef SDL_FPoint Vec2;
 
@@ -31,7 +31,7 @@ namespace trew {
         Vec2 uv;
     } Vertex;
 
-    typedef struct Context
+    typedef struct TextContext
     {
         SDL_GPUDevice* device;
         SDL_Window* window;
@@ -40,8 +40,9 @@ namespace trew {
         SDL_GPUBuffer* index_buffer;
         SDL_GPUTransferBuffer* transfer_buffer;
         SDL_GPUSampler* sampler;
-        SDL_GPUCommandBuffer* cmd_buf;
-    } Context;
+        SDL_GPUCommandBuffer* commandBuffer;
+        SDL_GPUTexture* swapchainTexture;
+    } TextContext;
 
     typedef struct GeometryData
     {
@@ -51,24 +52,32 @@ namespace trew {
         int index_count;
     } GeometryData;
 
+    class Camera;
+
     class TextRenderer {
     public:
-        TextRenderer();
+        TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam);
         ~TextRenderer();
+        void drawText(char str[]);
+
+        TextContext context{};
     private:
-        Context context{};
+        Camera* cam;
+        GeometryData geometry_data = { 0 };
+        TTF_Font* font;
+        TTF_TextEngine* engine;
+        TTF_Text* text;
         SDL_GPUShader* load_shader(
             SDL_GPUDevice* device,
-            Shader shader,
+            TextShader shader,
             Uint32 sampler_count,
             Uint32 uniform_buffer_count,
             Uint32 storage_buffer_count,
             Uint32 storage_texture_count);
         void queue_text_sequence(GeometryData* geometry_data, TTF_GPUAtlasDrawSequence* sequence, SDL_FColor* colour);
         void queue_text(GeometryData* geometry_data, TTF_GPUAtlasDrawSequence* sequence, SDL_FColor* colour);
-        void set_geometry_data(Context* context, GeometryData* geometry_data);
-        void transfer_data(Context* context, GeometryData* geometry_data);
-        void draw(Context* context, SDL_Mat4X4* matrices, int num_matrices, TTF_GPUAtlasDrawSequence* draw_sequence);
-        void DOIT();
+        void set_geometry_data(TextContext* context, GeometryData* geometry_data);
+        void transfer_data(TextContext* context, GeometryData* geometry_data);
+        void draw(TextContext* context, SDL_Mat4X4* matrices, int num_matrices, TTF_GPUAtlasDrawSequence* draw_sequence);
     };
 }

@@ -18,6 +18,7 @@
 #include <trew/AssetManager.hpp>
 #include <trew/drawables/ImageSurface.hpp>
 #include <trew/Globals.hpp>
+#include <trew/graphics/TextRenderer.hpp>
 
 using namespace trew;
 
@@ -36,10 +37,9 @@ typedef struct FragMultiplyUniform
 
 Renderer::Renderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam, AssetManager* assets) :
 	context(Context{ device, window }),
-	device(device),
-	window(window),
 	cam(cam),
-	assets(assets)
+	assets(assets),
+	textRenderer(std::make_unique<TextRenderer>(device, window, cam))
 {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.IniFilename = nullptr;
@@ -47,11 +47,11 @@ Renderer::Renderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam, Asset
 }
 
 Renderer::~Renderer() {
-	SDL_ReleaseGPUGraphicsPipeline(device, trianglePipeline);
-	SDL_ReleaseGPUBuffer(device, vertexBuffer);
-	SDL_ReleaseGPUBuffer(device, indexBuffer);
+	SDL_ReleaseGPUGraphicsPipeline(context.device, trianglePipeline);
+	SDL_ReleaseGPUBuffer(context.device, vertexBuffer);
+	SDL_ReleaseGPUBuffer(context.device, indexBuffer);
 	//SDL_ReleaseGPUTexture(device, texture);
-	SDL_ReleaseGPUSampler(device, sampler);
+	SDL_ReleaseGPUSampler(context.device, sampler);
 }
 
 void Renderer::init() {
@@ -64,22 +64,22 @@ void Renderer::init() {
 		.usage = SDL_GPU_BUFFERUSAGE_VERTEX,
 		.size = sizeof(PositionTextureVertex) * 4
 	};
-	vertexBuffer = SDL_CreateGPUBuffer(device, &vertexBufferCreateInfo);
+	vertexBuffer = SDL_CreateGPUBuffer(context.device, &vertexBufferCreateInfo);
 
 	auto indexBufferCreateInfo = SDL_GPUBufferCreateInfo{
 		.usage = SDL_GPU_BUFFERUSAGE_INDEX,
 		.size = sizeof(Uint16) * 6
 	};
-	indexBuffer = SDL_CreateGPUBuffer(device, &indexBufferCreateInfo);
+	indexBuffer = SDL_CreateGPUBuffer(context.device, &indexBufferCreateInfo);
 
 	// Create a temporary transfer buffer for one-time quad setup
 	auto bufferTransferBufferCreateInfo = SDL_GPUTransferBufferCreateInfo{
 		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
 		.size = (sizeof(PositionTextureVertex) * 4) + (sizeof(Uint16) * 6)
 	};
-	SDL_GPUTransferBuffer* bufferTransferBuffer = SDL_CreateGPUTransferBuffer(device, &bufferTransferBufferCreateInfo);
+	SDL_GPUTransferBuffer* bufferTransferBuffer = SDL_CreateGPUTransferBuffer(context.device, &bufferTransferBufferCreateInfo);
 
-	PositionTextureVertex* transferData = static_cast<PositionTextureVertex*>(SDL_MapGPUTransferBuffer(device, bufferTransferBuffer, false));
+	PositionTextureVertex* transferData = static_cast<PositionTextureVertex*>(SDL_MapGPUTransferBuffer(context.device, bufferTransferBuffer, false));
 	transferData[0] = PositionTextureVertex{ -1.0f, -1.0f, 0.0f, 0.0f, 0.0f };
 	transferData[1] = PositionTextureVertex{ 1.0f, -1.0f, 0.0f, 1.0f, 0.0f };
 	transferData[2] = PositionTextureVertex{ 1.0f,  1.0f, 0.0f, 1.0f, 1.0f };
@@ -93,9 +93,9 @@ void Renderer::init() {
 	indexData[4] = 2;
 	indexData[5] = 3;
 
-	SDL_UnmapGPUTransferBuffer(device, bufferTransferBuffer);
+	SDL_UnmapGPUTransferBuffer(context.device, bufferTransferBuffer);
 
-	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(device);
+	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(context.device);
 	SDL_GPUCopyPass* copyPass = SDL_BeginGPUCopyPass(uploadCmdBuf);
 
 	auto transferBufferLocationOne = SDL_GPUTransferBufferLocation{
@@ -122,7 +122,7 @@ void Renderer::init() {
 
 	SDL_EndGPUCopyPass(copyPass);
 	SDL_SubmitGPUCommandBuffer(uploadCmdBuf);
-	SDL_ReleaseGPUTransferBuffer(device, bufferTransferBuffer);
+	SDL_ReleaseGPUTransferBuffer(context.device, bufferTransferBuffer);
 
 	// Create the GPU resources
 	auto samplerCreateInfo = SDL_GPUSamplerCreateInfo{
@@ -133,7 +133,7 @@ void Renderer::init() {
 		.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
 		.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
 	};
-	sampler = SDL_CreateGPUSampler(device, &samplerCreateInfo);
+	sampler = SDL_CreateGPUSampler(context.device, &samplerCreateInfo);
 
 	if (auto image = assets->getImage("tex.png")) {
 		textures[image] = createTexture(image);
@@ -147,19 +147,25 @@ void Renderer::init() {
 }
 
 void Renderer::render() {
-	SDL_GPUCommandBuffer* commandBuffer = SDL_AcquireGPUCommandBuffer(device);
+	SDL_GPUCommandBuffer* commandBuffer = SDL_AcquireGPUCommandBuffer(context.device);
 	this->commandBuffer = commandBuffer;
 	if (commandBuffer == nullptr) {
 		SDL_Log("AcquireGPUCommandBuffer failed: %s", SDL_GetError());
+	} else {
+		textRenderer->context.commandBuffer = commandBuffer;
 	}
 
 	SDL_GPUTexture* swapchainTexture;
-	if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer, window, &swapchainTexture, nullptr, nullptr)) {
+	if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer, context.window, &swapchainTexture, nullptr, nullptr)) {
 		SDL_Log("WaitAndAcquireGPUSwapchainTexture failed: %s", SDL_GetError());
 	}
 	this->swapchainTexture = swapchainTexture;
+	textRenderer->context.swapchainTexture = swapchainTexture;
 
 	clearScreen();
+
+	char str[] = "     \nSDL is cool";
+	textRenderer->drawText(str);
 
 	drawTriangle(0, 0, 100, 100);
 
@@ -180,21 +186,23 @@ void Renderer::submit() {
 	SDL_SubmitGPUCommandBuffer(commandBuffer);
 	this->commandBuffer = nullptr;
 	this->swapchainTexture = nullptr;
+	textRenderer->context.commandBuffer = nullptr;
+	textRenderer->context.swapchainTexture = nullptr;
 }
 
 SDL_GPUGraphicsPipeline* Renderer::createTrianglePipeline() {
-	SDL_GPUShader* vertexShader = loadShader(device, assetsDirectory, "RawTriangle.vert", 0, 0, 0, 1);
+	SDL_GPUShader* vertexShader = loadShader(context.device, assetsDirectory, "RawTriangle.vert", 0, 0, 0, 1);
 	if (vertexShader == nullptr) {
 		SDL_Log("Failed to create vertex shader!");
 	}
 
-	SDL_GPUShader* fragmentShader = loadShader(device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
+	SDL_GPUShader* fragmentShader = loadShader(context.device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
 	if (fragmentShader == nullptr) {
 		SDL_Log("Failed to create fragment shader!");
 	}
 
 	SDL_GPUColorTargetDescription colorTargetDescription{};
-	colorTargetDescription.format = SDL_GetGPUSwapchainTextureFormat(device, window);
+	colorTargetDescription.format = SDL_GetGPUSwapchainTextureFormat(context.device, context.window);
 	std::vector colorTargetDescriptions{ colorTargetDescription };
 
 	SDL_GPUGraphicsPipelineTargetInfo targetInfo{};
@@ -208,29 +216,29 @@ SDL_GPUGraphicsPipeline* Renderer::createTrianglePipeline() {
 	pipelineCreateInfo.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_FILL;
 	pipelineCreateInfo.target_info = targetInfo;
 
-	auto pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineCreateInfo);
+	auto pipeline = SDL_CreateGPUGraphicsPipeline(context.device, &pipelineCreateInfo);
 	if (pipeline == nullptr) {
 		SDL_Log("Failed to create pipeline!");
 	}
 
-	SDL_ReleaseGPUShader(device, vertexShader);
-	SDL_ReleaseGPUShader(device, fragmentShader);
+	SDL_ReleaseGPUShader(context.device, vertexShader);
+	SDL_ReleaseGPUShader(context.device, fragmentShader);
 	return pipeline;
 }
 
 SDL_GPUGraphicsPipeline* Renderer::createRectanglePipeline() {
-	SDL_GPUShader* vertexShader = loadShader(device, assetsDirectory, "RawRectangle.vert", 0, 0, 0, 1);
+	SDL_GPUShader* vertexShader = loadShader(context.device, assetsDirectory, "RawRectangle.vert", 0, 0, 0, 1);
 	if (vertexShader == nullptr) {
 		SDL_Log("Failed to create vertex shader!");
 	}
 
-	SDL_GPUShader* fragmentShader = loadShader(device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
+	SDL_GPUShader* fragmentShader = loadShader(context.device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
 	if (fragmentShader == nullptr) {
 		SDL_Log("Failed to create fragment shader!");
 	}
 
 	SDL_GPUColorTargetDescription colorTargetDescription{};
-	colorTargetDescription.format = SDL_GetGPUSwapchainTextureFormat(device, window);
+	colorTargetDescription.format = SDL_GetGPUSwapchainTextureFormat(context.device, context.window);
 	std::vector colorTargetDescriptions{ colorTargetDescription };
 
 	SDL_GPUGraphicsPipelineTargetInfo targetInfo{};
@@ -244,23 +252,23 @@ SDL_GPUGraphicsPipeline* Renderer::createRectanglePipeline() {
 	pipelineCreateInfo.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_FILL;
 	pipelineCreateInfo.target_info = targetInfo;
 
-	auto pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineCreateInfo);
+	auto pipeline = SDL_CreateGPUGraphicsPipeline(context.device, &pipelineCreateInfo);
 	if (pipeline == nullptr) {
 		SDL_Log("Failed to create pipeline!");
 	}
 
-	SDL_ReleaseGPUShader(device, vertexShader);
-	SDL_ReleaseGPUShader(device, fragmentShader);
+	SDL_ReleaseGPUShader(context.device, vertexShader);
+	SDL_ReleaseGPUShader(context.device, fragmentShader);
 	return pipeline;
 }
 
 SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
-	SDL_GPUShader* vertexShader = loadShader(device, assetsDirectory, "TexturedQuad.vert", 0, 0, 0, 1);
+	SDL_GPUShader* vertexShader = loadShader(context.device, assetsDirectory, "TexturedQuad.vert", 0, 0, 0, 1);
 	if (vertexShader == nullptr) {
 		SDL_Log("Failed to create vertex shader!");
 	}
 
-	SDL_GPUShader* fragmentShader = loadShader(device, assetsDirectory, "TexturedQuad.frag", 1, 0, 0, 1);
+	SDL_GPUShader* fragmentShader = loadShader(context.device, assetsDirectory, "TexturedQuad.frag", 1, 0, 0, 1);
 	if (fragmentShader == nullptr) {
 		SDL_Log("Failed to create fragment shader!");
 	}
@@ -304,7 +312,7 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 		.enable_blend = true
 	};
 	auto colorTargetDescription = SDL_GPUColorTargetDescription{
-		.format = SDL_GetGPUSwapchainTextureFormat(device, window),
+		.format = SDL_GetGPUSwapchainTextureFormat(context.device, context.window),
 		.blend_state = blendState
 	};
 	auto targetInfo = SDL_GPUGraphicsPipelineTargetInfo{
@@ -319,13 +327,13 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 		.target_info = targetInfo
 	};
 
-	auto pipeline = SDL_CreateGPUGraphicsPipeline(device, &pipelineCreateInfo);
+	auto pipeline = SDL_CreateGPUGraphicsPipeline(context.device, &pipelineCreateInfo);
 	if (pipeline == nullptr) {
 		SDL_Log("Failed to create pipeline!");
 	}
 
-	SDL_ReleaseGPUShader(device, vertexShader);
-	SDL_ReleaseGPUShader(device, fragmentShader);
+	SDL_ReleaseGPUShader(context.device, vertexShader);
+	SDL_ReleaseGPUShader(context.device, fragmentShader);
 
 	return pipeline;
 }
@@ -344,16 +352,16 @@ SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
 		.size = static_cast<unsigned int>(w * h * 4)
 	};
-	SDL_GPUTransferBuffer* textureTransferBuffer = SDL_CreateGPUTransferBuffer(device, &textureTransferBufferCreateInfo);
+	SDL_GPUTransferBuffer* textureTransferBuffer = SDL_CreateGPUTransferBuffer(context.device, &textureTransferBufferCreateInfo);
 
-	Uint8* textureTransferPtr = static_cast<Uint8*>(SDL_MapGPUTransferBuffer(device, textureTransferBuffer, false));
+	Uint8* textureTransferPtr = static_cast<Uint8*>(SDL_MapGPUTransferBuffer(context.device, textureTransferBuffer, false));
 	if (textureTransferPtr && pixels) {
 		SDL_memcpy(textureTransferPtr, pixels, w * h * 4);
 	}
 	else if (textureTransferPtr == nullptr) {
 		SDL_Log("Failed to map transfer buffer!");
 	}
-	SDL_UnmapGPUTransferBuffer(device, textureTransferBuffer);
+	SDL_UnmapGPUTransferBuffer(context.device, textureTransferBuffer);
 	auto textureCreateInfo = SDL_GPUTextureCreateInfo{
 		.type = SDL_GPU_TEXTURETYPE_2D,
 		.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
@@ -363,7 +371,7 @@ SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 		.layer_count_or_depth = 1,
 		.num_levels = 1
 	};
-	auto texture = SDL_CreateGPUTexture(device, &textureCreateInfo);
+	auto texture = SDL_CreateGPUTexture(context.device, &textureCreateInfo);
 	auto textureTransferInfo = SDL_GPUTextureTransferInfo{
 		.transfer_buffer = textureTransferBuffer,
 		.offset = 0 /* Zeroes out the rest */
@@ -374,14 +382,14 @@ SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 		.h = h,
 		.d = 1
 	};
-	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(device);
+	SDL_GPUCommandBuffer* uploadCmdBuf = SDL_AcquireGPUCommandBuffer(context.device);
 	SDL_GPUCopyPass* copyPass = SDL_BeginGPUCopyPass(uploadCmdBuf);
 	SDL_UploadToGPUTexture(copyPass, &textureTransferInfo, &textureRegion, false);
 
 	SDL_EndGPUCopyPass(copyPass);
 	SDL_SubmitGPUCommandBuffer(uploadCmdBuf);
 
-	SDL_ReleaseGPUTransferBuffer(device, textureTransferBuffer);
+	SDL_ReleaseGPUTransferBuffer(context.device, textureTransferBuffer);
 	return texture;
 }
 

@@ -11,6 +11,7 @@
 #include <optional>
 #include <unordered_map>
 #include <trew/Color.hpp>
+#include <memory>
 
 struct SDL_GPUDevice;
 struct SDL_Window;
@@ -26,6 +27,7 @@ class Hud;
 class Camera;
 class AssetManager;
 class ImageSurface;
+class TextRenderer;
 struct Context {
     SDL_GPUDevice* device;
     SDL_Window* window;
@@ -45,13 +47,12 @@ public:
     void submit();
     SDL_GPUTexture* getTexture(ImageSurface* image);
 private:
+    std::unique_ptr<TextRenderer> textRenderer;
     SDL_GPUGraphicsPipeline* createTrianglePipeline();
     SDL_GPUGraphicsPipeline* createRectanglePipeline();
     SDL_GPUGraphicsPipeline* createTexturePipeline();
     SDL_GPUTexture* createTexture(ImageSurface* image);
     Context context;
-    SDL_GPUDevice* device;
-    SDL_Window* window;
     SDL_GPUGraphicsPipeline* trianglePipeline = nullptr;
     SDL_GPUGraphicsPipeline* rectanglePipeline = nullptr;
     SDL_GPUGraphicsPipeline* texturePipeline = nullptr;
