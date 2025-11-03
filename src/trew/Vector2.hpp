@@ -1,7 +1,7 @@
 #pragma once
 
 namespace trew {
-	class Vector2 {
+	struct Vector2 {
 	public:
 		Vector2();
         Vector2(float x, float y);

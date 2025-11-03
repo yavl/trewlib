@@ -11,12 +11,9 @@
 #include "testgputext/shaders/shader.frag.msl.h"
 #include "testgputext/shaders/shader-sdf.frag.msl.h"
 
-#define SDL_MATH_3D_IMPLEMENTATION
-#include "testgputext/SDL_math3d.h"
-
 using namespace trew;
 
-SDL_GPUShader* TextRenderer::load_shader(
+SDL_GPUShader* TextRenderer::loadShader(
     SDL_GPUDevice* device,
     TextShader shader,
     Uint32 sampler_count,
@@ -168,7 +165,7 @@ void TextRenderer::transfer_data(TextContext* context, GeometryData* geometry_da
     SDL_EndGPUCopyPass(copy_pass);
 }
 
-void TextRenderer::draw(TextContext* context, SDL_Mat4X4* matrices, int num_matrices, TTF_GPUAtlasDrawSequence* draw_sequence)
+void TextRenderer::draw(TextContext* context, glm::mat4 matrices[], int num_matrices, TTF_GPUAtlasDrawSequence* draw_sequence)
 {
     if (context->swapchainTexture != NULL) {
         // Initialize the struct using uniform initialization
@@ -187,7 +184,7 @@ void TextRenderer::draw(TextContext* context, SDL_Mat4X4* matrices, int num_matr
         SDL_GPUBufferBinding index_binding{ context->index_buffer, 0 };
         SDL_BindGPUIndexBuffer(render_pass, &index_binding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
 
-        SDL_PushGPUVertexUniformData(context->commandBuffer, 0, matrices, sizeof(SDL_Mat4X4) * num_matrices);
+        SDL_PushGPUVertexUniformData(context->commandBuffer, 0, matrices, sizeof(glm::mat4) * num_matrices);
 
         int index_offset = 0, vertex_offset = 0;
         for (TTF_GPUAtlasDrawSequence* seq = draw_sequence; seq != NULL; seq = seq->next) {
@@ -222,8 +219,8 @@ TextRenderer::TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* ca
     context.window = window;
     context.device = device;
 
-    SDL_GPUShader* vertex_shader = load_shader(context.device, VertexShader, 0, 1, 0, 0);
-    SDL_GPUShader* fragment_shader = load_shader(context.device, use_SDF ? PixelShader_SDF : PixelShader, 1, 0, 0, 0);
+    SDL_GPUShader* vertex_shader = loadShader(context.device, VertexShader, 0, 1, 0, 0);
+    SDL_GPUShader* fragment_shader = loadShader(context.device, use_SDF ? PixelShader_SDF : PixelShader, 1, 0, 0, 0);
 
     // Create the nested structures as named variables first
     SDL_GPUColorTargetBlendState blend_state = {
@@ -381,23 +378,23 @@ void TextRenderer::drawText(char str[]) {
     int tw, th;
     TTF_GetTextSize(text, &tw, &th);
 
-    SDL_Mat4X4 matrices[2] = {
-        SDL_MatrixPerspective(SDL_PI_F / 2.0f, 800.0f / 600.0f, 0.1f, 100.0f),
-        SDL_MatrixIdentity()
+    glm::mat4 matrices[2] = {
+        glm::perspective(SDL_PI_F / 2.0f, 800.0f / 600.0f, 0.1f, 100.0f),
+        glm::mat4(1.f)
     };
 
-    float rot_angle = 0;
+    float rotation = 0;
     SDL_FColor colour = { 1.0f, 1.0f, 0.0f, 1.0f };
 
-    rot_angle = SDL_fmodf(rot_angle + 0.01, 2 * SDL_PI_F);
+    rotation = SDL_fmodf(rotation + 0.01, 2 * SDL_PI_F);
 
     // Create a model matrix to make the text rotate
-    SDL_Mat4X4 model;
-    model = SDL_MatrixIdentity();
-    model = SDL_MatrixMultiply(model, SDL_MatrixTranslation({ 0.0f, 0.0f, -80.0f }));
-    model = SDL_MatrixMultiply(model, SDL_MatrixScaling({ 0.3f, 0.3f, 0.3f }));
-    model = SDL_MatrixMultiply(model, SDL_MatrixRotationY(rot_angle));
-    model = SDL_MatrixMultiply(model, SDL_MatrixTranslation({ -tw / 2.0f, th / 2.0f, 0.0f }));
+    glm::mat4 model;
+    model = glm::mat4(1.f);
+    model = glm::translate(model, { 0.0f, 0.0f, -80.0f });
+    model = glm::scale(model, { 0.3f, 0.3f, 0.3f });
+    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.f, 0.f, -1.f));
+    model = glm::translate(model, { -tw / 2.0f, th / 2.0f, 0.0f });
     matrices[1] = model;
 
     // Get the text data and queue the text in a buffer for drawing later
