@@ -1,4 +1,6 @@
 #include "TextRenderer.hpp"
+#include <trew/Camera.hpp>
+#include <fmt/core.h>
 
 // Shaders
 #include "testgputext/shaders/shader.vert.spv.h"
@@ -201,18 +203,33 @@ void TextRenderer::draw(TextContext* context, glm::mat4 matrices[], int num_matr
     }
 }
 
+TTF_Font* TextRenderer::createFont(int size, bool useSDF) {
+    auto path = "assets/Ubuntu-Regular.ttf";
+    TTF_Font* font = TTF_OpenFont(path, size);
+    SDL_Log("SDF %s", useSDF ? "enabled" : "disabled");
+    TTF_SetFontSDF(font, useSDF);
+    TTF_SetFontWrapAlignment(font, TTF_HORIZONTAL_ALIGN_CENTER);
+    return font;
+}
+
+TTF_Font* TextRenderer::fontOfSize(int size) const {
+    TTF_Font* font = nullptr;
+    if (auto findit = fonts.find(size); findit != fonts.end()) {
+        font = findit->second;
+    }
+    assert(font != nullptr && "wrong font size");
+    if (font == nullptr) {
+        font = fontDefault;
+    }
+    return font;
+}
+
 void free_context(TextContext* context)
 {
 }
 
 TextRenderer::TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam): cam(cam) {
-    const char* font_filename = NULL;
-    bool use_SDF = true;
-    font_filename = "assets/Ubuntu-Regular.ttf";
-    if (!font_filename) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Usage: testgputext [--sdf] FONT_FILENAME");
-        return;
-    }
+    bool useSDF = true;
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
@@ -220,7 +237,7 @@ TextRenderer::TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* ca
     context.device = device;
 
     SDL_GPUShader* vertex_shader = loadShader(context.device, VertexShader, 0, 1, 0, 0);
-    SDL_GPUShader* fragment_shader = loadShader(context.device, use_SDF ? PixelShader_SDF : PixelShader, 1, 0, 0, 0);
+    SDL_GPUShader* fragment_shader = loadShader(context.device, useSDF ? PixelShader_SDF : PixelShader, 1, 0, 0, 0);
 
     // Create the nested structures as named variables first
     SDL_GPUColorTargetBlendState blend_state = {
@@ -339,12 +356,14 @@ TextRenderer::TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* ca
     geometry_data.indices = static_cast<int*>(SDL_calloc(MAX_INDEX_COUNT, sizeof(int)));
 
     TTF_Init();
-    font = TTF_OpenFont(font_filename, 50); /* Preferably use a Monospaced font */
-    SDL_Log("SDF %s", use_SDF ? "enabled" : "disabled");
-    TTF_SetFontSDF(font, use_SDF);
-    TTF_SetFontWrapAlignment(font, TTF_HORIZONTAL_ALIGN_CENTER);
+
+    fonts[50] = createFont(50, useSDF);
+    fonts[100] = createFont(100, useSDF);
+
+    fontDefault = fonts[50];
+
     engine = TTF_CreateGPUTextEngine(context.device);
-    text = TTF_CreateText(engine, font, "example", 0);
+    text = TTF_CreateText(engine, fontDefault, "example", 0);
 }
 
 TextRenderer::~TextRenderer() {
@@ -353,7 +372,9 @@ TextRenderer::~TextRenderer() {
     SDL_free(geometry_data.indices);
     TTF_DestroyText(text);
     TTF_DestroyGPUTextEngine(engine);
-    TTF_CloseFont(font);
+    for (const auto& pair : fonts) {
+        TTF_CloseFont(pair.second);
+    }
     TTF_Quit();
     free_context(&context);
 
@@ -367,39 +388,30 @@ TextRenderer::~TextRenderer() {
     SDL_DestroyWindow(context.window);
 }
 
-void TextRenderer::drawText(char str[]) {
-    TTF_SetTextString(text, str, 0);
-
+void TextRenderer::drawText(char str[], float x, float y, FontSize fontSize, float rotation) {
     for (int i = 0; i < 5; i++) {
         str[i] = 65 + SDL_rand(26);
     }
+    TTF_SetTextFont(text, fontOfSize(static_cast<int>(fontSize)));
     TTF_SetTextString(text, str, 0);
 
-    int tw, th;
-    TTF_GetTextSize(text, &tw, &th);
+    int textWidth, textHeight;
+    TTF_GetTextSize(text, &textWidth, &textHeight);
+
+    auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 0.f));
+    matrix = glm::rotate(matrix, glm::radians(rotation / 2.f), glm::vec3(0.f, 0.f, -1.f));
+    matrix = glm::translate(matrix, { -textWidth / 4.f, textHeight / 4.f, 0.0f });
 
     glm::mat4 matrices[2] = {
-        glm::perspective(SDL_PI_F / 2.0f, 800.0f / 600.0f, 0.1f, 100.0f),
+        cam->projection * cam->view * matrix,
         glm::mat4(1.f)
     };
-
-    float rotation = 0;
-    SDL_FColor colour = { 1.0f, 1.0f, 0.0f, 1.0f };
-
-    rotation = SDL_fmodf(rotation + 0.01, 2 * SDL_PI_F);
-
-    // Create a model matrix to make the text rotate
-    glm::mat4 model;
-    model = glm::mat4(1.f);
-    model = glm::translate(model, { 0.0f, 0.0f, -80.0f });
-    model = glm::scale(model, { 0.3f, 0.3f, 0.3f });
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.f, 0.f, -1.f));
-    model = glm::translate(model, { -tw / 2.0f, th / 2.0f, 0.0f });
-    matrices[1] = model;
+    matrices[1] = matrix;
 
     // Get the text data and queue the text in a buffer for drawing later
     TTF_GPUAtlasDrawSequence* sequence = TTF_GetGPUTextDrawData(text);
-    queue_text(&geometry_data, sequence, &colour);
+    SDL_FColor textColor = { 1.0f, 1.0f, 0.0f, 1.0f };
+    queue_text(&geometry_data, sequence, &textColor);
 
     set_geometry_data(&context, &geometry_data);
 

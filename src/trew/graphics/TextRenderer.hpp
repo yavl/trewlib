@@ -4,6 +4,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <memory>
 #include <trew/trew.hpp>
+#include <unordered_map>
 
 #define MAX_VERTEX_COUNT 4000
 #define MAX_INDEX_COUNT  6000
@@ -47,19 +48,24 @@ namespace trew {
         int index_count;
     };
 
+    enum class FontSize : int {
+        LARGE = 100,
+        NORMAL = 50
+    };
+
     class Camera;
 
     class TextRenderer {
     public:
         TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam);
         ~TextRenderer();
-        void drawText(char str[]);
+        void drawText(char str[], float x, float y, FontSize fontSize, float rotation);
 
         TextContext context{};
     private:
         Camera* cam;
         GeometryData geometry_data = { 0 };
-        TTF_Font* font;
+        TTF_Font* fontDefault;
         TTF_TextEngine* engine;
         TTF_Text* text;
         SDL_GPUShader* loadShader(
@@ -74,5 +80,8 @@ namespace trew {
         void set_geometry_data(TextContext* context, GeometryData* geometry_data);
         void transfer_data(TextContext* context, GeometryData* geometry_data);
         void draw(TextContext* context, glm::mat4 matrices[], int num_matrices, TTF_GPUAtlasDrawSequence* draw_sequence);
+        TTF_Font* createFont(int size, bool useSDF);
+        TTF_Font* fontOfSize(int size) const;
+        std::unordered_map<int, TTF_Font*> fonts;
     };
 }

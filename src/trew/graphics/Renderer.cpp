@@ -165,7 +165,7 @@ void Renderer::render() {
 	clearScreen();
 
 	char str[] = "     \nSDL is cool";
-	textRenderer->drawText(str);
+	textRenderer->drawText(str, 0.f, 0.f, FontSize::LARGE, 0.f);
 
 	drawTriangle(0, 0, 100, 100);
 
