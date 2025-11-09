@@ -2,7 +2,7 @@
 #include <trew/drawables/Drawable.hpp>
 #include <trew/graphics/Renderer.hpp>
 #include <trew/drawables/ImageSurface.hpp>
-#include <fmt/core.h>
+#include <trew/Logger.hpp>
 
 using namespace trew;
 
@@ -31,11 +31,11 @@ void Sprite::draw(Renderer* renderer) {
 		parentMatrix = glm::translate(glm::mat4(1.f), glm::vec3(getParent()->getX(), getParent()->getY(), 0));
 		parentMatrix = glm::rotate(parentMatrix, glm::radians(getParent()->getRotation()), glm::vec3(0.f, 0.f, -1.f));
 		auto surface = static_cast<ImageSurface*>(getDrawable());
-		renderer->drawTexture(getX(), getY(), surface->getImageWidth(), surface->getImageHeight(), renderer->getTexture(surface), getRotation(), color, parentMatrix);
+		renderer->drawTexture(getX(), getY(), surface->getImageWidth(), surface->getImageHeight(), renderer->getTexture(surface), getRotation(), scale, color, parentMatrix);
 	}
 	else {
 		auto surface = static_cast<ImageSurface*>(getDrawable());
-		renderer->drawTexture(getX(), getY(), surface->getImageWidth(), surface->getImageHeight(), renderer->getTexture(surface), getRotation(), color);
+		renderer->drawTexture(getX(), getY(), surface->getImageWidth(), surface->getImageHeight(), renderer->getTexture(surface), getRotation(), scale, color);
 	}
 	drawChildren(renderer);
 }

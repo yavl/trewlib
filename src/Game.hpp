@@ -29,7 +29,8 @@ public:
 	void resize(int width, int height) override;
 private:
 	flecs::world world;
-	flecs::query<Position, Image> query;
+	flecs::query<Image, MapIdentity> mapQuery;
+	flecs::query<Position, Image, CharacterIdentity> characterQuery;
 
 	Window* window;
 	std::unique_ptr<AssetManager> assets;

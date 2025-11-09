@@ -4,6 +4,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <memory>
 #include <trew/trew.hpp>
+#include <trew/graphics/GraphicsTypes.hpp>
 #include <unordered_map>
 
 #define MAX_VERTEX_COUNT 4000
@@ -48,18 +49,13 @@ namespace trew {
         int index_count;
     };
 
-    enum class FontSize : int {
-        LARGE = 100,
-        NORMAL = 50
-    };
-
     class Camera;
 
     class TextRenderer {
     public:
         TextRenderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam);
         ~TextRenderer();
-        void drawText(char str[], float x, float y, FontSize fontSize, float rotation);
+        void drawText(const char* str, float x, float y, FontSize fontSize, float rotation);
 
         TextContext context{};
     private:

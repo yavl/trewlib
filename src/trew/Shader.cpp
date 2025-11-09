@@ -24,7 +24,7 @@ SDL_GPUShader* trew::loadShader(
 	} else if (SDL_strstr(shaderFilename, ".frag")) {
 		stage = SDL_GPU_SHADERSTAGE_FRAGMENT;
 	} else {
-		SDL_Log("Invalid shader stage!");
+		logError(LOGTAG, fmt::format("Invalid shader stage!"));
 		return NULL;
 	}
 
@@ -42,14 +42,14 @@ SDL_GPUShader* trew::loadShader(
 		format = SDL_GPU_SHADERFORMAT_MSL;
 		entrypoint = "main_0";
 	} else {
-		SDL_Log("%s", "Unrecognized backend shader format!");
+		logError(LOGTAG, fmt::format("{}", "Unrecognized backend shader format!"));
 		return NULL;
 	}
 
 	size_t codeSize;
 	void* code = SDL_LoadFile(fullPath, &codeSize);
 	if (code == nullptr) {
-		SDL_Log("Failed to load shader from disk! %s", fullPath);
+		logError(LOGTAG, fmt::format("Failed to load shader from disk! {}", fullPath));
 		return NULL;
 	}
 
@@ -67,7 +67,7 @@ SDL_GPUShader* trew::loadShader(
 	SDL_GPUShader* shader = SDL_CreateGPUShader(device, &shaderInfo);
 	if (shader == NULL)
 	{
-		SDL_Log("Failed to create shader!");
+		logError(LOGTAG, fmt::format("Failed to create shader!"));
 		SDL_free(code);
 		return NULL;
 	}

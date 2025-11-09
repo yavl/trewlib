@@ -11,8 +11,12 @@
 #include <trew/graphics/Renderer.hpp>
 #include <trew/nodes/Sprite.hpp>
 #include <trew/drawables/ImageSurface.hpp>
-#include <iostream>
-#include <fmt/core.h>
+#include <trew/graphics/GraphicsTypes.hpp>
+#include <trew/Logger.hpp>
+
+constexpr auto LOGTAG = "Game";
+
+const char* mapName = "default-europe";
 
 Game::Game(Window* window) :
 	window(window)
@@ -31,6 +35,7 @@ void Game::create() {
 	assets->load("tex.png", AssetType::IMAGE);
 	assets->load("tex2.png", AssetType::IMAGE);
 	assets->load("circle.png", AssetType::IMAGE);
+	auto terrainImagePath = assets->loadMap("default-europe");
 
 	ASManager as(assets.get(), cam.get());
 	//as.registerScript("assets/scripts/main.as");
@@ -42,21 +47,30 @@ void Game::create() {
 	renderer = std::make_unique<Renderer>(device, window->getRawSdlWindow(), cam.get(), assets.get());
 	renderer->init();
 
-	// Register system
-	auto sys = world.system<Position, Velocity>()
-		.each([](flecs::iter& it, size_t, Position& p, Velocity& v) {
-			p.x += v.x * it.delta_time();
-			p.y += v.y * it.delta_time();
-		});
+	renderer->prepareTexture("tex.png");
+	renderer->prepareTexture("tex2.png");
+	renderer->prepareTexture("circle.png");
+	renderer->prepareTexture(terrainImagePath.c_str());
 
-	// Create an entity with name Bob, add Position and food preference
+	world.entity("map")
+		.set(Image{ assets->getTerrain("default-europe")})
+		.set(MapIdentity{ "default-europe"});
+
 	world.entity("Bob")
 		.set(Position{ 0, 0 })
 		.set(Velocity{ 50.f, 50.f })
 		.set(Image{ assets->getImage("circle.png")})
+		.set(CharacterIdentity{ "Daniel" })
 		.add<Eats, Apples>();
 
-	query = world.query<Position, Image>();
+	mapQuery = world.query<Image, MapIdentity>();
+	characterQuery = world.query<Position, Image, CharacterIdentity>();
+
+	auto movingSystem = world.system<Position, Velocity>()
+		.each([](flecs::iter& it, size_t, Position& p, Velocity& v) {
+		//p.x += v.x * it.delta_time();
+		//p.y += v.y * it.delta_time();
+			});
 }
 
 void Game::update(float dt) {
@@ -64,7 +78,7 @@ void Game::update(float dt) {
 	world.progress(dt);
 
 	SDL_Event event;
-	//fmt::print("fps: {}\n", 1 / dt);
+	//logDebug(LOGTAG, fmt::format("fps: {}", 1 / dt));
 	while (SDL_PollEvent(&event)) {
 		input->update(event);
 		if (event.type == SDL_EVENT_QUIT) {
@@ -91,10 +105,15 @@ void Game::update(float dt) {
 
 void Game::render() {
 	renderer->render();
-	renderer->render(hud.get());
-	query.each([this](flecs::entity e, Position& pos, Image& p) {
-		renderer->drawTexture(pos.x, pos.y, p.image->getImageWidth(), p.image->getImageHeight(), renderer->getTexture(p.image), 0.f);
+	mapQuery.each([this](flecs::entity e, Image& p, MapIdentity map) {
+		renderer->drawTexture(0.f, 0.f, p.image->getImageWidth(), p.image->getImageHeight(), renderer->getTexture(p.image), 0.f, 128.f);
 		});
+	characterQuery.each([this](flecs::entity e, Position& pos, Image& p, CharacterIdentity& identity) {
+		renderer->drawTexture(pos.x, pos.y, p.image->getImageWidth(), p.image->getImageHeight(), renderer->getTexture(p.image), 0.f, 1.f, std::nullopt, std::nullopt, FilterMode::LINEAR);
+		renderer->drawText(identity.name.c_str(), pos.x, pos.y - 100.f, FontSize::NORMAL, 0.f);
+		});
+	renderer->render(hud.get());
+
 	renderer->submit();
 }
 

@@ -6,12 +6,10 @@ struct UniformData {
 ConstantBuffer<UniformData> ubo;
 
 [[vk::binding(0, 2)]]
-Texture2D texture;
-
-SamplerState sampler;
+Sampler2D textureSampler;
 
 [shader("fragment")]
 float4 main(float2 texCoord : TEXCOORD0) : SV_Target0
 {
-    return ubo.multiplyColor * texture.Sample(sampler, texCoord);
+    return ubo.multiplyColor * textureSampler.Sample(texCoord);
 }

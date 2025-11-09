@@ -11,6 +11,7 @@
 #include <optional>
 #include <unordered_map>
 #include <trew/Color.hpp>
+#include <trew/graphics/GraphicsTypes.hpp>
 #include <memory>
 
 struct SDL_GPUDevice;
@@ -43,9 +44,11 @@ public:
     void clearScreen();
     void drawTriangle(float x, float y, float width, float height);
     void drawRectangle(float x, float y, float width, float height);
-    void drawTexture(float x, float y, float width, float height, SDL_GPUTexture* texture, float rotation, std::optional<Color> color = std::nullopt, std::optional<glm::mat4> parentModelMatrix = std::nullopt);
+    void drawTexture(float x, float y, float width, float height, SDL_GPUTexture* texture, float rotation, float scale, std::optional<Color> color = std::nullopt, std::optional<glm::mat4> parentModelMatrix = std::nullopt, FilterMode filterMode = FilterMode::NEAREST);
+    void drawText(const char* str, float x, float y, FontSize fontSize, float rotation);
     void submit();
     SDL_GPUTexture* getTexture(ImageSurface* image);
+    void prepareTexture(const char* name);
 private:
     std::unique_ptr<TextRenderer> textRenderer;
     SDL_GPUGraphicsPipeline* createTrianglePipeline();
@@ -68,6 +71,7 @@ private:
 
     SDL_GPUBuffer* vertexBuffer = nullptr;
     SDL_GPUBuffer* indexBuffer = nullptr;
-    SDL_GPUSampler* sampler = nullptr;
+    SDL_GPUSampler* nearestSampler = nullptr;
+    SDL_GPUSampler* linearSampler = nullptr;
 };
 }

@@ -21,3 +21,11 @@ struct Velocity {
 struct Image {
 	ImageSurface* image;
 };
+
+struct CharacterIdentity {
+	std::string name;
+};
+
+struct MapIdentity {
+	std::string name;
+};

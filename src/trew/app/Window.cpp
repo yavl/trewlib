@@ -7,9 +7,11 @@
 
 using namespace trew;
 
+constexpr auto LOGTAG = "Window";
+
 Window::Window() {
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
-		SDL_Log("Failed to initialize SDL: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("Failed to initialize SDL: {}", SDL_GetError()));
 	}
 }
 
@@ -24,17 +26,17 @@ void Window::createWindow(const std::string& title, int width, int height) {
 
 	device = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_MSL, true, nullptr);
 	if (!device) {
-		SDL_Log("SDL_CreateGPUDevice failed: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("SDL_CreateGPUDevice failed: {}", SDL_GetError()));
 		SDL_Quit();
 	}
 	window = SDL_CreateWindow(title.c_str(), width, height, SDL_WINDOW_RESIZABLE);
 	if (!window) {
-		SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("SDL_CreateWindow failed: {}", SDL_GetError()));
 		SDL_Quit();
 	}
 
 	if (!SDL_ClaimWindowForGPUDevice(device, window)) {
-		SDL_Log("SDL_ClaimWindowForGPUDevice failed %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("SDL_ClaimWindowForGPUDevice failed {}", SDL_GetError()));
 		SDL_Quit();
 	}
 

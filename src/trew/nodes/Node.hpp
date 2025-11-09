@@ -35,6 +35,8 @@ namespace trew {
 		void act(float dt) override;
 		void addAction(Action* action) override;
 		std::vector<std::unique_ptr<Node>> children;
+	protected:
+		float scale = 1.f;
 	private:
 		Vector2 pos;
 		Vector2 size;

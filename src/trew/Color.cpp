@@ -1,5 +1,4 @@
 #include "Color.hpp"
-#include <fmt/core.h>
 
 using namespace trew;
 

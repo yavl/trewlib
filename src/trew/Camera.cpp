@@ -6,6 +6,8 @@
 
 using namespace trew;
 
+constexpr auto LOGTAG = "Camera";
+
 const float CAMERA_SPEED = 500.f;
 
 Camera::Camera(Window* window) :
@@ -47,7 +49,7 @@ void Camera::update(float dt) {
 	if (input.isMousePressed(Key::LEFT_MOUSE_BUTTON)) {
 		auto pos = window->getCursorPos();
 		auto world = screenToSpace(pos.x, pos.y);
-		log("camera", fmt::format("World pos: {}, {}", world.x, world.y));
+		//log(LOGTAG, fmt::format("World pos: {}, {}", world.x, world.y));
 	}
 
 	bool mousePressed = false;

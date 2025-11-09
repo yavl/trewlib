@@ -22,8 +22,9 @@ void Executor::executeAtFixedRate(long long rate, const std::function<void()>& f
 		lastFrame = currentFrame;
 		frameCount++;
 		if (currentFrame - prevTime >= 1000000000) {
-			if (logRefreshRate)
-				log("asd", fmt::format("fps: {}\n", frameCount));
+			if (logRefreshRate) {
+				log("Executor", fmt::format("fps: {}", frameCount));
+			}
 			frameCount = 0;
 			prevTime = currentFrame;
 		}

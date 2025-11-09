@@ -23,7 +23,9 @@ namespace trew {
 		AssetManager(std::string rootPath);
 		~AssetManager();
 		void load(std::string path, AssetType type);
+		std::string loadMap(std::string name);
 		ImageSurface* getImage(const char* path);
+		ImageSurface* getTerrain(const char* mapName);
 	private:
 		Asset* getAsset(const char* path);
 		SDL_Surface* loadImage(const char* imageFilename, int desiredChannels, int& width, int& height);

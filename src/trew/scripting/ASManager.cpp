@@ -2,7 +2,6 @@
 #include <angelscript.h>
 #include <scriptstdstring/scriptstdstring.h>
 #include <scriptbuilder/scriptbuilder.h>
-#include <fmt/core.h>
 #include <trew/Logger.hpp>
 #include <trew/AssetManager.hpp>
 #include <trew/nodes/Sprite.hpp>
@@ -17,7 +16,7 @@ constexpr auto LOGTAG = "AngelScript";
 
 namespace ASFunction {
     void print(const char* msg) {
-        fmt::print("{}\n", msg);
+        log(LOGTAG, fmt::format("{}", msg));
     }
 
     void loadTexture(const char* path) {

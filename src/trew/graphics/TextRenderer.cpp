@@ -1,6 +1,6 @@
 #include "TextRenderer.hpp"
 #include <trew/Camera.hpp>
-#include <fmt/core.h>
+#include <trew/Logger.hpp>
 
 // Shaders
 #include "testgputext/shaders/shader.vert.spv.h"
@@ -14,6 +14,8 @@
 #include "testgputext/shaders/shader-sdf.frag.msl.h"
 
 using namespace trew;
+
+constexpr auto LOGTAG = "TextRenderer";
 
 SDL_GPUShader* TextRenderer::loadShader(
     SDL_GPUDevice* device,
@@ -204,9 +206,9 @@ void TextRenderer::draw(TextContext* context, glm::mat4 matrices[], int num_matr
 }
 
 TTF_Font* TextRenderer::createFont(int size, bool useSDF) {
-    auto path = "assets/Ubuntu-Regular.ttf";
+    auto path = "assets/fonts/Ubuntu-Regular.ttf";
     TTF_Font* font = TTF_OpenFont(path, size);
-    SDL_Log("SDF %s", useSDF ? "enabled" : "disabled");
+    logDebug(LOGTAG, fmt::format("SDF {} for {} with size {}", useSDF ? "enabled" : "disabled", path, size));
     TTF_SetFontSDF(font, useSDF);
     TTF_SetFontWrapAlignment(font, TTF_HORIZONTAL_ALIGN_CENTER);
     return font;
@@ -388,17 +390,14 @@ TextRenderer::~TextRenderer() {
     SDL_DestroyWindow(context.window);
 }
 
-void TextRenderer::drawText(char str[], float x, float y, FontSize fontSize, float rotation) {
-    for (int i = 0; i < 5; i++) {
-        str[i] = 65 + SDL_rand(26);
-    }
+void TextRenderer::drawText(const char* str, float x, float y, FontSize fontSize, float rotation) {
     TTF_SetTextFont(text, fontOfSize(static_cast<int>(fontSize)));
     TTF_SetTextString(text, str, 0);
 
     int textWidth, textHeight;
     TTF_GetTextSize(text, &textWidth, &textHeight);
 
-    auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 0.f));
+    auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x / 2.f, y / 2.f, 0.f));
     matrix = glm::rotate(matrix, glm::radians(rotation / 2.f), glm::vec3(0.f, 0.f, -1.f));
     matrix = glm::translate(matrix, { -textWidth / 4.f, textHeight / 4.f, 0.0f });
 

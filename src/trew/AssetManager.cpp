@@ -3,7 +3,6 @@
 #include <trew/Shader.hpp>
 #include <trew/Logger.hpp>
 #include <cassert>
-#include <fmt/core.h>
 #include <nlohmann/json.hpp>
 #include <SDL3_image/SDL_image.h>
 
@@ -23,11 +22,11 @@ SDL_Surface* AssetManager::loadImage(const char* imageFilename, int desiredChann
 
 	result = IMG_Load(imageFilename);
 	if (result == nullptr) {
-		SDL_Log("Failed to load image: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("Failed to load image: {}", SDL_GetError()));
 		return nullptr;
 	}
 	if (!SDL_FlipSurface(result, SDL_FLIP_VERTICAL)) {
-		SDL_Log("Failed to flip image: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("Failed to flip image: {}", SDL_GetError()));
 		return nullptr;
 	}
 
@@ -71,12 +70,24 @@ void AssetManager::load(std::string path, AssetType type) {
 	}
 }
 
+std::string AssetManager::loadMap(std::string name) {
+	std::string path = fmt::format("maps/{}", name);
+	std::string terrainImagePath = fmt::format("{}/terrain.png", path);
+	load(terrainImagePath, AssetType::IMAGE);
+	return terrainImagePath;
+}
+
 ImageSurface* AssetManager::getImage(const char* path) {
 	if (auto asset = getAsset(path); asset) {
 		auto surface = static_cast<ImageSurface*>(asset);
 		return surface;
 	}
 	return nullptr;
+}
+
+ImageSurface* AssetManager::getTerrain(const char* mapName) {
+	std::string terrainImagePath = fmt::format("maps/{}/terrain.png", mapName);
+	return getImage(terrainImagePath.c_str());
 }
 
 Asset* AssetManager::getAsset(const char* path) {

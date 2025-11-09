@@ -22,6 +22,8 @@
 
 using namespace trew;
 
+constexpr auto LOGTAG = "Renderer";
+
 const char* assetsDirectory = "assets";
 
 typedef struct PositionTextureVertex
@@ -43,7 +45,7 @@ Renderer::Renderer(SDL_GPUDevice* device, SDL_Window* window, Camera* cam, Asset
 {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.IniFilename = nullptr;
-	font = io.Fonts->AddFontFromFileTTF("assets/Ubuntu-Regular.ttf", font_size, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+	font = io.Fonts->AddFontFromFileTTF("assets/fonts/Ubuntu-Regular.ttf", font_size, nullptr, io.Fonts->GetGlyphRangesCyrillic());
 }
 
 Renderer::~Renderer() {
@@ -51,7 +53,7 @@ Renderer::~Renderer() {
 	SDL_ReleaseGPUBuffer(context.device, vertexBuffer);
 	SDL_ReleaseGPUBuffer(context.device, indexBuffer);
 	//SDL_ReleaseGPUTexture(device, texture);
-	SDL_ReleaseGPUSampler(context.device, sampler);
+	SDL_ReleaseGPUSampler(context.device, linearSampler);
 }
 
 void Renderer::init() {
@@ -124,48 +126,44 @@ void Renderer::init() {
 	SDL_SubmitGPUCommandBuffer(uploadCmdBuf);
 	SDL_ReleaseGPUTransferBuffer(context.device, bufferTransferBuffer);
 
-	// Create the GPU resources
-	auto samplerCreateInfo = SDL_GPUSamplerCreateInfo{
+	auto nearestSamplerCreateInfo = SDL_GPUSamplerCreateInfo{
 		.min_filter = SDL_GPU_FILTER_NEAREST,
 		.mag_filter = SDL_GPU_FILTER_NEAREST,
-		.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_NEAREST,
+		.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
 		.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
 		.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
 		.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
 	};
-	sampler = SDL_CreateGPUSampler(context.device, &samplerCreateInfo);
+	nearestSampler = SDL_CreateGPUSampler(context.device, &nearestSamplerCreateInfo);
 
-	if (auto image = assets->getImage("tex.png")) {
-		textures[image] = createTexture(image);
-	}
-	if (auto image = assets->getImage("tex2.png")) {
-		textures[image] = createTexture(image);
-	}
-	if (auto image = assets->getImage("circle.png")) {
-		textures[image] = createTexture(image);
-	}
+	auto linearSamplerCreateInfo = SDL_GPUSamplerCreateInfo{
+		.min_filter = SDL_GPU_FILTER_LINEAR,
+		.mag_filter = SDL_GPU_FILTER_LINEAR,
+		.mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
+		.address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+		.address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+		.address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+	};
+	linearSampler = SDL_CreateGPUSampler(context.device, &linearSamplerCreateInfo);
 }
 
 void Renderer::render() {
 	SDL_GPUCommandBuffer* commandBuffer = SDL_AcquireGPUCommandBuffer(context.device);
 	this->commandBuffer = commandBuffer;
 	if (commandBuffer == nullptr) {
-		SDL_Log("AcquireGPUCommandBuffer failed: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("AcquireGPUCommandBuffer failed: {}", SDL_GetError()));
 	} else {
 		textRenderer->context.commandBuffer = commandBuffer;
 	}
 
 	SDL_GPUTexture* swapchainTexture;
 	if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer, context.window, &swapchainTexture, nullptr, nullptr)) {
-		SDL_Log("WaitAndAcquireGPUSwapchainTexture failed: %s", SDL_GetError());
+		logError(LOGTAG, fmt::format("WaitAndAcquireGPUSwapchainTexture failed: {}", SDL_GetError()));
 	}
 	this->swapchainTexture = swapchainTexture;
 	textRenderer->context.swapchainTexture = swapchainTexture;
 
 	clearScreen();
-
-	char str[] = "     \nSDL is cool";
-	textRenderer->drawText(str, 0.f, 0.f, FontSize::LARGE, 0.f);
 
 	drawTriangle(0, 0, 100, 100);
 
@@ -174,7 +172,7 @@ void Renderer::render() {
 		Vector2 end = Globals::selectionQuad[1];
 		auto vec1 = begin;
 		auto vec2 = end;
-		//fmt::print("wpos: {}, {}; {}, {}\n", vec1.x, vec1.y, vec2.x, vec2.y);
+		//logDebug(LOGTAG, fmt::format("wpos: {}, {}; {}, {}", vec1.x, vec1.y, vec2.x, vec2.y));
 
 		auto width = abs(vec2.x - vec1.x);
 		auto height = abs(vec2.y - vec1.y);
@@ -193,12 +191,12 @@ void Renderer::submit() {
 SDL_GPUGraphicsPipeline* Renderer::createTrianglePipeline() {
 	SDL_GPUShader* vertexShader = loadShader(context.device, assetsDirectory, "RawTriangle.vert", 0, 0, 0, 1);
 	if (vertexShader == nullptr) {
-		SDL_Log("Failed to create vertex shader!");
+		logError(LOGTAG, fmt::format("Failed to create vertex shader!"));
 	}
 
 	SDL_GPUShader* fragmentShader = loadShader(context.device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
 	if (fragmentShader == nullptr) {
-		SDL_Log("Failed to create fragment shader!");
+		logError(LOGTAG, fmt::format("Failed to create fragment shader!"));
 	}
 
 	SDL_GPUColorTargetDescription colorTargetDescription{};
@@ -218,7 +216,7 @@ SDL_GPUGraphicsPipeline* Renderer::createTrianglePipeline() {
 
 	auto pipeline = SDL_CreateGPUGraphicsPipeline(context.device, &pipelineCreateInfo);
 	if (pipeline == nullptr) {
-		SDL_Log("Failed to create pipeline!");
+		logError(LOGTAG, fmt::format("Failed to create pipeline!"));
 	}
 
 	SDL_ReleaseGPUShader(context.device, vertexShader);
@@ -229,12 +227,12 @@ SDL_GPUGraphicsPipeline* Renderer::createTrianglePipeline() {
 SDL_GPUGraphicsPipeline* Renderer::createRectanglePipeline() {
 	SDL_GPUShader* vertexShader = loadShader(context.device, assetsDirectory, "RawRectangle.vert", 0, 0, 0, 1);
 	if (vertexShader == nullptr) {
-		SDL_Log("Failed to create vertex shader!");
+		logError(LOGTAG, fmt::format("Failed to create vertex shader!"));
 	}
 
 	SDL_GPUShader* fragmentShader = loadShader(context.device, assetsDirectory, "SolidColor.frag", 0, 0, 0, 0);
 	if (fragmentShader == nullptr) {
-		SDL_Log("Failed to create fragment shader!");
+		logError(LOGTAG, fmt::format("Failed to create fragment shader!"));
 	}
 
 	SDL_GPUColorTargetDescription colorTargetDescription{};
@@ -254,7 +252,7 @@ SDL_GPUGraphicsPipeline* Renderer::createRectanglePipeline() {
 
 	auto pipeline = SDL_CreateGPUGraphicsPipeline(context.device, &pipelineCreateInfo);
 	if (pipeline == nullptr) {
-		SDL_Log("Failed to create pipeline!");
+		logError(LOGTAG, fmt::format("Failed to create pipeline!"));
 	}
 
 	SDL_ReleaseGPUShader(context.device, vertexShader);
@@ -265,12 +263,12 @@ SDL_GPUGraphicsPipeline* Renderer::createRectanglePipeline() {
 SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 	SDL_GPUShader* vertexShader = loadShader(context.device, assetsDirectory, "TexturedQuad.vert", 0, 0, 0, 1);
 	if (vertexShader == nullptr) {
-		SDL_Log("Failed to create vertex shader!");
+		logError(LOGTAG, fmt::format("Failed to create vertex shader!"));
 	}
 
 	SDL_GPUShader* fragmentShader = loadShader(context.device, assetsDirectory, "TexturedQuad.frag", 1, 0, 0, 1);
 	if (fragmentShader == nullptr) {
-		SDL_Log("Failed to create fragment shader!");
+		logError(LOGTAG, fmt::format("Failed to create fragment shader!"));
 	}
 
 	auto vertexBufferDescription = SDL_GPUVertexBufferDescription{
@@ -329,7 +327,7 @@ SDL_GPUGraphicsPipeline* Renderer::createTexturePipeline() {
 
 	auto pipeline = SDL_CreateGPUGraphicsPipeline(context.device, &pipelineCreateInfo);
 	if (pipeline == nullptr) {
-		SDL_Log("Failed to create pipeline!");
+		logError(LOGTAG, fmt::format("Failed to create pipeline!"));
 	}
 
 	SDL_ReleaseGPUShader(context.device, vertexShader);
@@ -359,17 +357,28 @@ SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 		SDL_memcpy(textureTransferPtr, pixels, w * h * 4);
 	}
 	else if (textureTransferPtr == nullptr) {
-		SDL_Log("Failed to map transfer buffer!");
+		logError(LOGTAG, fmt::format("Failed to map transfer buffer!"));
 	}
 	SDL_UnmapGPUTransferBuffer(context.device, textureTransferBuffer);
+
+	unsigned int maxDim = (w > h) ? w : h;
+	unsigned int numLevels = 0;
+	while (maxDim > 1) {
+		maxDim >>= 1;
+		numLevels++;
+	}
+	numLevels += 1;
+
+	logDebug(LOGTAG, fmt::format("Generating {}x{} texture with num levels: {}", w, h, numLevels));
+
 	auto textureCreateInfo = SDL_GPUTextureCreateInfo{
 		.type = SDL_GPU_TEXTURETYPE_2D,
 		.format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
-		.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+		.usage = SDL_GPU_TEXTUREUSAGE_SAMPLER | SDL_GPU_TEXTUREUSAGE_COLOR_TARGET,
 		.width = w,
 		.height = h,
 		.layer_count_or_depth = 1,
-		.num_levels = 1
+		.num_levels = numLevels
 	};
 	auto texture = SDL_CreateGPUTexture(context.device, &textureCreateInfo);
 	auto textureTransferInfo = SDL_GPUTextureTransferInfo{
@@ -387,6 +396,7 @@ SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 	SDL_UploadToGPUTexture(copyPass, &textureTransferInfo, &textureRegion, false);
 
 	SDL_EndGPUCopyPass(copyPass);
+	SDL_GenerateMipmapsForGPUTexture(uploadCmdBuf, texture);
 	SDL_SubmitGPUCommandBuffer(uploadCmdBuf);
 
 	SDL_ReleaseGPUTransferBuffer(context.device, textureTransferBuffer);
@@ -395,9 +405,22 @@ SDL_GPUTexture* Renderer::createTexture(ImageSurface* image) {
 
 SDL_GPUTexture* Renderer::getTexture(ImageSurface* image) {
 	if (textures.count(image) == 0) {
-		fmt::print("No such texture\n");
+		logError(LOGTAG, "No such texture, please call Renderer::prepareTexture first");
 	}
 	return textures[image];
+}
+
+void Renderer::prepareTexture(const char* name) {
+	if (auto image = assets->getImage(name)) {
+		if (textures[image] == nullptr) {
+			textures[image] = createTexture(image);
+		}
+		else {
+			logError(LOGTAG, fmt::format("Texture {} was already loaded", name));
+		}
+	} else {
+		logError(LOGTAG, fmt::format("Asset {} not found, please load image with AssetManager::load first", name));
+	}
 }
 
 void Renderer::render(Hud* hud) {
@@ -422,7 +445,7 @@ void Renderer::render(Hud* hud) {
 		ImGui::InputInt("port", &port);
 		if (ImGui::Button("Connect")) {
 			show_window = false;
-			log("Hud", fmt::format("ip: {}\nport: {}\n", ip, port));
+			logDebug("Hud", fmt::format("ip: {}\nport: {}", ip, port));
 			// connection code was here
 		}
 		ImGui::End();
@@ -509,7 +532,7 @@ void Renderer::drawRectangle(float x, float y, float width, float height) {
 	}
 }
 
-void Renderer::drawTexture(float x, float y, float width, float height, SDL_GPUTexture* texture, float rotation, std::optional<Color> color, std::optional<glm::mat4> parentModelMatrix) {
+void Renderer::drawTexture(float x, float y, float width, float height, SDL_GPUTexture* texture, float rotation, float scale, std::optional<Color> color, std::optional<glm::mat4> parentModelMatrix, FilterMode filterMode) {
 	if (swapchainTexture) {
 		SDL_GPUColorTargetInfo colorTargetInfo = { 0 };
 		colorTargetInfo.texture = swapchainTexture;
@@ -529,13 +552,15 @@ void Renderer::drawTexture(float x, float y, float width, float height, SDL_GPUT
 
 		auto textureSamplerBinding = SDL_GPUTextureSamplerBinding{
 			.texture = texture,
-			.sampler = sampler
+			.sampler = (filterMode == FilterMode::NEAREST) ? nearestSampler : linearSampler
 		};
 		SDL_BindGPUFragmentSamplers(renderPass, 0, &textureSamplerBinding, 1);
 
 		auto matrix = glm::translate(glm::mat4(1.f), glm::vec3(x, y, 0));
 		matrix = glm::rotate(matrix, glm::radians(rotation), glm::vec3(0.f, 0.f, -1.f));
-		matrix = glm::scale(matrix, glm::vec3(width / 2.0f, height / 2.0f, 1.f));
+		matrix = glm::scale(matrix, glm::vec3(width, height, 1.f));
+		matrix = glm::scale(matrix, glm::vec3(scale, scale, 1.f));
+		matrix = glm::scale(matrix, glm::vec3(0.5f, 0.5f, 1.f));
 		if (auto resultOpt = parentModelMatrix) {
 			glm::mat4 parentMatrix = *resultOpt;
 			matrix = parentMatrix * matrix;
@@ -554,4 +579,8 @@ void Renderer::drawTexture(float x, float y, float width, float height, SDL_GPUT
 		SDL_DrawGPUIndexedPrimitives(renderPass, 6, 1, 0, 0, 0);
 		SDL_EndGPURenderPass(renderPass);
 	}
+}
+
+void Renderer::drawText(const char* text, float x, float y, FontSize fontSize, float rotation) {
+	textRenderer->drawText(text, x, y, fontSize, 0.f);
 }
