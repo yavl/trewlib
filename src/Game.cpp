@@ -1,4 +1,4 @@
-#include "Game.hpp"
+﻿#include "Game.hpp"
 #include <trew/Globals.hpp>
 #include <trew/InputManager.hpp>
 #include <trew/Camera.hpp>
@@ -13,10 +13,14 @@
 #include <trew/drawables/ImageSurface.hpp>
 #include <trew/graphics/GraphicsTypes.hpp>
 #include <trew/Logger.hpp>
+#include <ecs/systems/MovementModule.hpp>
 
 constexpr auto LOGTAG = "Game";
 
 const char* mapName = "default-europe";
+
+using namespace trew;
+using namespace game;
 
 Game::Game(Window* window) :
 	window(window)
@@ -42,8 +46,8 @@ void Game::create() {
 	//as.runScript("assets/scripts/main.as");
 
 	auto device = window->getSdlGpuDevice();
-    
-    hud = std::make_unique<Hud>(window);
+
+	hud = std::make_unique<Hud>(window);
 	renderer = std::make_unique<Renderer>(device, window->getRawSdlWindow(), cam.get(), assets.get());
 	renderer->init();
 
@@ -53,24 +57,26 @@ void Game::create() {
 	renderer->prepareTexture(terrainImagePath.c_str());
 
 	world.entity("map")
-		.set(Image{ assets->getTerrain("default-europe")})
-		.set(MapIdentity{ "default-europe"});
+		.set(Image{ assets->getTerrain("default-europe") })
+		.set(MapIdentity{ "default-europe" });
 
 	world.entity("Bob")
 		.set(Position{ 0, 0 })
 		.set(Velocity{ 50.f, 50.f })
-		.set(Image{ assets->getImage("circle.png")})
-		.set(CharacterIdentity{ "Daniel" })
-		.add<Eats, Apples>();
+		.set(Image{ assets->getImage("circle.png") })
+		.set(CharacterIdentity{ "Daniel" });
 
 	mapQuery = world.query<Image, MapIdentity>();
 	characterQuery = world.query<Position, Image, CharacterIdentity>();
 
-	auto movingSystem = world.system<Position, Velocity>()
-		.each([](flecs::iter& it, size_t, Position& p, Velocity& v) {
-		//p.x += v.x * it.delta_time();
-		//p.y += v.y * it.delta_time();
-			});
+	world.import<game::systems::Movement>();
+
+	auto p1 = world.entity().set<MoveTarget>({ 0, 50.f });
+	auto p2 = world.entity().set<MoveTarget>({ 50.f, 100.f });
+	auto p3 = world.entity().set<MoveTarget>({ 80.f, 0 });
+	p1.add<Next>(p2);
+	p2.add<Next>(p3);
+	world.entity("Bob").set<ActiveRoute>({ p1 });
 }
 
 void Game::update(float dt) {
@@ -99,7 +105,7 @@ void Game::update(float dt) {
 			SDL_GetWindowSize(window->getRawSdlWindow(), &width, &height);
 			window->onWindowResize(width, height);
 		}
-        hud.get()->update(event);
+		hud.get()->update(event);
 	}
 }
 

@@ -1,11 +1,15 @@
-#pragma once
+﻿#pragma once
 
 #include <trew/app/Application.hpp>
 #include <memory>
 #include <vector>
 #include <string>
 #include <flecs.h>
-#include <ecs/Components.hpp>
+#include <ecs/components/Components.hpp>
+#include <ecs/components/MotionComponents.hpp>
+#include <ecs/components/IdentityComponents.hpp>
+#include <ecs/components/NavigationComponents.hpp>
+#include <ecs/components/RenderComponents.hpp>
 
 namespace trew {
 	class Camera;
@@ -18,6 +22,7 @@ namespace trew {
 }
 
 using namespace trew;
+using namespace game::components;
 
 class Game : public Application {
 public:

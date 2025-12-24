@@ -14,9 +14,13 @@ file(GLOB SRC
 	"../src/*.hpp"
 	"../src/*.cpp"
 )
-file(GLOB SRC_ecs
-	"../src/ecs/*.hpp"
-	"../src/ecs/*.cpp"
+file(GLOB SRC_ecs_components
+	"../src/ecs/components/*.hpp"
+	"../src/ecs/components/*.cpp"
+)
+file(GLOB SRC_ecs_systems
+	"../src/ecs/systems/*.hpp"
+	"../src/ecs/systems/*.cpp"
 )
 file(GLOB SRC_trew
 	"../src/trew/*.hpp"
@@ -64,17 +68,20 @@ file(GLOB_RECURSE SRC_angelscript
 )
 
 if(WIN32)
+	if(MSVC)
+	    add_compile_options("/utf-8")
+	endif()
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-msvc/x64/as_callfunc_x64_msvc_asm.obj"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs_components} ${SRC_ecs_systems} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript} ${SRC_angelscript_obj})
 elseif(APPLE)
 	file(GLOB SRC_angelscript_obj
 		"../extlibs/libs-mac/as_callfunc_arm64_xcode.S"
 	)
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript} ${SRC_angelscript_obj})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs_components} ${SRC_ecs_systems} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript} ${SRC_angelscript_obj})
 else()
-	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript})
+	add_executable(Trewlib ${SRC} ${SRC_trew} ${SRC_ecs_components} ${SRC_ecs_systems} ${SRC_trew_actions} ${SRC_trew_app} ${SRC_trew_drawables} ${SRC_trew_graphics} ${SRC_trew_input} ${SRC_trew_nodes} ${SRC_trew_scripting} ${SRC_imgui} ${SRC_angelscript})
 endif()
 
 include_directories(Trewlib "../src")
@@ -89,7 +96,8 @@ source_group("trew\\input" FILES ${SRC_trew_input})
 source_group("trew\\nodes" FILES ${SRC_trew_nodes})
 source_group("trew\\scripting" FILES ${SRC_trew_scripting})
 source_group("game" FILES ${SRC})
-source_group("game\\ecs" FILES ${SRC_ecs})
+source_group("game\\ecs\\components" FILES ${SRC_ecs_components})
+source_group("game\\ecs\\systems" FILES ${SRC_ecs_systems})
 
 
 include_directories(Trewlib ../extlibs/include ../extlibs/include/angelscript/addons)
