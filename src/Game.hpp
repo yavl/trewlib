@@ -15,6 +15,8 @@ namespace trew {
 	class Renderer;
 	class Window;
 	class Sprite;
+	class Server;
+	class Client;
 }
 
 using namespace trew;
@@ -39,4 +41,6 @@ private:
 	std::unique_ptr<InputManager> input;
     std::unique_ptr<BaseUI> hud;
 	std::unique_ptr<Renderer> renderer;
+	std::unique_ptr<Server> server;
+	std::unique_ptr<Client> client;
 };

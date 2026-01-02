@@ -11,10 +11,13 @@
 #include <trew/drawables/ImageSurface.hpp>
 #include <trew/graphics/GraphicsTypes.hpp>
 #include <ecs/systems/MovementModule.hpp>
+#include <trew/net/Server.hpp>
+#include <trew/net/Client.hpp>
 
 constexpr auto LOGTAG = "Game";
 
 const char* mapName = "default-europe";
+const int port = 13370;
 
 using namespace trew;
 using namespace game;
@@ -25,6 +28,8 @@ Game::Game(Window* window) :
 	cam = std::make_unique<Camera>(window);
 	input = std::make_unique<InputManager>(window);
 	Globals::camera = cam.get();
+	server = std::make_unique<Server>(port);
+	client = std::make_unique<Client>("localhost", 13370);
 }
 
 Game::~Game() {
@@ -79,6 +84,12 @@ void Game::create() {
 void Game::update(float dt) {
 	cam->update(dt);
 	world.progress(dt);
+	if (server) {
+		server->update();
+	}
+	if (client) {
+		client->update();
+	}
 
 	SDL_Event event;
 	//logDebug(LOGTAG, fmt::format("fps: {}", 1 / dt));
