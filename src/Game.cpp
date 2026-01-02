@@ -6,13 +6,10 @@
 #include <trew/AssetManager.hpp>
 #include <trew/app/Window.hpp>
 #include <SDL3/SDL.h>
-#include <trew/Shader.hpp>
-#include <trew/Hud.hpp>
+#include <ui/BaseUI.hpp>
 #include <trew/graphics/Renderer.hpp>
-#include <trew/nodes/Sprite.hpp>
 #include <trew/drawables/ImageSurface.hpp>
 #include <trew/graphics/GraphicsTypes.hpp>
-#include <trew/Logger.hpp>
 #include <ecs/systems/MovementModule.hpp>
 
 constexpr auto LOGTAG = "Game";
@@ -47,7 +44,7 @@ void Game::create() {
 
 	auto device = window->getSdlGpuDevice();
 
-	hud = std::make_unique<Hud>(window);
+	hud = std::make_unique<BaseUI>(window);
 	renderer = std::make_unique<Renderer>(device, window->getRawSdlWindow(), cam.get(), assets.get());
 	renderer->init();
 
@@ -71,9 +68,9 @@ void Game::create() {
 
 	world.import<game::systems::Movement>();
 
-	auto p1 = world.entity().set<MoveTarget>({ 0, 50.f });
-	auto p2 = world.entity().set<MoveTarget>({ 50.f, 100.f });
-	auto p3 = world.entity().set<MoveTarget>({ 80.f, 0 });
+	auto p1 = world.entity().set<MoveTarget>({ 100.f, 350.f });
+	auto p2 = world.entity().set<MoveTarget>({ 350.f, 200.f });
+	auto p3 = world.entity().set<MoveTarget>({ 480.f, 0 });
 	p1.add<Next>(p2);
 	p2.add<Next>(p3);
 	world.entity("Bob").set<ActiveRoute>({ p1 });
@@ -118,7 +115,7 @@ void Game::render() {
 		renderer->drawTexture(pos.x, pos.y, p.image->getImageWidth(), p.image->getImageHeight(), renderer->getTexture(p.image), 0.f, 1.f, std::nullopt, std::nullopt, FilterMode::LINEAR);
 		renderer->drawText(identity.name.c_str(), pos.x, pos.y - 100.f, FontSize::NORMAL, 0.f);
 		});
-	renderer->render(hud.get());
+	hud->render(renderer.get());
 
 	renderer->submit();
 }

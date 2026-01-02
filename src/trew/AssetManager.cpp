@@ -1,9 +1,6 @@
 #include "AssetManager.hpp"
-#include <trew/FileHandle.hpp>
 #include <trew/Shader.hpp>
 #include <trew/Logger.hpp>
-#include <cassert>
-#include <nlohmann/json.hpp>
 #include <SDL3_image/SDL_image.h>
 
 using namespace trew;

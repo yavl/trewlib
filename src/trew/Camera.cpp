@@ -1,8 +1,6 @@
 #include "Camera.hpp"
-#include <trew/Logger.hpp>
 #include <trew/input/Input.hpp>
 #include <trew/app/Window.hpp>
-#include <functional>
 
 using namespace trew;
 

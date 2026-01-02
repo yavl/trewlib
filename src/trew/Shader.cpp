@@ -1,7 +1,5 @@
 #include "Shader.hpp"
-#include <trew/FileHandle.hpp>
 #include <trew/Logger.hpp>
-#include <trew/Color.hpp>
 #include <SDL3/SDL.h>
 
 using namespace trew;

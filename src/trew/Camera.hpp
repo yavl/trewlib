@@ -2,7 +2,6 @@
 
 #include <trew/trew.hpp>
 #include <trew/Vector2.hpp>
-#include <memory>
 
 namespace trew {
 	class Window;

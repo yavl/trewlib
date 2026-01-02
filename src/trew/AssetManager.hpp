@@ -2,18 +2,14 @@
 
 #include <string>
 #include <unordered_map>
-#include <optional>
 #include <memory>
 #include <trew/drawables/ImageSurface.hpp>
-
-struct SDL_Surface;
 
 struct SDL_Surface;
 
 namespace trew {
 	class Shader;
 	class Asset;
-	class ImageSurface;
 	enum class AssetType {
 		IMAGE
 	};

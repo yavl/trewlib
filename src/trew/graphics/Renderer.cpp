@@ -1,4 +1,4 @@
-//
+﻿//
 //  Renderer.cpp
 //  Trewlib
 //
@@ -10,10 +10,7 @@
 #include <trew/Shader.hpp>
 #include <vector>
 #include <imgui/imgui.h>
-#include <imgui/imgui_impl_sdl3.h>
-#include <imgui/imgui_impl_sdlgpu3.h>
 #include <trew/Logger.hpp>
-#include <trew/Hud.hpp>
 #include <trew/Camera.hpp>
 #include <trew/AssetManager.hpp>
 #include <trew/drawables/ImageSurface.hpp>
@@ -165,14 +162,11 @@ void Renderer::render() {
 
 	clearScreen();
 
-	drawTriangle(0, 0, 100, 100);
-
 	{
 		Vector2 begin = Globals::selectionQuad[0];
 		Vector2 end = Globals::selectionQuad[1];
 		auto vec1 = begin;
 		auto vec2 = end;
-		//logDebug(LOGTAG, fmt::format("wpos: {}, {}; {}, {}", vec1.x, vec1.y, vec2.x, vec2.y));
 
 		auto width = abs(vec2.x - vec1.x);
 		auto height = abs(vec2.y - vec1.y);
@@ -423,54 +417,12 @@ void Renderer::prepareTexture(const char* name) {
 	}
 }
 
-void Renderer::render(Hud* hud) {
-	ImGui_ImplSDLGPU3_NewFrame();
-	ImGui_ImplSDL3_NewFrame();
-	ImGui::NewFrame();
+SDL_GPUTexture* Renderer::getSwapchainTexture() const {
+	return swapchainTexture;
+}
 
-	auto& show_window = hud->getShowWindow();
-	if (show_window) {
-		ImGui::SetNextWindowSizeConstraints(ImVec2(300, 150), ImVec2(1600, 1200));
-		ImGui::Begin("Connect", &show_window,
-			ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoScrollbar |
-			ImGuiWindowFlags_NoSavedSettings
-		);
-		ImGui::PushFont(font);
-		ImGui::PopFont();
-
-		static char ip[256] = "127.0.0.1";
-		static int port = 13370;
-		ImGui::InputText("ip", ip, IM_ARRAYSIZE(ip));
-		ImGui::InputInt("port", &port);
-		if (ImGui::Button("Connect")) {
-			show_window = false;
-			logDebug("Hud", fmt::format("ip: {}\nport: {}", ip, port));
-			// connection code was here
-		}
-		ImGui::End();
-	}
-
-	// Rendering
-	ImGui::Render();
-
-	ImDrawData* draw_data = ImGui::GetDrawData();
-	const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
-
-	if (swapchainTexture != nullptr && !is_minimized) {
-		// This is mandatory: call ImGui_ImplSDLGPU3_PrepareDrawData() to upload the vertex/index buffer!
-		ImGui_ImplSDLGPU3_PrepareDrawData(draw_data, commandBuffer);
-
-		// Setup and start a render pass
-		SDL_GPUColorTargetInfo target_info = {};
-		target_info.texture = swapchainTexture;
-		SDL_GPURenderPass* render_pass = SDL_BeginGPURenderPass(commandBuffer, &target_info, 1, nullptr);
-
-		// Render ImGui
-		ImGui_ImplSDLGPU3_RenderDrawData(draw_data, commandBuffer, render_pass);
-
-		SDL_EndGPURenderPass(render_pass);
-	}
+SDL_GPUCommandBuffer* Renderer::getCommandBuffer() const {
+	return commandBuffer;
 }
 
 void Renderer::clearScreen() {

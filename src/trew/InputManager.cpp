@@ -1,8 +1,6 @@
 #include "InputManager.hpp"
 #include <trew/input/Input.hpp>
 #include <trew/app/Window.hpp>
-#include <SDL3/SDL.h>
-#include <trew/Logger.hpp>
 #include <trew/Globals.hpp>
 #include <trew/Camera.hpp>
 

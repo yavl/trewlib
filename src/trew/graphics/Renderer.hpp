@@ -24,7 +24,7 @@ struct SDL_GPUSampler;
 struct ImFont;
 
 namespace trew {
-class Hud;
+class BaseUI;
 class Camera;
 class AssetManager;
 class ImageSurface;
@@ -40,7 +40,6 @@ public:
     ~Renderer();
     void init();
     void render();
-    void render(Hud* hud);
     void clearScreen();
     void drawTriangle(float x, float y, float width, float height);
     void drawRectangle(float x, float y, float width, float height);
@@ -49,6 +48,8 @@ public:
     void submit();
     SDL_GPUTexture* getTexture(ImageSurface* image);
     void prepareTexture(const char* name);
+    SDL_GPUTexture* getSwapchainTexture() const;
+    SDL_GPUCommandBuffer* getCommandBuffer() const;
 private:
     std::unique_ptr<TextRenderer> textRenderer;
     SDL_GPUGraphicsPipeline* createTrianglePipeline();

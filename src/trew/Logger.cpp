@@ -1,5 +1,4 @@
 #include "Logger.hpp"
-#include <fmt/core.h>
 
 using namespace trew;
 

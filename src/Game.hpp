@@ -2,20 +2,16 @@
 
 #include <trew/app/Application.hpp>
 #include <memory>
-#include <vector>
-#include <string>
 #include <flecs.h>
-#include <ecs/components/Components.hpp>
 #include <ecs/components/MotionComponents.hpp>
 #include <ecs/components/IdentityComponents.hpp>
-#include <ecs/components/NavigationComponents.hpp>
 #include <ecs/components/RenderComponents.hpp>
 
 namespace trew {
 	class Camera;
 	class InputManager;
 	class AssetManager;
-    class Hud;
+    class BaseUI;
 	class Renderer;
 	class Window;
 	class Sprite;
@@ -41,6 +37,6 @@ private:
 	std::unique_ptr<AssetManager> assets;
 	std::unique_ptr<Camera> cam;
 	std::unique_ptr<InputManager> input;
-    std::unique_ptr<Hud> hud;
+    std::unique_ptr<BaseUI> hud;
 	std::unique_ptr<Renderer> renderer;
 };

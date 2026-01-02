@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 #include <trew/Vector2.hpp>
-#include <optional>
 
 namespace trew {
 	class AssetManager;
